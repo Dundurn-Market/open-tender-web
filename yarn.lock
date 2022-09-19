@@ -1611,18 +1611,11 @@
   resolved "https://registry.yarnpkg.com/@open-tender/hooks/-/hooks-1.0.1.tgz#568a541ff96340f3f3d7b0b70fc0493ee67e6b45"
   integrity sha512-7jN4D/9I1jHlOPy4HAJFw6jvhOToke01iW+E77vTtnwzGqxAiJISk/gGtoX+3HBplUFsfNrV4XvDHcw+wtQ7lw==
 
-"@open-tender/js@^2.2.4":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@open-tender/js/-/js-2.2.4.tgz#2bab58e56d8b9c1d0f83ed07b189698e033a235f"
-  integrity sha512-AIaRNMVzZua6Tvy+hAHeO1mUExG/wjbmEaNga4PKq1DNFYsMZacc1HNdMXbeCEK+vE5lA61jAK4m+faUs4TwCg==
-  dependencies:
-    date-fns "^2.29.1"
-    date-fns-tz "^1.3.6"
+"@open-tender/js@file:../open-tender-js/src":
+  version "0.0.0"
 
-"@open-tender/redux@^3.0.14":
-  version "3.0.14"
-  resolved "https://registry.yarnpkg.com/@open-tender/redux/-/redux-3.0.14.tgz#fd03bfc9ba2e489035adb843bae38b4f9e1f0cc9"
-  integrity sha512-hbLBLecDIlLxp2pcOaukALxllj4Riv5eaVcfcbNZIp6LVqFnFvIZ0vau7Wx4+cMXC2sX852Zo5m6uVdh8aDXwg==
+"@open-tender/redux@file:../open-tender-redux/src":
+  version "0.0.0"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.7"

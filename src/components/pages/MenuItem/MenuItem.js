@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import { isMobile } from 'react-device-detect'
@@ -13,7 +13,7 @@ import {
   selectOrder,
   setCurrentItem,
   selectMenuSlug,
-  showNotification,
+  showNotification, selectOrderFrequency
 } from '@open-tender/redux'
 import { useBuilder } from '@open-tender/hooks'
 import { selectContentSection, selectMenuPath } from '../../../slices'
@@ -112,12 +112,26 @@ const MenuItem = () => {
     setOptionQuantity,
   } = useBuilder(item || {})
 
+  const [searchParams] = useSearchParams()
+  const orderFrequencyFromUrl = searchParams.get("freq")
+
+  const orderFrequency = useSelector(selectOrderFrequency)
+
+  const [orderFreq, setOrderFreq] = useState(orderFrequencyFromUrl? orderFrequencyFromUrl : orderFrequency)
+  // useEffect(() => {
+  //   setOrderFreq(orderFrequency)
+  // }, [orderFrequency])
+
+  const setOrderFrequency = (event) => {
+    setOrderFreq(event.target.value)
+  }
+
   const cancel = () => {
     dispatch(setCurrentItem(null))
   }
 
   const addItem = (builtItem) => {
-    const cartItem = { ...builtItem }
+    const cartItem = { ...builtItem, frequency: orderFreq }
     if (cartItem.index === -1) delete cartItem.index
     dispatch(addItemToCart(cartItem))
     dispatch(showNotification(`${cartItem.name} added to cart`))
@@ -194,6 +208,8 @@ const MenuItem = () => {
                   toggleOption={toggleOption}
                   setMadeFor={setMadeFor}
                   setNotes={setNotes}
+                  setOrderFrequency={setOrderFrequency}
+                  orderFreq={orderFreq}
                   displaySettings={displaySettings}
                   cartId={cartId}
                 />

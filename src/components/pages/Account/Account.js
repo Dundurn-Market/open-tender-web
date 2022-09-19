@@ -11,7 +11,7 @@ import {
   fetchCustomerCreditCards,
   fetchCustomerFavorites,
   fetchCustomerGroupOrders,
-  fetchCustomerOrders,
+  fetchCustomerOrders, fetchCustomerRecurrences,
   fetchCustomerRewards,
   fetchDeals,
   selectAnnouncementsPage,
@@ -21,7 +21,7 @@ import {
   selectCustomerOrders,
   selectCustomerRewards,
   selectDeals,
-  selectHasAnnouncementsPage,
+  selectHasAnnouncementsPage
 } from '@open-tender/redux'
 
 import { selectBrand, closeModal, selectContentSection } from '../../../slices'
@@ -233,6 +233,7 @@ const Account = () => {
     dispatch(fetchCustomerOrders(20))
     dispatch(fetchCustomerFavorites())
     dispatch(fetchCustomerGroupOrders())
+    dispatch(fetchCustomerRecurrences())
   }, [token, dispatch, navigate])
 
   useEffect(() => {

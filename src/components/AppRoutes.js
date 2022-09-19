@@ -58,6 +58,7 @@ import {
   Upsell,
   Vendor,
   VerifyAccount,
+  Recurrences
 } from './pages'
 import MenuNew from './pages/Menu/MenuNew'
 
@@ -137,6 +138,7 @@ const AppRoutes = () => {
         path="order/catering"
         element={<Navigate to="/account" replace />}
       />
+      <Route path="recurrences" element={<Recurrences />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

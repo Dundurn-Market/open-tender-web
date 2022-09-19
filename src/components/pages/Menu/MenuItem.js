@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import propTypes from 'prop-types'
 import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
@@ -7,17 +7,17 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { isMobile } from 'react-device-detect'
 import {
   addItemToCart,
-  selectCartCounts,
+  selectCartCounts, selectGuest,
   selectMenu,
-  selectMenuSlug,
+  selectMenuSlug, selectOrderFrequency, selectOrderType,
   selectPointsProgram,
-  selectSelectedAllergenNames,
+  selectSelectedAllergenNames, selectToken,
   setCurrentItem,
-  showNotification,
+  showNotification
 } from '@open-tender/redux'
 import { makeOrderItem, rehydrateOrderItem, slugify } from '@open-tender/js'
 import { useOrderItem } from '@open-tender/hooks'
-import { Body, ButtonStyled, CardMenuItem } from '@open-tender/components'
+import { Body, ButtonStyled, CardMenuItem, SelectOnly } from '@open-tender/components'
 import {
   selectDisplaySettings,
   openModal,
@@ -26,6 +26,8 @@ import {
 } from '../../../slices'
 import { MenuItemButton, MenuItemOverlay, MenuItemTagAlert } from '../..'
 import MenuItemCount from './MenuItemCount'
+import { selectRequestedAt } from '@open-tender/redux/selectors/order'
+import { subscriptionFreqOptions } from '../../buttons/OrderFrequency'
 
 const MenuItemView = styled(CardMenuItem)`
   position: relative;
@@ -50,6 +52,17 @@ const MenuItemButtonsContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`
+
+const MenuItemSubscriptionDropdown = styled.div`
+  width: 8.2rem;
+  select {
+    padding-left: 5px;
+    padding-right: 0;
+  }
+  select:focus {
+    outline: none;
+  }
 `
 
 const MenuItemButtonsWarning = styled(Body)`
@@ -107,6 +120,21 @@ const MenuItem = ({
   const { soldOut } = useSelector(selectMenu)
   const displaySettings = useSelector(selectDisplaySettings)
   const pointsProgram = useSelector(selectPointsProgram)
+  const authToken = useSelector(selectToken)
+  const requestedAt = useSelector(selectRequestedAt)
+  const orderType = useSelector(selectOrderType)
+
+  const orderFrequency = useSelector(selectOrderFrequency)
+  const [orderFreq, setOrderFreq] = useState(orderFrequency)
+  useEffect(() => {
+    setOrderFreq(orderFrequency)
+  }, [orderFrequency])
+
+  const [isRecurringAllowed, setRecurringAllowed] = useState(!!(requestedAt !== 'ASAP' && authToken && orderType === 'OLO'))
+  useEffect(() => {
+    setRecurringAllowed(requestedAt !== 'ASAP' && authToken && orderType === 'OLO')
+  }, [requestedAt, authToken])
+
   const hasPoints = !!pointsProgram
   const orderItem = item.favorite
     ? { ...rehydrateOrderItem(item, item.favorite.item), index: -1 }
@@ -144,7 +172,7 @@ const MenuItem = ({
   const view = () => {
     if (!isSoldOut) {
       dispatch(setMenuPath(pathname || menuSlug))
-      dispatch(setCurrentItem(orderItem))
+      dispatch(setCurrentItem(isRecurringAllowed? { ...orderItem, frequency: orderFreq } : orderItem))
       if (builderType === 'PAGE') {
         navigate(`${menuSlug}/item/${slugify(name)}`)
       } else if (builderType === 'SIDEBAR') {
@@ -157,12 +185,16 @@ const MenuItem = ({
 
   const add = () => {
     if (!isSoldOut && !isIncomplete) {
-      const cartItem = { ...orderItem }
+      const cartItem = isRecurringAllowed? { ...orderItem, frequency: orderFreq } : { ...orderItem}
       if (cartItem.index === -1) delete cartItem.index
       dispatch(addItemToCart(cartItem))
       dispatch(showNotification(`${name} added to cart!`))
       if (addCallback) addCallback()
     }
+  }
+
+  const setSubscription = (event) => {
+    setOrderFreq(event.target.value)
   }
 
   const imageOverlay = showImage ? (
@@ -209,6 +241,17 @@ const MenuItem = ({
                 Add To Order
               </ButtonStyled>
             </MenuItemButtonsAdd>
+            {isRecurringAllowed && (
+              <MenuItemSubscriptionDropdown>
+                <SelectOnly
+                  label='Subscribe'
+                  name='subscription-freq'
+                  value={orderFreq}
+                  onChange={setSubscription}
+                  options={subscriptionFreqOptions}
+                />
+              </MenuItemSubscriptionDropdown>
+            )}
             <MenuItemButtonsCustomize customizeIsPrimary={customizeIsPrimary}>
               <ButtonStyled
                 onClick={view}

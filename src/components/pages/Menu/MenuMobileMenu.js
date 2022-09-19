@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { Preface } from '@open-tender/components'
 import { useSelector } from 'react-redux'
-import { selectAutoSelect, selectGroupOrder } from '@open-tender/redux'
+import { selectAutoSelect, selectGroupOrder, selectToken, setAlert } from '@open-tender/redux'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
 import {
@@ -13,6 +13,8 @@ import {
   RevenueCenter,
   ServiceType,
 } from '../../buttons'
+import OrderFrequency from '../../buttons/OrderFrequency'
+import { useCallback } from 'react'
 
 const MenuMobileMenuView = styled.div`
   label: MenuMobileMenuView;
@@ -75,8 +77,10 @@ const MenuMobileMenu = ({ order, showMenu, setShowMenu }) => {
   const { orderId, revenueCenter, serviceType, requestedAt } = order
   const autoSelect = useSelector(selectAutoSelect)
   const { cartGuest, isCartOwner } = useSelector(selectGroupOrder)
+  const authToken = useSelector(selectToken)
   const settings = revenueCenter ? revenueCenter.settings || revenueCenter : {}
   const hasGroupOrdering = settings.group_ordering
+
 
   if (cartGuest) return null
 
@@ -125,6 +129,12 @@ const MenuMobileMenu = ({ order, showMenu, setShowMenu }) => {
                 <MenuMobileMenuRow>
                   <Preface size="xSmall">Group Ordering</Preface>
                   <GroupOrder />
+                </MenuMobileMenuRow>
+              )}
+              {authToken && (requestedAt !== 'asap') && (
+                <MenuMobileMenuRow>
+                  <Preface size="xSmall">Order Frequency</Preface>
+                  <OrderFrequency />
                 </MenuMobileMenuRow>
               )}
             </>

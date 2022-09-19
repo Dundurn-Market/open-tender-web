@@ -102,7 +102,7 @@ const CartItemFavorite = styled.div`
 
 const CartItem = ({ item, editItem, removeItem }) => {
   const dispatch = useDispatch()
-  const { name, quantity, max, totalPrice, imageUrl, madeFor } = item
+  const { name, quantity, max, totalPrice, imageUrl, madeFor, frequency = 'SINGLE'} = item
   const bgStyle = imageUrl ? { backgroundImage: `url(${imageUrl}` } : null
   const desc = makeModifierNames(item)
   const { auth } = useSelector(selectCustomer)
@@ -120,7 +120,7 @@ const CartItem = ({ item, editItem, removeItem }) => {
     <CartItemView>
       <CartItemImage as="span" style={bgStyle} />
       <CartItemInfo>
-        <CartItemName>{name}</CartItemName>
+        <CartItemName>{name} {frequency === 'SINGLE'?'':'- '+frequency}</CartItemName>
         {desc && <CartItemDescription>{desc}</CartItemDescription>}
         {madeFor && (
           <CartItemMadeFor>

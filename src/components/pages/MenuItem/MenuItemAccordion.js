@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import propTypes from 'prop-types'
 import styled from '@emotion/styled'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
@@ -8,7 +8,7 @@ import {
   ButtonStyled,
   Checkmark,
   Heading,
-  Input,
+  Input, SelectOnly
 } from '@open-tender/components'
 import { ChevronDown, ChevronUp } from '../../icons'
 import {
@@ -17,6 +17,10 @@ import {
   MenuItemPriceCals,
 } from '../..'
 import MenuItemQuantity from './MenuItemQuantity'
+import { subscriptionFreqOptions } from '../../buttons/OrderFrequency'
+import { useSelector } from 'react-redux'
+import { selectOrder, selectOrderType, selectToken } from '@open-tender/redux'
+import { selectRequestedAt } from '@open-tender/redux/selectors/order'
 
 const MenuItemAccordionView = styled.div`
   padding: ${(props) => props.theme.layout.padding};
@@ -104,6 +108,15 @@ const MenuItemAccordionToggle = ({ isOpen, children }) => {
 
 const MenuItemAccordionQuantity = styled.div`
   margin-right: -0.8rem;
+`
+
+const MenuItemAccordionFrequency = styled.div`
+  margin-right: 0.5rem;
+  width: 8rem;
+  select, select:focus {
+    border-bottom: none;
+    outline: none;
+  }
 `
 
 const MenuItemAccordionSelectedSize = styled(Heading)`
@@ -282,6 +295,8 @@ const MenuItemAccordion = ({
   toggleOption,
   setMadeFor,
   setNotes,
+  setOrderFrequency,
+  orderFreq,
   displaySettings,
   cartId,
 }) => {
@@ -315,6 +330,15 @@ const MenuItemAccordion = ({
     toggleOption(sizeGroup.id, optionId)
     setOpen(null)
   }
+// TODO this is repeated from menuItem .. can refactor
+  const authToken = useSelector(selectToken)
+  const requestedAt = useSelector(selectRequestedAt)
+  const orderType = useSelector(selectOrderType)
+
+  const [isRecurringAllowed, setRecurringAllowed] = useState(!!(requestedAt !== 'ASAP' && authToken && orderType === 'OLO'))
+  useEffect(() => {
+    setRecurringAllowed(requestedAt !== 'ASAP' && authToken && orderType === 'OLO')
+  }, [requestedAt, authToken])
 
   return (
     <MenuItemAccordionView>
@@ -372,6 +396,21 @@ const MenuItemAccordion = ({
             />
           </MenuItemAccordionQuantity>
         </MenuItemAccordionRow>
+        {isRecurringAllowed && (
+          <MenuItemAccordionRow>
+            <MenuItemAccordionLabel>Frequency</MenuItemAccordionLabel>
+            <MenuItemAccordionFrequency>
+              <SelectOnly
+                label='Subscribe'
+                name='subscription-freq'
+                value={orderFreq}
+                onChange={setOrderFrequency}
+                options={subscriptionFreqOptions}
+              />
+            </MenuItemAccordionFrequency>
+          </MenuItemAccordionRow>
+        )}
+
         {!!hasInstructions && (
           <>
             <MenuItemAccordionRowButton

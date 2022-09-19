@@ -56,6 +56,7 @@ import Thanx from './Thanx'
 import Upsell from './Upsell'
 import Vendor from './Vendor'
 import VerifyAccount from './VerifyAccount'
+import Recurrences from './Recurrences'
 
 export {
   About,
@@ -116,4 +117,5 @@ export {
   Upsell,
   Vendor,
   VerifyAccount,
+  Recurrences
 }

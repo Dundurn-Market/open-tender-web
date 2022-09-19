@@ -28,7 +28,8 @@ const Cart = () => {
     dispatch(setCurrentItem(item))
     if (builderType === 'PAGE') {
       dispatch(toggleSidebar())
-      navigate(`${menuSlug}/item/${slugify(item.name)}`)
+      const frequencyVar = item.frequency? `?freq=${item.frequency}`:''
+      navigate(`${menuSlug}/item/${slugify(item.name)}${frequencyVar}`)
     } else if (builderType === 'SIDEBAR') {
       dispatch(toggleSidebarModal())
     } else {

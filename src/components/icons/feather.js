@@ -229,6 +229,13 @@ export const ShoppingBag = (props) => {
   )
 }
 
+export const Recurrence = (props) => {
+  const { icons } = useTheme()
+  return (
+    <RF.Repeat size={null} strokeWidth={icons.strokeWidth} {...props} />
+  )
+}
+
 export const ShoppingCart = (props) => {
   const { icons } = useTheme()
   return (
