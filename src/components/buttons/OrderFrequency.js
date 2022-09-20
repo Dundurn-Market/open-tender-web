@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   addMessage,
   selectOrderFrequency, setAlert,
-  setDefaultOrderFrequency
+  setDefaultOrderFrequency, showNotification
 } from '@open-tender/redux'
 import { SelectOnly } from '@open-tender/components'
 import styled from '@emotion/styled'
@@ -23,7 +23,7 @@ const OrderFrequency = () => {
 
   const setOrderFrequency = (event) => {
     dispatch(setDefaultOrderFrequency(event.target.value))
-    dispatch(addMessage('You just updated your global order frequency! You can still alter the frequency for individual items in the menu.'))
+    dispatch(showNotification('You just updated your global order frequency! You can still alter the frequency for individual items in the menu.'))
   }
 
   return (
