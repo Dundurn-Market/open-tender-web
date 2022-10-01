@@ -17,7 +17,7 @@ import {
   MenuItemPriceCals,
 } from '../..'
 import MenuItemQuantity from './MenuItemQuantity'
-import { subscriptionFreqOptions } from '../../buttons/OrderFrequency'
+import { subscriptionFreqOptions } from '../../../utils/recurringFrequencyUtils'
 import { useSelector } from 'react-redux'
 import { selectOrder, selectOrderType, selectToken } from '@open-tender/redux'
 import { selectRequestedAt } from '@open-tender/redux/selectors/order'

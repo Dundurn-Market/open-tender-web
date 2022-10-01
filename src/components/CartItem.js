@@ -14,7 +14,7 @@ import {
 } from '@open-tender/js'
 import { BgImage, Body, ButtonLink, Heading, SelectOnly } from '@open-tender/components'
 import { MenuItemFavorite, Quantity } from '.'
-import { subscriptionFreqOptions } from './buttons/OrderFrequency'
+import { subscriptionFreqOptions } from '../utils/recurringFrequencyUtils'
 
 const CartItemView = styled.span`
   display: flex;

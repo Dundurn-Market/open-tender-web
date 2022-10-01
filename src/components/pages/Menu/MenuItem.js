@@ -27,8 +27,7 @@ import {
 import { MenuItemButton, MenuItemOverlay, MenuItemTagAlert } from '../..'
 import MenuItemCount from './MenuItemCount'
 import { selectRequestedAt } from '@open-tender/redux/selectors/order'
-import { subscriptionFreqOptions } from '../../buttons/OrderFrequency'
-
+import { subscriptionFreqOptions } from '../../../utils/recurringFrequencyUtils'
 const MenuItemView = styled(CardMenuItem)`
   position: relative;
   flex: 1;
@@ -77,13 +76,14 @@ const MenuItemButtonsWarning = styled(Body)`
 const MenuItemButtonsAdd = styled.div`
   ${(props) =>
     props.disabled
-      ? `
-    button, button:active, button:hover, button:disabled {
-    opacity: 1;
-    color: ${props.theme.colors.primary};
-    background-color: ${props.theme.bgColors.tertiary};
-    border-color: ${props.theme.bgColors.tertiary};
-    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.05);
+      ?
+            `
+  button, button:active, button:hover, button:disabled {
+    border: 0;
+    padding-left: 0;
+    padding-right: 0;
+    background-color: transparent;
+    color: black;
   }`
       : ''}
 `

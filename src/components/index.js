@@ -113,6 +113,7 @@ import UpsellItem from './UpsellItem'
 import UpsellItems from './UpsellItems'
 import VerifyAccount from './VerifyAccount'
 import Welcome from './Welcome'
+import CartSummary from './CartSummary'
 
 export {
   Alerts,
@@ -234,4 +235,5 @@ export {
   UpsellItems,
   VerifyAccount,
   Welcome,
+  CartSummary
 }

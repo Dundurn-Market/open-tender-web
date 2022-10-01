@@ -28,6 +28,10 @@ import RequestedAt from './RequestedAt'
 import Reward from './Reward'
 import SignUp from './SignUp'
 import Working from './Working'
+import DeleteRecurrence from './DeleteRecurrence'
+import SkipRecurrence from './SkipRecurrence'
+import PostponeOrder from './PostponeOrder'
+import CancelOrder from './CancelOrder'
 
 export {
   Address,
@@ -60,4 +64,8 @@ export {
   Reward,
   SignUp,
   Working,
+  DeleteRecurrence,
+  SkipRecurrence,
+  PostponeOrder,
+  CancelOrder
 }

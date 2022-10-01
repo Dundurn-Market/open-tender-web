@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { SelectOnly } from '@open-tender/components'
-import { subscriptionFreqOptions } from '../../buttons/OrderFrequency'
+import { subscriptionFreqOptions } from '../../../utils/recurringFrequencyUtils'
 import { useState } from 'react'
 import { string } from 'prop-types'
 

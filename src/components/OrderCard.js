@@ -5,7 +5,7 @@ import {
   setOrderServiceType,
   setAddress,
   reorderPastOrder,
-  editOrder,
+  editOrder, deleteCustomerOrder
 } from '@open-tender/redux'
 import {
   timezoneMap,
@@ -17,6 +17,7 @@ import {
 import { ButtonStyled, DeliveryLink } from '@open-tender/components'
 import { Card, OrderImages, OrderTag } from '.'
 import { ExternalLink } from './icons'
+import { openModal } from '../slices'
 
 const OrderCard = ({ order, isLast }) => {
   const navigate = useNavigate()
@@ -57,6 +58,10 @@ const OrderCard = ({ order, isLast }) => {
     dispatch(setOrderServiceType(order_type, service_type))
     dispatch(setAddress(address || null))
     dispatch(reorderPastOrder({ revenueCenterId, serviceType, items: cart }))
+  }
+
+  const deleteOrder = () => {
+    dispatch(openModal({ type: 'cancelOrder', args: { order } }))
   }
 
   return (
@@ -110,6 +115,15 @@ const OrderCard = ({ order, isLast }) => {
           >
             Details
           </ButtonStyled>
+          {order.is_editable && (
+            <ButtonStyled
+              onClick={deleteOrder}
+              size="small"
+              style={{ backgroundColor: '#e24a4a', borderColor: '#e24a4a' }}
+            >
+              Cancel
+            </ButtonStyled>
+          )}
         </>
       }
     />

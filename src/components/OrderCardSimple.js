@@ -82,12 +82,12 @@ const OrderCardSimple = ({ order }) => {
     revenue_center,
     requested_at,
     timezone,
-    cart,
   } = order
   const orderTypeName = makeOrderTypeName(order_type, service_type)
   const tz = timezoneMap[timezone]
   const requestedAt = isoToDateStr(requested_at, tz, 'MMMM d, yyyy')
   const isUpcoming = isoToDate(requested_at) > new Date()
+  const cart = [...order.cart]
   const sorted = cart.sort(
     (a, b) => parseFloat(b.price_total) - parseFloat(a.price_total)
   )

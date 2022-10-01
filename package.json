@@ -6,7 +6,7 @@
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
     "@google-pay/button-react": "^3.0.0",
-    "@open-tender/components": "file:/Users/adam/dev/open-tender-components/",
+    "@open-tender/components": "^5.0.6",
     "@open-tender/hooks": "^1.0.1",
     "@open-tender/js": "file:/Users/adam/dev/open-tender-js/src",
     "@open-tender/redux": "file:/Users/adam/dev/open-tender-redux/src",
