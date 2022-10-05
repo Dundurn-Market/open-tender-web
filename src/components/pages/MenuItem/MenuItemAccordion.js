@@ -19,7 +19,7 @@ import {
 import MenuItemQuantity from './MenuItemQuantity'
 import { subscriptionFreqOptions } from '../../../utils/recurringFrequencyUtils'
 import { useSelector } from 'react-redux'
-import { selectOrder, selectOrderType, selectToken } from '@open-tender/redux'
+import { selectOrder, selectOrderType, selectRevenueCenter, selectToken } from '@open-tender/redux'
 import { selectRequestedAt } from '@open-tender/redux/selectors/order'
 
 const MenuItemAccordionView = styled.div`
@@ -332,13 +332,13 @@ const MenuItemAccordion = ({
   }
 // TODO this is repeated from menuItem .. can refactor
   const authToken = useSelector(selectToken)
-  const requestedAt = useSelector(selectRequestedAt)
+  const revenueCenter = useSelector(selectRevenueCenter)
   const orderType = useSelector(selectOrderType)
 
-  const [isRecurringAllowed, setRecurringAllowed] = useState(!!(requestedAt !== 'ASAP' && authToken && orderType === 'OLO'))
+  const [isRecurringAllowed, setRecurringAllowed] = useState(!!(revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO'))
   useEffect(() => {
-    setRecurringAllowed(requestedAt !== 'ASAP' && authToken && orderType === 'OLO')
-  }, [requestedAt, authToken])
+    setRecurringAllowed(revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO')
+  }, [revenueCenter, authToken, orderType])
 
   return (
     <MenuItemAccordionView>

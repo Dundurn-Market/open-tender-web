@@ -1,20 +1,13 @@
 import { ModalContent, ModalView } from '../Modal'
-import { ButtonStyled, SelectOnly } from '@open-tender/components'
-import { closeModal, toggleSidebar } from '../../slices'
-import React, { useEffect, useState } from 'react'
+import { ButtonStyled } from '@open-tender/components'
+import { closeModal } from '../../slices'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   deleteCustomerOrder,
-  editOrder,
-  removeItemFromCartById, resetCheckout,
-  resetOrder,
-  selectTimezone, setRequestedAt,
-  setSubmitting, showNotification,
-  submitOrder
+  selectTimezone,
 } from '@open-tender/redux'
-import { dateToIso, isoToDateStr } from '@open-tender/js'
-import { format, parseISO } from 'date-fns'
-import { isoToDate } from '@open-tender/js/lib/datetimes'
+import { capitalize, isoToDateStr } from '@open-tender/js'
 
 const CancelOrder = ({ order }) => {
   const tz = useSelector(selectTimezone)
@@ -33,7 +26,7 @@ const CancelOrder = ({ order }) => {
         subtitle={
           <>
             <p>
-              Order scheduled for {readableDate} will be removed.
+              The {capitalize(order.service_type)} order scheduled for {readableDate} will be removed.
             </p>
           </>
         }
@@ -49,10 +42,8 @@ const CancelOrder = ({ order }) => {
           </div>
         </>
         }
-
       >
       </ModalContent>
-      }
     </ModalView>
   )
 }

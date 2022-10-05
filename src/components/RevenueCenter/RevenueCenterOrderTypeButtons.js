@@ -1,0 +1,114 @@
+import propTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { isMobileOnly } from 'react-device-detect'
+import {
+  setOrderServiceType,
+  setAddress,
+  setRevenueCenter, setRequestedAt
+} from '@open-tender/redux'
+import { ButtonStyled } from '@open-tender/components'
+import { openModal } from '../../slices'
+import { capitalize } from '@open-tender/js'
+
+export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
+                                                orderType,
+                                                setShowLocations,
+                                                setDisplayedRevenueCenters,
+                                                serviceType }) => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const scheduledRevenueCenters = []
+  const asapRevenueCenters = []
+
+  for (const revenueCenter of revenueCenters) {
+    if (revenueCenter.delivery_zone.priority === 1) {
+      scheduledRevenueCenters.push(revenueCenter)
+    } else {
+      asapRevenueCenters.push(revenueCenter)
+    }
+  }
+
+  const hasAsapDelivery = asapRevenueCenters.length > 0
+
+  // const handleDelivery = () => {
+  //   dispatch(setOrderServiceType(rcType, 'DELIVERY', isOutpost))
+  //   if (isOutpost) {
+  //     dispatch(setAddress(address))
+  //     dispatch(setRevenueCenter(revenueCenter))
+  //     navigate(menuSlug)
+  //   } else {
+  //     dispatch(setAddress(null))
+  //     dispatch(setRevenueCenter(revenueCenter))
+  //     dispatch(openModal({ type: 'mapsAutocomplete' }))
+  //   }
+  // }
+
+  const orderAsap = () => {
+    if (!hasAsapDelivery) return
+    if (serviceType === 'DELIVERY' && asapRevenueCenters.length === 1) {
+      dispatch(setRequestedAt('asap'))
+      dispatch(setRevenueCenter(asapRevenueCenters[0]))
+      dispatch(setOrderServiceType(asapRevenueCenters[0].revenue_center_type, serviceType))
+      navigate(`/menu/${asapRevenueCenters[0].slug}`)
+    } else {
+      setShowLocations(true)
+      setDisplayedRevenueCenters(asapRevenueCenters)
+    }
+  }
+
+  const orderLater = () => {
+    if (serviceType === 'DELIVERY') {
+      const args = {
+        focusFirst: true,
+        skipClose: true,
+        //TODO not sure if we should support scheduled group orders.. for now, NO
+        isGroupOrder: false,
+        //isGroupOrder: isGroupOrder || cartId ? true : false,
+        style: scheduledRevenueCenters[0].orderTimes ? { alignItems: 'flex-start' } : {},
+        revenueCenter: scheduledRevenueCenters[0],
+        serviceType: serviceType,
+        orderType,
+      }
+      setShowLocations(false)
+      dispatch(openModal({ type: 'requestedAt', args }))
+    } else {
+      setShowLocations(true)
+      setDisplayedRevenueCenters(scheduledRevenueCenters)
+    }
+
+  }
+
+  return (
+    <>
+      <ButtonStyled
+        label={`Schedule a delivery`}
+        onClick={orderLater}
+        size={isMobileOnly ? 'small' : 'default'}
+        style={{"marginRight": '1.5rem'}}
+      >
+        Schedule Grocery {capitalize(serviceType)}
+      </ButtonStyled>
+      {hasAsapDelivery && (
+        <ButtonStyled
+          label={`Order Quick Delivery`}
+          onClick={orderAsap}
+          size={isMobileOnly ? 'small' : 'default'}
+        >
+          Order Quick Cafe {capitalize(serviceType)}
+        </ButtonStyled>
+      )}
+    </>
+  )
+}
+
+RevenueCenterOrderTypeButtons.displayName = 'RevenueCenterOrderTypeButtons'
+RevenueCenterOrderTypeButtons.propTypes = {
+  revenueCenter: propTypes.array,
+  orderType: propTypes.string,
+  isGroupOrder: propTypes.bool,
+  setShowLocations: propTypes.func
+}
+
+export default RevenueCenterOrderTypeButtons

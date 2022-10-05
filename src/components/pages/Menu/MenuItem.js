@@ -10,7 +10,7 @@ import {
   selectCartCounts, selectGuest,
   selectMenu,
   selectMenuSlug, selectOrderFrequency, selectOrderType,
-  selectPointsProgram,
+  selectPointsProgram, selectRevenueCenter,
   selectSelectedAllergenNames, selectToken,
   setCurrentItem,
   showNotification
@@ -121,7 +121,8 @@ const MenuItem = ({
   const displaySettings = useSelector(selectDisplaySettings)
   const pointsProgram = useSelector(selectPointsProgram)
   const authToken = useSelector(selectToken)
-  const requestedAt = useSelector(selectRequestedAt)
+  // const requestedAt = useSelector(selectRequestedAt)
+  const revenueCenter = useSelector(selectRevenueCenter)
   const orderType = useSelector(selectOrderType)
 
   const orderFrequency = useSelector(selectOrderFrequency)
@@ -130,10 +131,10 @@ const MenuItem = ({
     setOrderFreq(orderFrequency)
   }, [orderFrequency])
 
-  const [isRecurringAllowed, setRecurringAllowed] = useState(!!(requestedAt !== 'ASAP' && authToken && orderType === 'OLO'))
+  const [isRecurringAllowed, setRecurringAllowed] = useState(!!(revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO'))
   useEffect(() => {
-    setRecurringAllowed(requestedAt !== 'ASAP' && authToken && orderType === 'OLO')
-  }, [requestedAt, authToken])
+    setRecurringAllowed(revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO')
+  }, [revenueCenter, authToken, orderType])
 
   const hasPoints = !!pointsProgram
   const orderItem = item.favorite

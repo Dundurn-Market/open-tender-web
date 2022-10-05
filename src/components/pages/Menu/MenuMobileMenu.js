@@ -131,7 +131,7 @@ const MenuMobileMenu = ({ order, showMenu, setShowMenu }) => {
                   <GroupOrder />
                 </MenuMobileMenuRow>
               )}
-              {authToken && (requestedAt !== 'asap') && (
+              {authToken && revenueCenter && revenueCenter.isScheduledGroceryCenter && (
                 <MenuMobileMenuRow>
                   <Preface size="xSmall">Order Frequency</Preface>
                   <OrderFrequency />

@@ -33,7 +33,7 @@ import {
 import { Container, Loading, PageContent, RevenueCenter } from '../..'
 import { useTheme } from '@emotion/react'
 import RevenueCenterButtons from '../../RevenueCenter/RevenueCenterButtons'
-import RevenueCenterDeliveryOrder from '../../RevenueCenter/RevenueCenterDeliveryOrder'
+import RevenueCenterOrderTypeButtons from '../../RevenueCenter/RevenueCenterOrderTypeButtons'
 
 const RevenueCentersSelectView = styled('div')`
   position: relative;
@@ -146,7 +146,8 @@ const RevenueCentersSelect = () => {
   const [msg, setMsg] = useState(rcConfig.subtitle)
   const [error, setError] = useState(null)
   const [displayedRevenueCenters, setDisplayedRevenueCenters] = useState([])
-  const [showDeliveryLocations, setShowDeliveryLocations] = useState(false)
+  const [totalRevenueCenters, setTotalRevenueCenters] = useState([])
+  const [showLocations, setShowLocations] = useState(false)
   const isLoading = loading === 'pending'
   const missingAddress = serviceType === 'DELIVERY' && !address
   const hasCount = displayedRevenueCenters && displayedRevenueCenters.length > 0
@@ -158,9 +159,9 @@ const RevenueCentersSelect = () => {
   const groupOrderNA = isGroupOrder && !showRevenueCenters
   const serviceTypeName = serviceTypeNamesMap[serviceType]
 
-  const setShowDeliveryOptions = useCallback((show) => {
-    setShowDeliveryLocations(show)
-  }, [showDeliveryLocations])
+  const setShowLocationsCallback = useCallback((show) => {
+    setShowLocations(show)
+  }, [showLocations])
 
   useEffect(() => {
     if (orderType) {
@@ -199,7 +200,8 @@ const RevenueCentersSelect = () => {
       setMsg(msg)
       setError(error)
       setDisplayedRevenueCenters(displayed)
-      setShowDeliveryOptions(false)
+      setTotalRevenueCenters(displayed)
+      setShowLocationsCallback(false)
     }
   }, [
     revenueCenters,
@@ -253,12 +255,17 @@ const RevenueCentersSelect = () => {
             </RevenueCentersSelectTitle>
             {showRevenueCenters ? (
               <>
-                {(serviceType === 'DELIVERY') && (
-                  <RevenueCenterDeliveryOrder revenueCenters={displayedRevenueCenters} orderType={orderType} isGroupOrder={isGroupOrder} setShowDeliveryOptions={setShowDeliveryOptions} />
+                {(serviceType === 'DELIVERY' || serviceType === 'PICKUP') && (
+                  <RevenueCenterOrderTypeButtons revenueCenters={totalRevenueCenters}
+                                                 orderType={orderType}
+                                                 setShowLocations={setShowLocationsCallback}
+                                                 setDisplayedRevenueCenters={setDisplayedRevenueCenters}
+                                                 serviceType={serviceType}
+                  />
                 )}
-                {(serviceType !== 'DELIVERY' || showDeliveryLocations) && (
+                {((serviceType !== 'DELIVERY' && serviceType !== 'PICKUP') || showLocations) && (
                   <RevenueCentersSelectList hasBox={hasBox}>
-                    {(showDeliveryLocations? displayedRevenueCenters.slice(1) : displayedRevenueCenters).map((revenueCenter) => (
+                    {displayedRevenueCenters.map((revenueCenter) => (
                       <li id={revenueCenter.slug} key={revenueCenter.revenue_center_id}>
                         <RevenueCenter
                           revenueCenter={revenueCenter}

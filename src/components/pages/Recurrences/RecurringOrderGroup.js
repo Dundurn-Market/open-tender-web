@@ -89,7 +89,7 @@ function RecurringOrderGroup({ order, recurrences }) {
             Postpone Order
           </ButtonStyled>
           <ButtonStyled onClick={deleteOrder} size='small' disabled={!order.is_editable}
-                        style={{ backgroundColor: '#e24a4a', borderColor: '#e24a4a' }}
+                        color='cart'
           >
             Cancel Order
           </ButtonStyled>
@@ -103,6 +103,7 @@ function RecurringOrderGroup({ order, recurrences }) {
           content={
             <>
               <p className='title'>{recurrence.item.name}{recurrence.isSkipped && <> - <b>SKIPPED</b></>}</p>
+              <p>Quantity: {recurrence.quantity}</p>
               <p>Created on: {recurrence.created_at.split('T')[0]}</p>
               <p>Re-occurs: {getLongName(recurrence.frequency)} on {orderDay}s</p>
               {/*  <ButtonLink>see next order</ButtonLink></p>*/}
@@ -114,15 +115,15 @@ function RecurringOrderGroup({ order, recurrences }) {
                 onClick={skipRecurrence(recurrence)}
                 size='small'
                 color='secondary'
-                disabled={recurrence.isSkipped || !order.is_editable}
+                disabled={!order.is_editable}
                 style={{ marginRight: '1rem' }}
               >
-                Skip Item
+                {recurrence.isSkipped? 'Un-skip Item':'Skip Item'}
               </ButtonStyled>
               <ButtonStyled
                 onClick={cancelRecurrence(recurrence)}
                 size='small'
-                style={{ backgroundColor: '#e24a4a', borderColor: '#e24a4a' }}
+                color='cart'
               >
                 Delete Subscription
               </ButtonStyled>

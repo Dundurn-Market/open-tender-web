@@ -119,7 +119,7 @@ const OrderCard = ({ order, isLast }) => {
             <ButtonStyled
               onClick={deleteOrder}
               size="small"
-              style={{ backgroundColor: '#e24a4a', borderColor: '#e24a4a' }}
+              color='cart'
             >
               Cancel
             </ButtonStyled>

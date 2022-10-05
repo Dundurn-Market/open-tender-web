@@ -121,8 +121,7 @@ const Recurrences = () => {
                         }
                         actions={
                             <ButtonStyled onClick={cancelRecurrence(recurrence)}
-                              size='small'
-                              style={{ backgroundColor: '#e24a4a', borderColor: '#e24a4a' }}
+                              size='small' color='cart'
                             >
                               Delete Subscription
                             </ButtonStyled>

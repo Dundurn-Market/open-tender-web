@@ -8,6 +8,8 @@ import {
   timezoneMap,
 } from '@open-tender/js'
 import { ButtonStyled } from '@open-tender/components'
+import { useDispatch } from 'react-redux'
+import { setOrderBy } from '@open-tender/redux'
 
 const makeOrderWindow = (orderTime) => {
   if (orderTime.start_time === orderTime.end_time) {
@@ -72,9 +74,11 @@ const RequestedAtTimes = ({
 }) => {
   const tz = timezoneMap[revenueCenter.timezone]
   const availableTimes = makeOrderTimes(orderTimes, tz)
+  const dispatch = useDispatch()
 
-  const handleRequestedAt = (requestedAt) => {
+  const handleRequestedAt = (requestedAt, orderBy) => {
     setRequestedAt(requestedAt)
+    dispatch(setOrderBy(orderBy))
   }
 
   return (
@@ -95,7 +99,7 @@ const RequestedAtTimes = ({
                 <p>Order by {orderBy}</p>
               </OrderTime>
               <ButtonStyled
-                onClick={() => handleRequestedAt(i.iso)}
+                onClick={() => handleRequestedAt(i.iso, i.order_by.iso)}
                 color={current ? 'primary' : 'secondary'}
                 size="small"
               >
