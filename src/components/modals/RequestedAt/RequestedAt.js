@@ -9,7 +9,7 @@ import {
   setAddress,
   setOrderServiceType,
   setRequestedAt,
-  setRevenueCenter,
+  setRevenueCenter
 } from '@open-tender/redux'
 import { ButtonStyled } from '@open-tender/components'
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import propTypes from 'prop-types'
-import { isBrowser, isMobile } from 'react-device-detect'
+import { isBrowser } from 'react-device-detect'
 import styled from '@emotion/styled'
 import { useTheme } from '@emotion/react'
 
@@ -27,7 +27,7 @@ const HeaderView = styled.div`
   border-style: solid;
   border-color: ${(props) =>
     props.borderColor || props.theme.header[props.stuck ? 'stuck' : 'primary']};
-  padding: 0 ${(props) => (props.isMobile ? '0' : props.theme.layout.padding)};
+  padding: 0 ${(props) => props.theme.layout.padding};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     height: ${(props) => props.theme.layout.navHeightMobile};
     padding: 0 ${(props) => props.theme.layout.paddingMobile};
@@ -72,6 +72,7 @@ const HeaderNav = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  height: inherit;
 `
 
 const Header = ({
@@ -113,7 +114,6 @@ const Header = ({
         bgColor={bgColor}
         borderColor={borderColor}
         maxWidth={maxWidth}
-        isMobile={isMobile}
         style={style}
       >
         <HeaderNav>{left}</HeaderNav>

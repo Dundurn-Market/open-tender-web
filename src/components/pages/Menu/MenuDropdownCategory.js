@@ -11,10 +11,10 @@ import {
 import { BgImage, Heading } from '@open-tender/components'
 
 const MenuBrowseCategoryView = styled.div`
-  width: 20% ;
+  width: 12.5%;
   padding: 0 2rem 2rem 0;
   @media (max-width: ${(props) => props.theme.breakpoints.narrow}) {
-    width: 50%;
+    width: 33.3%;
   }
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     width: 100%;
@@ -34,31 +34,36 @@ const MenuBrowseCategoryButton = styled.button`
   // border-style: solid;
   // border-color: ${(props) => props.theme.border.color};
   // border-bottom-width: ${(props) => props.theme.border.width};
+
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+    border-radius: 0;
+    border: none;
+    border-bottom: .1rem solid ${(props) => props.theme.border.color};
+    background-color: transparent;
+  }
+  
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    padding: 1rem 0;
+    //padding: 1rem 0;
   }
   
   :hover {
-    transform: scale(1.05);
+    transform: scale(1.10);
   }
 `
 
 const MenuBrowseCategoryImage = styled(BgImage)`
   flex-shrink: 0;
-  width: 7rem;
-  height: 7rem;
+  width: 4rem;
+  height: 4rem;
   background-size: cover;
   transition: ${(props) => props.theme.links.transition};
   background-color: ${(props) => props.theme.bgColors.tertiary};
   border-radius: ${(props) => props.theme.border.radiusSmall};
 
-  // button:hover & {
-  //   transform: scale(1.05);
-  //
-  //   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-  //     transform: scale(1);
-  //   }
-  // }
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+    width: 4rem;
+    height: 4rem;
+  }
 `
 
 const MenuBrowseCategoryText = styled.span`
@@ -68,7 +73,7 @@ const MenuBrowseCategoryText = styled.span`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0 2.5rem;
+  padding: 0 1.5rem;
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     padding: 0 2rem;
   }
@@ -78,9 +83,9 @@ const MenuBrowseCategoryTitle = styled(Heading)`
   display: block;
   margin: 0 0 0 -0.1rem;
   transition: ${(props) => props.theme.links.transition};
-  font-size: ${(props) => props.theme.fonts.sizes.big};
+  font-size: ${(props) => props.theme.fonts.sizes.small};
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    font-size: ${(props) => props.theme.fonts.sizes.big};
+    
   }
 `
 
@@ -103,7 +108,7 @@ const MenuBrowseCategoryArrow = styled.span`
   // }
 `
 
-const MenuBrowseCategory = ({ category, isLast = false, onClickCallback }) => {
+const MenuBrowseCategory = ({ category, isLast = false, isDropdown = false, onClickCallback }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const menuSlug = useSelector(selectMenuSlug)
@@ -133,11 +138,10 @@ const MenuBrowseCategory = ({ category, isLast = false, onClickCallback }) => {
 
   return (
     <MenuBrowseCategoryView>
-      <MenuBrowseCategoryButton onClick={view} isLast={isLast}>
-        <MenuBrowseCategoryImage style={bgStyle} />
+      <MenuBrowseCategoryButton onClick={view}>
+        <MenuBrowseCategoryImage style={bgStyle}/>
         <MenuBrowseCategoryText>
           <MenuBrowseCategoryTitle>{name}</MenuBrowseCategoryTitle>
-          {/* <MenuBrowseCategorySubtitle>{description}</MenuBrowseCategorySubtitle> */}
         </MenuBrowseCategoryText>
       </MenuBrowseCategoryButton>
     </MenuBrowseCategoryView>

@@ -86,7 +86,7 @@ export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
         label={`Schedule a delivery`}
         onClick={orderLater}
         size={isMobileOnly ? 'small' : 'default'}
-        style={{"marginRight": '1.5rem'}}
+        style={{"margin": '0 1.5rem 1rem 0'}}
       >
         Schedule Grocery {capitalize(serviceType)}
       </ButtonStyled>
@@ -95,6 +95,7 @@ export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
           label={`Order Quick Delivery`}
           onClick={orderAsap}
           size={isMobileOnly ? 'small' : 'default'}
+          style={{"margin": '0 0 1rem 0'}}
         >
           Order Quick Cafe {capitalize(serviceType)}
         </ButtonStyled>

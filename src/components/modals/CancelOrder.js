@@ -4,8 +4,9 @@ import { closeModal } from '../../slices'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  addMessage,
   deleteCustomerOrder,
-  selectTimezone,
+  selectTimezone
 } from '@open-tender/redux'
 import { capitalize, isoToDateStr } from '@open-tender/js'
 
@@ -26,7 +27,8 @@ const CancelOrder = ({ order }) => {
         subtitle={
           <>
             <p>
-              The {capitalize(order.service_type)} order scheduled for {readableDate} will be removed.
+              The {capitalize(order.service_type)} order scheduled for {readableDate} will be cancelled.
+              However any subscriptions related to that order will not be removed.
             </p>
           </>
         }

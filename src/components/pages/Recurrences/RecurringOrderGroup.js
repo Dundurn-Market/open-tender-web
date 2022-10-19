@@ -1,20 +1,29 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteCustomerOrder, editOrder, selectTimezone } from '@open-tender/redux'
-import { capitalize, isoToDateStr } from '@open-tender/js'
+import { editOrder, selectRevenueCenters, selectTimezone } from '@open-tender/redux'
+import {
+  capitalize,
+  isoToDateStr,
+  minutesToDate,
+  time24ToMinutes
+} from '@open-tender/js'
 import { openModal } from '../../../slices'
-import { ButtonStyled, BgImage } from '@open-tender/components'
+import { ButtonStyled } from '@open-tender/components'
 import { Row } from '../../index'
 import { getLongName } from '../../../utils'
 import * as PropTypes from 'prop-types'
 import React from 'react'
 import styled from '@emotion/styled'
 import { RecurringItemImage } from './Recurrences'
+import Tag from '../../Tag'
+import { isoToDate } from '@open-tender/js/lib/datetimes'
+import { format } from 'date-fns'
 
 const OrderGroupCard = styled.div`
   margin-bottom: 3rem;
   padding: 2rem;
   background-color: #dee5d4;
   border-radius: 0.7rem;
+  position: relative;
 `
 
 const OrderGroupHeader = styled.div`
@@ -25,19 +34,40 @@ const OrderGroupHeader = styled.div`
   p {
     margin-bottom: .2rem;
   }
+  
+  button:not(:last-child) {
+    margin: 0 1rem 0.5rem 0;
+  }
 `
 
 const OrderGroupTitle = styled.h6`
-  text-decoration: underline;
   margin-bottom: .6rem;
 `
 
-function RecurringOrderGroup({ order, recurrences }) {
+const OrderGroupTag = styled('div')`
+  position: absolute;
+  top: -1.1rem;
+`
+
+function RecurringOrderGroup({ order, recurrences, revenueCenter }) {
   const dispatch = useDispatch()
 
   const tz = useSelector(selectTimezone)
   const readableDate = isoToDateStr(order.requested_at, tz, 'EEE, MMM dd')
   const orderDay = isoToDateStr(order.requested_at, tz, 'EEEE')
+
+  //const revenueCenter = revenueCenters.revenueCenters.find(rc => rc.revenue_center_id === order.revenue_center.revenue_center_id)
+  if (revenueCenter == null) { // this is a band - aid fix because outpost order break this:
+    return null;
+  }
+  const orderTimes = revenueCenter.order_times[order.service_type]
+
+  const orderWindow = orderTimes.find(ot => ot.weekday === orderDay.toUpperCase())
+  const orderByTime = orderWindow ? orderWindow.order_by.time : null;
+  const orderByDate = orderByTime ? minutesToDate(time24ToMinutes(orderByTime), isoToDate(order.requested_at, tz)) : null
+  const formattedOrderByDate = orderByDate ? format(orderByDate, "EEE, MMM dd 'at' HH:mm a") : null
+
+  const isEditable = (!orderByDate || orderByDate > Date.now()) && order.is_editable
 
   const singleItems = order.cart.filter(i => !recurrences.find(r => i.id === r.item_id))
 
@@ -63,6 +93,12 @@ function RecurringOrderGroup({ order, recurrences }) {
 
   return (
     <OrderGroupCard>
+      <OrderGroupTag>
+        { formattedOrderByDate && (
+          <Tag text={isEditable? `Edit By ${formattedOrderByDate}`:'No Longer Editable'}
+          />
+        )}
+      </OrderGroupTag>
       <OrderGroupHeader>
         <div>
           <OrderGroupTitle>Next {capitalize(order.service_type)} Order Scheduled on {readableDate}</OrderGroupTitle>
@@ -72,25 +108,18 @@ function RecurringOrderGroup({ order, recurrences }) {
               <p>{order.requested_time}</p>
             </>
           ) : (
-            <p>Ready at {order.requested_time}</p>
-          )}
-          {!order.is_editable && (
-            <p><b> - No Longer Editable - </b></p>
+            <p>Ready at {order.revenue_center.name} between {order.requested_time}</p>
           )}
 
         </div>
         <div>
-          <ButtonStyled disabled={!order.is_editable} onClick={editNextOrder} style={{ marginRight: '1rem' }} size='small'>
+          <ButtonStyled disabled={!isEditable} onClick={editNextOrder} size='small'>
             Edit
           </ButtonStyled>
-          <ButtonStyled onClick={postponeOrder} size='small' color='secondary'
-                        style={{ marginRight: '1rem' }} disabled={!order.is_editable}
-          >
+          <ButtonStyled onClick={postponeOrder} size='small' color='secondary' disabled={!isEditable}>
             Postpone Order
           </ButtonStyled>
-          <ButtonStyled onClick={deleteOrder} size='small' disabled={!order.is_editable}
-                        color='cart'
-          >
+          <ButtonStyled onClick={deleteOrder} size='small' disabled={!isEditable} color='cart'>
             Cancel Order
           </ButtonStyled>
         </div>
@@ -115,8 +144,8 @@ function RecurringOrderGroup({ order, recurrences }) {
                 onClick={skipRecurrence(recurrence)}
                 size='small'
                 color='secondary'
-                disabled={!order.is_editable}
-                style={{ marginRight: '1rem' }}
+                disabled={!isEditable}
+                style={{ margin: '0 1rem .5rem 0' }}
               >
                 {recurrence.isSkipped? 'Un-skip Item':'Skip Item'}
               </ButtonStyled>
@@ -134,7 +163,7 @@ function RecurringOrderGroup({ order, recurrences }) {
       ))}
       {singleItems.length > 0 && (
         <div style={{borderBottom: '1px solid', marginBottom: '2rem'}}>
-          <h7>Non-Recurring Items</h7>
+          <h6>Non-Recurring Items</h6>
         </div>
       )}
       {singleItems.length > 0 && (singleItems.map((item, index) => (

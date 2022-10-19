@@ -1,11 +1,11 @@
 import { ModalContent, ModalView } from '../Modal'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   deleteCustomerOrder,
   editOrder,
   removeItemFromCartById,
-  removeRecurrence, resetCheckout, resetOrder, selectCart,
+  removeRecurrence, resetCheckout, resetOrder,
   selectTimezone,
   setSubmitting,
   submitOrder
@@ -30,20 +30,22 @@ const DeleteRecurrence = ({recurrence, order}) => {
 
     if (cart.length !== 0) {
       dispatch(setSubmitting(true))
-      dispatch(submitOrder())
+      await dispatch(submitOrder())
     } else {
-      dispatch(deleteCustomerOrder(order.order_id))
+      await dispatch(deleteCustomerOrder(order.order_id))
     }
+
+
     //TODO check if this was successful first, before deleting recurrence
 
-    deleteRecurrence(recurrence)
+    await deleteRecurrence(recurrence)
 
     dispatch(resetOrder())
     dispatch(resetCheckout())
   }
 
-  const deleteRecurrence = () => {
-    dispatch(removeRecurrence(recurrence.id, null))
+  const deleteRecurrence = async () => {
+    await dispatch(removeRecurrence(recurrence.id, null))
     dispatch(closeModal())
   }
 

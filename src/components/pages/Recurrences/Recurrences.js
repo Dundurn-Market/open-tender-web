@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import {
   Content,
@@ -12,19 +12,20 @@ import {
   Row
 } from '../../index'
 import {
-  editOrder, removeRecurrence, selectCustomerOrders,
+  fetchCustomerOrders,
+  fetchCustomerRecurrences, fetchLocations, selectCustomer, selectCustomerOrders,
   selectCustomerRecurrences,
-  selectCustomerRecurrencesLoadingStatus, selectGlobalMenuItems, selectTimezone, showNotification
+  selectCustomerRecurrencesLoadingStatus, selectGlobalMenuItems, selectRevenueCenters, selectTimezone, showNotification
 } from '@open-tender/redux'
 import { useDispatch, useSelector } from 'react-redux'
 import { BgImage, ButtonLink, ButtonStyled } from '@open-tender/components'
 import styled from '@emotion/styled'
 import { openModal, selectConfig } from '../../../slices'
-import * as PropTypes from 'prop-types'
 import { capitalize, isoToDateStr } from '@open-tender/js'
 import { parseISO } from 'date-fns'
 import { getLongName } from '../../../utils'
 import RecurringOrderGroup from './RecurringOrderGroup'
+import { useNavigate } from 'react-router-dom'
 
 export const RecurringItemImage = styled(BgImage)`
   position: relative;
@@ -41,17 +42,36 @@ export const RecurringItemImage = styled(BgImage)`
 const Recurrences = () => {
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const recurrences = useSelector(selectCustomerRecurrences)
   const loading = useSelector(selectCustomerRecurrencesLoadingStatus)
   const isLoading = loading === 'pending'
   const { entities: menuItems } = useSelector(selectGlobalMenuItems)
   const customerOrders = useSelector(selectCustomerOrders)
+  const { auth } = useSelector(selectCustomer)
+  const { revenueCenters } = useSelector(selectRevenueCenters)
 
   const menuItemsMap = new Map(menuItems.map(item => [item.id, item]))
 
   const cancelRecurrence = (recurrence) => () => {
     dispatch(openModal({ type: 'deleteRecurrence', args: { recurrence } }))
   }
+
+  useEffect(() => {
+    if (!auth) return navigate('/guest')
+  }, [auth, navigate])
+
+  useLayoutEffect(() => {
+    if (!recurrences.length) {
+      dispatch(fetchCustomerRecurrences())
+    }
+    if (!revenueCenters.length) {
+      dispatch(fetchLocations({type: 'OLO'}))
+    }
+    if (!customerOrders.length) {
+      dispatch(fetchCustomerOrders())
+    }
+  }, [dispatch])
 
   const orderGroups = []
   const unconnectedRecurrences = []
@@ -66,8 +86,9 @@ const Recurrences = () => {
         } else {
           const order = customerOrders.entities.find(order => order.order_id === recurrence.next_order_id)
           if (order) {
+            const revenueCenter = revenueCenters.find(rc => rc.revenue_center_id === order.revenue_center.revenue_center_id)
             const isSkipped = !order.cart.find(i => i.id === recurrence.item_id)
-            orderGroups.push({ order, recurrences: [{ ...recurrence, item, isSkipped }] })
+            orderGroups.push({ order, revenueCenter, recurrences: [{ ...recurrence, item, isSkipped }] })
           } else {
             unconnectedRecurrences.push({ ...recurrence, item })
           }
@@ -94,13 +115,13 @@ const Recurrences = () => {
       <Content>
         <HeaderDefault />
         <Main>
-          <PageContainer style={{ maxWidth: '86.8rem' }}>
+          <PageContainer style={{ maxWidth: '90rem' }}>
             <PageTitle title='Recurring Items' subtitle='Manage your recurring subscriptions here' />
             {/*<PageError error={error} />*/}
             {recurrences && recurrences.length !== 0 ? (
               <div>
                 {orderGroups.map((group) => (
-                  <RecurringOrderGroup key={group.order.order_id} order={group.order} recurrences={group.recurrences} />
+                  <RecurringOrderGroup key={group.order.order_id} order={group.order} recurrences={group.recurrences} revenueCenter={group.revenueCenter} />
                 ))}
                 {unconnectedRecurrences.length !== 0 && (
                   <>

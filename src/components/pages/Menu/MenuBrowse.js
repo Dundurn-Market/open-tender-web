@@ -10,8 +10,7 @@ import MenuBrowseSquare from './MenuBrowseSquare'
 
 const MenuBrowseView = styled.div`
   margin: ${(props) => props.theme.layout.margin} 0;
-  ${(props) =>
-    props.hasTop ? '' : `margin-top: ${props.theme.layout.padding};`}
+  ${(props) => props.hasTop ? '' : `margin-top: ${props.theme.layout.padding}`};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     margin: ${(props) => props.theme.layout.marginMobile} 0;
     ${(props) =>
@@ -38,14 +37,15 @@ const MenuBrowseTitle = styled(Heading)`
   }
 `
 
-const MenuBrowseCategories = styled.div`
+export const MenuBrowseCategories = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: wrap;
-  margin: 0 -2rem;
-  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    margin: 0;
+  margin: 0;
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    max-height: 60rem;
+    overflow: scroll;
   }
 `
 
@@ -87,7 +87,7 @@ const MenuBrowse = ({ categories, isRcs }) => {
         {hasTop && (
           <MenuBrowseHeader>
             <MenuBrowseTitle>
-              Browse by {isRcs ? 'Vendor' : 'Category'}
+              Categories
             </MenuBrowseTitle>
           </MenuBrowseHeader>
         )}
