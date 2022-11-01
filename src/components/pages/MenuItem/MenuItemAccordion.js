@@ -8,7 +8,7 @@ import {
   ButtonStyled,
   Checkmark,
   Heading,
-  Input, SelectOnly
+  Input, SelectOnly, Textarea
 } from '@open-tender/components'
 import { ChevronDown, ChevronUp } from '../../icons'
 import {
@@ -247,6 +247,7 @@ const MenuItemAccordionInstructions = ({
   notes,
   setNotes,
   allDone,
+  isGreetingCard
 }) => {
   return (
     <MenuItemAccordionInstructionsView>
@@ -257,7 +258,7 @@ const MenuItemAccordionInstructions = ({
             Who is this order for?
           </MenuItemAccordionInstructionsTitle> */}
             <Input
-              label="Who is this order for?"
+              label={isGreetingCard ? "Name of Recipient" : "Who is this order for?"}
               name="made-for"
               type="text"
               value={madeFor || ''}
@@ -270,13 +271,25 @@ const MenuItemAccordionInstructions = ({
             {/* <MenuItemAccordionInstructionsTitle>
             Any special instructions?
           </MenuItemAccordionInstructionsTitle> */}
-            <Input
-              label="Any special instructions?"
-              name="notes"
-              type="text"
-              value={notes || ''}
-              onChange={(evt) => setNotes(evt.target.value)}
-            />
+            {isGreetingCard ? (
+              <Textarea
+                label='Personalized Note'
+                name="notes"
+                value={notes || ''}
+                onChange={(evt) => setNotes(evt.target.value)}
+                style={{marginTop: '3.1rem'}}
+              />
+            ) : (
+              <Input
+                label="Any special instructions?"
+                name="notes"
+                type="text"
+                value={notes || ''}
+                onChange={(evt) => setNotes(evt.target.value)}
+              />
+            )
+            }
+
           </MenuItemAccordionInstructionsInput>
         )}
         <MenuItemAccordionInstructionsFooter>
@@ -313,8 +326,11 @@ const MenuItemAccordion = ({
   const hasCals = showCals && totalCals
   const nutritionalInfo = hasCals ? calcNutrition(builtItem) : null
   const hasIngredients = ingredients && ingredients.length > 0
+  const isGreetingCard = builtItem.category === 'Greeting Cards'
   const specialInstructionTitle =
-    hasMadeFor && hasNotes
+    isGreetingCard
+      ? 'Recipient / Note'
+      :hasMadeFor && hasNotes
       ? 'Name / Special Instructions'
       : hasMadeFor
       ? 'Name'
@@ -339,6 +355,12 @@ const MenuItemAccordion = ({
   useEffect(() => {
     setRecurringAllowed(revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO')
   }, [revenueCenter, authToken, orderType])
+
+  useEffect(() => {
+    if (isGreetingCard) {
+      setOpen("INSTRUCTIONS")
+    }
+  }, [])
 
   return (
     <MenuItemAccordionView>
@@ -436,6 +458,7 @@ const MenuItemAccordion = ({
                 hasNotes={hasNotes}
                 notes={notes}
                 setNotes={setNotes}
+                isGreetingCard={isGreetingCard}
                 allDone={() => setOpen(null)}
               />
             </MenuItemAccordionSection>

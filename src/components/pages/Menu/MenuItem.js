@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { isMobile } from 'react-device-detect'
 import {
   addItemToCart,
-  selectCartCounts, selectGuest,
+  selectCartCounts,
   selectMenu,
   selectMenuSlug, selectOrderFrequency, selectOrderType,
   selectPointsProgram, selectRevenueCenter,
@@ -26,7 +26,6 @@ import {
 } from '../../../slices'
 import { MenuItemButton, MenuItemOverlay, MenuItemTagAlert } from '../..'
 import MenuItemCount from './MenuItemCount'
-import { selectRequestedAt } from '@open-tender/redux/selectors/order'
 import { subscriptionFreqOptions } from '../../../utils/recurringFrequencyUtils'
 const MenuItemView = styled(CardMenuItem)`
   position: relative;
@@ -121,7 +120,6 @@ const MenuItem = ({
   const displaySettings = useSelector(selectDisplaySettings)
   const pointsProgram = useSelector(selectPointsProgram)
   const authToken = useSelector(selectToken)
-  // const requestedAt = useSelector(selectRequestedAt)
   const revenueCenter = useSelector(selectRevenueCenter)
   const orderType = useSelector(selectOrderType)
 
@@ -131,9 +129,9 @@ const MenuItem = ({
     setOrderFreq(orderFrequency)
   }, [orderFrequency])
 
-  const [isRecurringAllowed, setRecurringAllowed] = useState(!!(revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO'))
+  const [isRecurringAllowed, setRecurringAllowed] = useState(!!(revenueCenter && revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO'))
   useEffect(() => {
-    setRecurringAllowed(revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO')
+    setRecurringAllowed(revenueCenter && revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO')
   }, [revenueCenter, authToken, orderType])
 
   const hasPoints = !!pointsProgram
@@ -188,9 +186,13 @@ const MenuItem = ({
     if (!isSoldOut && !isIncomplete) {
       const cartItem = isRecurringAllowed? { ...orderItem, frequency: orderFreq } : { ...orderItem}
       if (cartItem.index === -1) delete cartItem.index
-      dispatch(addItemToCart(cartItem))
-      dispatch(showNotification(`${name} added to cart!`))
-      if (addCallback) addCallback()
+      if (item.category_id === 4074) { // A hack for giftcards to go directly to "Add a note"
+        view()
+      } else {
+        dispatch(addItemToCart(cartItem))
+        dispatch(showNotification(`${name} added to cart!`))
+        if (addCallback) addCallback()
+      }
     }
   }
 
