@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import {
   Content,
-  HeaderDefault, LinkSeparator,
+  HeaderDefault,
   Loading,
   Main,
   PageContainer,
@@ -20,8 +20,8 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { BgImage, ButtonLink, ButtonStyled } from '@open-tender/components'
 import styled from '@emotion/styled'
-import { openModal, selectConfig } from '../../../slices'
-import { capitalize, isoToDateStr } from '@open-tender/js'
+import { openModal} from '../../../slices'
+import { isoToDateStr } from '@open-tender/js'
 import { parseISO } from 'date-fns'
 import { getLongName } from '../../../utils'
 import RecurringOrderGroup from './RecurringOrderGroup'
@@ -109,14 +109,14 @@ const Recurrences = () => {
     <>
       <Helmet>
         <title>
-          Recurring Items
+          Subscriptions
         </title>
       </Helmet>
       <Content>
         <HeaderDefault />
         <Main>
           <PageContainer style={{ maxWidth: '90rem' }}>
-            <PageTitle title='Recurring Items' subtitle='Manage your recurring subscriptions here' />
+            <PageTitle title='Subscriptions' subtitle='Manage your subscriptions here' />
             {/*<PageError error={error} />*/}
             {recurrences && recurrences.length !== 0 ? (
               <div>

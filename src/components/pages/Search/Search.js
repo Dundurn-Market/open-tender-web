@@ -8,6 +8,8 @@ import { MenuContext } from '../Menu/Menu'
 import debounce from 'lodash/debounce'
 import { MenuItem, MenuItems } from '../Menu'
 import { XCircle } from '../../icons'
+import { useSelector } from 'react-redux'
+import { selectMenuSlug } from '@open-tender/redux'
 
 const SearchContainer = styled.div`
   margin: 5rem 30%;
@@ -52,6 +54,8 @@ const Search = () => {
   const searchBar = useRef(null)
   const {menuItems} = useContext(MenuContext)
   const [filteredItems, setFilteredItems] = useState([])
+  const menuSlug = useSelector(selectMenuSlug)
+
   const updateSearch = useRef(debounce((query) => {
     if (query.length === 0) {
       setFilteredItems([])
@@ -87,7 +91,7 @@ const Search = () => {
         <title>Search</title>
       </Helmet>
       <Content>
-        <MenuHeader backClick={() => navigate(-1)} />
+        <MenuHeader backClick={() => navigate(menuSlug)} />
         <Main>
           <ScreenreaderTitle>Search</ScreenreaderTitle>
           <SearchContainer>
@@ -98,7 +102,7 @@ const Search = () => {
             { filteredItems.length > 0 ? (
               <MenuItems>
                 {filteredItems.map(item => (
-                  <MenuItem item={item} />
+                  <MenuItem item={item} key={item.id} />
                 ))}
               </MenuItems>
             ): searchBar.current && searchBar.current.value.length !== 0 ? (

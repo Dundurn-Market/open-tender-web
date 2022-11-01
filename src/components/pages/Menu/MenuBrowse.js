@@ -31,6 +31,7 @@ const MenuBrowseHeader = styled.div`
 
 const MenuBrowseTitle = styled(Heading)`
   line-height: 1;
+  margin-bottom: 2rem;
   font-size: ${(props) => props.theme.fonts.sizes.xBig};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     font-size: ${(props) => props.theme.fonts.sizes.big};

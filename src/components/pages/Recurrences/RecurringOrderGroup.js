@@ -96,6 +96,7 @@ function RecurringOrderGroup({ order, recurrences, revenueCenter }) {
       <OrderGroupTag>
         { formattedOrderByDate && (
           <Tag text={isEditable? `Edit By ${formattedOrderByDate}`:'No Longer Editable'}
+               bgColor={isEditable? 'success':'error'}
           />
         )}
       </OrderGroupTag>
@@ -110,7 +111,6 @@ function RecurringOrderGroup({ order, recurrences, revenueCenter }) {
           ) : (
             <p>Ready at {order.revenue_center.name} between {order.requested_time}</p>
           )}
-
         </div>
         <div>
           <ButtonStyled disabled={!isEditable} onClick={editNextOrder} size='small'>

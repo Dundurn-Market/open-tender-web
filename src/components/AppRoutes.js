@@ -140,7 +140,7 @@ const AppRoutes = () => {
         path="order/catering"
         element={<Navigate to="/account" replace />}
       />
-      <Route path="recurrences" element={<Recurrences />} />
+      <Route path="subscriptions" element={<Recurrences />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

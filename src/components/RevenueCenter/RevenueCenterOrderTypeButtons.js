@@ -7,9 +7,16 @@ import {
   setAddress,
   setRevenueCenter, setRequestedAt
 } from '@open-tender/redux'
-import { ButtonStyled } from '@open-tender/components'
+import {  ButtonStyled } from '@open-tender/components'
 import { openModal } from '../../slices'
 import { capitalize } from '@open-tender/js'
+import ReactTooltip from 'react-tooltip'
+import styled from '@emotion/styled'
+import { useTheme } from '@emotion/react'
+
+export const OrderTypeButtonContainer = styled('div')`
+  display: inline-block;
+`
 
 export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
                                                 orderType,
@@ -18,6 +25,7 @@ export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
                                                 serviceType }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const theme = useTheme()
 
   const scheduledRevenueCenters = []
   const asapRevenueCenters = []
@@ -82,23 +90,33 @@ export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
 
   return (
     <>
-      <ButtonStyled
-        label={`Schedule a delivery`}
-        onClick={orderLater}
-        size={isMobileOnly ? 'small' : 'default'}
-        style={{"margin": '0 1.5rem 1rem 0'}}
-      >
-        Schedule Grocery {capitalize(serviceType)}
-      </ButtonStyled>
-      {hasAsapDelivery && (
+      <OrderTypeButtonContainer data-tip data-for="scheduleButton" style={{"margin": '0 1.5rem 2rem 0'}}>
         <ButtonStyled
-          label={`Order Quick Delivery`}
-          onClick={orderAsap}
+          label={`Schedule a delivery`}
+          onClick={orderLater}
           size={isMobileOnly ? 'small' : 'default'}
-          style={{"margin": '0 0 1rem 0'}}
+
         >
-          Order Quick Cafe {capitalize(serviceType)}
+          Schedule Grocery {capitalize(serviceType)}
         </ButtonStyled>
+        <ReactTooltip id="scheduleButton" place='bottom' effect='solid' backgroundColor={theme.bgColors.dark}>
+          Shop our entire grocery offering & setup subscriptions to your favorite local products.
+        </ReactTooltip>
+      </OrderTypeButtonContainer>
+      {hasAsapDelivery && (
+        <OrderTypeButtonContainer data-tip data-for="asapButton" style={{"margin": '0 0 2rem 0'}}>
+          <ButtonStyled
+            label={`Order Quick Delivery`}
+            onClick={orderAsap}
+            size={isMobileOnly ? 'small' : 'default'}
+
+          >
+            Order Quick Cafe {capitalize(serviceType)}
+          </ButtonStyled>
+          <ReactTooltip id="asapButton" place='bottom' effect='solid' backgroundColor={theme.bgColors.dark}>
+            Place a quick cafe or grocery staples order.  Pickup orders ready in as little as 20 minutes and delivery in 1hr.
+          </ReactTooltip>
+        </OrderTypeButtonContainer>
       )}
     </>
   )
