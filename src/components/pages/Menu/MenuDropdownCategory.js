@@ -84,31 +84,13 @@ const MenuBrowseCategoryTitle = styled(Heading)`
   margin: 0 0 0 -0.1rem;
   transition: ${(props) => props.theme.links.transition};
   font-size: ${(props) => props.theme.fonts.sizes.small};
+  font-family: 'Full Mrkt Font';
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     
   }
 `
 
-const MenuBrowseCategoryArrow = styled.span`
-  position: relative;
-  width: 2.2rem;
-  height: 2.2rem;
-  line-height: 0;
-  flex-shrink: 0;
-  color: ${(props) => props.theme.fonts.headings.color};
-  transition: ${(props) => props.theme.links.transition};
-  transform: translateX(0);
-
-  // button:hover & {
-  //   transform: translateX(1rem);
-  //
-  //   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-  //     transform: translateX(0);
-  //   }
-  // }
-`
-
-const MenuBrowseCategory = ({ category, isLast = false, isDropdown = false, onClickCallback }) => {
+const MenuDropdownCategory = ({ category, onClickOverride = null }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const menuSlug = useSelector(selectMenuSlug)
@@ -122,7 +104,7 @@ const MenuBrowseCategory = ({ category, isLast = false, isDropdown = false, onCl
   const imageUrl = app_image_url || small_image_url || large_image_url
   const bgStyle = imageUrl ? { backgroundImage: `url(${imageUrl}` } : null
 
-  const view = (evt) => {
+  const view = onClickOverride || ((evt) => {
     evt.preventDefault()
     if (revenue_center_id) {
       dispatch(setCurrentVendor(category))
@@ -131,10 +113,7 @@ const MenuBrowseCategory = ({ category, isLast = false, isDropdown = false, onCl
       dispatch(setCurrentCategory(category))
       navigate(`${menuSlug}/category/${slugify(category.name)}`)
     }
-
-    if (onClickCallback)
-      onClickCallback()
-  }
+  })
 
   return (
     <MenuBrowseCategoryView>
@@ -148,8 +127,8 @@ const MenuBrowseCategory = ({ category, isLast = false, isDropdown = false, onCl
   )
 }
 
-MenuBrowseCategory.displayName = 'MenuBrowseCategory'
-MenuBrowseCategory.propTypes = {
+MenuDropdownCategory.displayName = 'MenuDropdownCategory'
+MenuDropdownCategory.propTypes = {
   category: propTypes.object,
 }
-export default MenuBrowseCategory
+export default MenuDropdownCategory

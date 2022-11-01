@@ -5,6 +5,7 @@ import store from './app/store'
 import App from './App'
 import * as Sentry from '@sentry/react'
 import packageJson from '../package.json'
+import './index.css'
 
 global.appVersion = packageJson.version
 
