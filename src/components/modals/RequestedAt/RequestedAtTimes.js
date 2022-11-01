@@ -9,7 +9,7 @@ import {
 } from '@open-tender/js'
 import { ButtonStyled } from '@open-tender/components'
 import { useDispatch } from 'react-redux'
-import { setOrderBy } from '@open-tender/redux'
+import { setOrderWindow } from '@open-tender/redux'
 
 const makeOrderWindow = (orderTime) => {
   if (orderTime.start_time === orderTime.end_time) {
@@ -76,9 +76,9 @@ const RequestedAtTimes = ({
   const availableTimes = makeOrderTimes(orderTimes, tz)
   const dispatch = useDispatch()
 
-  const handleRequestedAt = (requestedAt, orderBy) => {
-    setRequestedAt(requestedAt)
-    dispatch(setOrderBy(orderBy))
+  const handleRequestedAt = (window) => {
+    setRequestedAt(window.iso)
+    dispatch(setOrderWindow(window))
   }
 
   return (
@@ -99,7 +99,7 @@ const RequestedAtTimes = ({
                 <p>Order by {orderBy}</p>
               </OrderTime>
               <ButtonStyled
-                onClick={() => handleRequestedAt(i.iso, i.order_by.iso)}
+                onClick={() => handleRequestedAt(i)}
                 color={current ? 'primary' : 'secondary'}
                 size="small"
               >
