@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isBrowser } from 'react-device-detect'
 import { scroller, Element } from 'react-scroll'
@@ -29,6 +29,7 @@ const About = () => {
   const { about } = useSelector(selectConfig)
   const { background, mobile, title, subtitle, content } = about
   const announcements = useSelector(selectAnnouncementsPage('MENU'))
+  const translated = content.replaceAll('&lt;', '<').replaceAll('&gt;', '>')
 
   const scrollToMenu = () => {
     scroller.scrollTo('aboutCards', {
@@ -39,40 +40,63 @@ const About = () => {
   }
 
   useEffect(() => {
-    dispatch(fetchAnnouncementPage('MENU'))
-  }, [dispatch])
+    const container = document.createElement('div');
+    container.id = 'vev-container'
+
+    const script = document.createElement('script');
+    script.src = "https://embed.vev.page/v1/gqVii9xVtn/p-21isBUPPR?target=vev-container";
+    script.async = true;
+
+    document.body.appendChild(container)
+    container.appendChild(script)
+
+    const root = document.getElementById('root')
+    root.style.height = '0px'
+
+    return () => {
+      document.body.removeChild(container)
+      const scriptTags = document.body.getElementsByTagName('script')
+      const len = scriptTags.length
+      for(let i = len - 1;i >= 0; i--) {
+        scriptTags[i].remove()
+      }
+
+      root.style.height = null
+    }
+  }, []);
 
   return (
     <>
       <Helmet>
         <title>About | {brand.title}</title>
       </Helmet>
-      <Content>
-        <HeaderSite />
-        <Main style={{ paddingTop: '0' }}>
-          <PageHero
-            announcements={announcements}
-            imageUrl={isBrowser ? background : mobile}
-          >
-            <BackgroundContent
-              title={title}
-              subtitle={subtitle}
-              title_color={colors.light}
-              subtitle_color={colors.light}
-              vertical="BOTTOM"
-              horizontal="LEFT"
-            >
-              <ButtonStyled onClick={scrollToMenu} size="big" color="light">
-                Learn More
-              </ButtonStyled>
-            </BackgroundContent>
-          </PageHero>
-          <AboutView>
-            <PageIntro content={content} />
-            <Element name="aboutCards"></Element>
-          </AboutView>
-        </Main>
-      </Content>
+      <HeaderSite />
+
+      {/*<Content>*/}
+      {/*  /!*<Main style={{ paddingTop: '0' }}>*!/*/}
+      {/*  /!*  <PageHero*!/*/}
+      {/*  /!*    announcements={announcements}*!/*/}
+      {/*  /!*    imageUrl={isBrowser ? background : mobile}*!/*/}
+      {/*  /!*  >*!/*/}
+      {/*  /!*    <BackgroundContent*!/*/}
+      {/*  /!*      title={title}*!/*/}
+      {/*  /!*      subtitle={subtitle}*!/*/}
+      {/*  /!*      title_color={colors.light}*!/*/}
+      {/*  /!*      subtitle_color={colors.light}*!/*/}
+      {/*  /!*      vertical="BOTTOM"*!/*/}
+      {/*  /!*      horizontal="LEFT"*!/*/}
+      {/*  /!*    >*!/*/}
+      {/*  /!*      <ButtonStyled onClick={scrollToMenu} size="big" color="light">*!/*/}
+      {/*  /!*        Learn More*!/*/}
+      {/*  /!*      </ButtonStyled>*!/*/}
+      {/*  /!*    </BackgroundContent>*!/*/}
+      {/*  /!*  </PageHero>*!/*/}
+      {/*  /!*  <AboutView>*!/*/}
+      {/*  /!*    <PageIntro content={translated} />*!/*/}
+      {/*  /!*    <Element name="aboutCards"></Element>*!/*/}
+      {/*  /!*  </AboutView>*!/*/}
+      {/*  /!*</Main>*!/*/}
+      {/*</Content>*/}
     </>
   )
 }

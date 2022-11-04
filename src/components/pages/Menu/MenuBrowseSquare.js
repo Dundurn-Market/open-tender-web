@@ -55,6 +55,7 @@ const MenuBrowseSquareContent = styled.div`
 
 const MenuBrowseSquareTitle = styled(Heading)`
   font-size: ${(props) => props.theme.fonts.sizes.big};
+  font-family: "Full Mrkt Font";
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     font-size: ${(props) => props.theme.fonts.sizes.main};
   }

@@ -78,6 +78,7 @@ const MenuBrowseCategoryTitle = styled(Heading)`
   display: block;
   margin: 0 0 0 -0.1rem;
   transition: ${(props) => props.theme.links.transition};
+  font-family: 'Full Mrkt Font';
   font-size: ${(props) => props.theme.fonts.sizes.big};
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     font-size: ${(props) => props.theme.fonts.sizes.big};

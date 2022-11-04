@@ -10,6 +10,7 @@ import {
 } from '@open-tender/redux'
 import { ButtonStyled, GoogleMapsAutocomplete } from '@open-tender/components'
 import { Navigation } from '../../icons'
+import { hexToRgba } from '@open-tender/js'
 
 const LocationsAutocompleteView = styled('div')`
   position: absolute;
@@ -42,24 +43,24 @@ const LocationsAutocompleteForm = styled.div`
   // background-color: ${(props) => props.theme.overlay.dark};
 
   label {
-    display: block
+    display: block;
     flex: 1 1 auto;
-    color: ${(props) => props.theme.colors.light};
+    color: black;
   }
 
   input {
-    color: ${(props) => props.theme.colors.light};
-    background-color: transparent;
-    border-color: ${(props) => props.theme.colors.light};
+    color: black;
+    background-color: white;
+    border-radius: .6rem;
+    border: 1px solid;
 
     &:active,
     &:focus {
-      background-color: transparent;
-      border-color: ${(props) => props.theme.colors.light};
+      background-color: white;
     }
 
     &::placeholder {
-      color: ${(props) => props.theme.colors.light};
+      color: black;
     }
   }
 `
@@ -69,6 +70,16 @@ const LocationsAutocompleteButtons = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
+  > button {
+    border: none; 
+    transition: none;
+    &:hover {
+      color: black;
+      border: 1px solid ${props => props.theme.colors.success};
+      padding: 0.9rem 1.5rem;
+    }
+  }
 `
 
 const LocationsAutocompleteToggle = styled.div`
@@ -96,11 +107,11 @@ const LocationsAutocompleteButton = styled.button`
   font-size: ${(props) => props.theme.fonts.sizes.small};
   border-width: 0.1rem;
   border-style: solid;
-  border-color: ${(props) => props.theme.colors.light};
+  border-color: ${(props) => props.theme.colors.success};
   color: ${(props) =>
-    props.isActive ? props.theme.colors.dark : props.theme.colors.light};
+    props.isActive ? props.theme.colors.light : props.theme.colors.dark};
   background-color: ${(props) =>
-    props.isActive ? props.theme.colors.light : 'transparent'};
+    props.isActive ? props.theme.bgColors.toast : props.theme.colors.light};
 `
 
 const LocationsAutocomplete = ({
@@ -169,8 +180,8 @@ const LocationsAutocomplete = ({
           <ButtonStyled
             onClick={order}
             size="small"
-            color="primary"
-            disabled={!address || !locSt}
+            color="light"
+            //disabled={!address || !locSt}
           >
             Go
           </ButtonStyled>

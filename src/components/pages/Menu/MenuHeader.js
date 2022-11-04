@@ -72,12 +72,14 @@ const MenuHeaderDropdown = styled.span`
 `
 
 const SearchButton = styled.button`
-  border-radius: 1rem;
-  border:1px solid ${(props) => props.theme.border.color};
+  border-radius: 2rem;
+  border:2px solid black;  /* ${(props) => props.theme.border.color}; */
   padding: .5rem 2rem;
   
   background-color: ${(props) => props.isSearchPage? props.theme.bgColors.toast : 'transparent' };
   color: ${(props) => props.isSearchPage? 'white':'black' };
+  display: flex;
+  align-items: center;
   
   svg {
     vertical-align: bottom;
@@ -96,23 +98,27 @@ const SearchButton = styled.button`
 const Categories = styled.button`
   display: flex;
   font-size:2rem;
+  font-family: "Full Mrkt Font";
+
   //margin-left: 1rem;
   //padding: 0 1rem;
   height: inherit;
   align-items: center;
   
-  //:hover {
-    transition: background-color .2s ease;
-    background-color: ${(props) => props.showCategories ? props.theme.bgColors.primary : 'transparent'};
-    //color: ${(props) => props.showCategories ? 'white' : 'black'};;
+
+    transition: background-color, color .2s ease;
+  background-color: ${(props) => props.showCategories ? props.theme.bgColors.primary : 'transparent'};
   padding-bottom: ${(props) => props.showCategories ? '1px': 'none'};
   margin-bottom: ${(props) => props.showCategories ? '-1px': 'none'};
   margin-left: 1.8rem;
   border-left: ${(props) => props.showCategories ? '1px solid '+props.theme.border.color: 'none'};
   border-right: ${(props) => props.showCategories ? '1px solid '+props.theme.border.color: 'none'};
   padding: ${(props) => props.showCategories ? '0 .9rem': '0 1rem'};
-
-  //}
+  
+  :hover {
+    background-color: ${(props) => props.theme.bgColors.toast};
+    color: white;
+  }
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     //margin: 0;
@@ -196,7 +202,7 @@ const MenuHeader = ({ backPath = '/locations', backClick }) => {
 
   const search = () => {
     if (isSearchPage) {
-      navigate(-1)
+      navigate(menuSlug)
     } else {
       navigate(menuSlug + '/search')
     }
@@ -234,14 +240,15 @@ const MenuHeader = ({ backPath = '/locations', backClick }) => {
         <>
           { onClick ? <Back onClick={onClick} /> : <Back path={backPath} /> }
           <Categories onClick={toggleShowCategories(!showCategories)} showCategories={showCategories}>
-            <Grid size={24} />&nbsp;Shop
+            <Grid size={24} />&nbsp;SHOP
           </Categories>
         </>
         }
         right={
           <>
             <SearchButton onClick={search} isSearchPage={isSearchPage}>
-                <Search size={isMobile? 20:16}/> Search
+              <Search size={isMobile? 20:16} strokeWidth={2}/>
+              <span>&nbsp;Search</span>
             </SearchButton>
             {showAllergens && <Allergens />}
             {showGroupOrdering ? (

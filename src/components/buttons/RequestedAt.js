@@ -5,18 +5,20 @@ import {
   selectOrder,
   selectTimezone,
 } from '@open-tender/redux'
-import { makeRequestedAtStr } from '@open-tender/js'
+import { makeReadableDateStrFromOrderWindow, makeRequestedAtStr } from '@open-tender/js'
 import { openModal } from '../../slices'
 import { Clock } from '../icons'
 import { ButtonBoth } from '.'
 
 const RequestedAt = ({ style = null, useButton = false }) => {
   const dispatch = useDispatch()
-  const { requestedAt, revenueCenter, serviceType, orderType } =
+  const { requestedAt, revenueCenter, serviceType, orderType, orderWindow } =
     useSelector(selectOrder)
   const { cartId } = useSelector(selectGroupOrder)
   const tz = useSelector(selectTimezone)
-  const requestedAtText = makeRequestedAtStr(requestedAt, tz)
+  const requestedAtText = orderWindow ?
+    makeReadableDateStrFromOrderWindow(orderWindow, tz) :
+    makeRequestedAtStr(requestedAt, tz)
   const { order_times } = revenueCenter || {}
   const orderTimes = order_times ? order_times[serviceType] : null
   const args = {

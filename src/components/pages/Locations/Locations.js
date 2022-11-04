@@ -236,27 +236,27 @@ const Locations = () => {
               </HeroSiteCta>
             </HeroSite>
           )}
-          <LocationsView>
-            <Container>
-              <Element name="locations">
-                <LocationsTitle>
-                  <h1>{title}</h1>
-                  {subtitle && <p>{subtitle}</p>}
-                </LocationsTitle>
-                <LocationsList>
-                  {locations.map((location) => (
-                    <li id={location.slug} key={location.revenue_center_id}>
-                      <RevenueCenter
-                        revenueCenter={location}
-                        showImage={true}
-                        isActive={location.revenue_center_id === activeMarker}
-                      />
-                    </li>
-                  ))}
-                </LocationsList>
-              </Element>
-            </Container>
-          </LocationsView>
+          {/*<LocationsView>*/}
+          {/*  <Container>*/}
+          {/*    <Element name="locations">*/}
+          {/*      <LocationsTitle>*/}
+          {/*        <h1>{title}</h1>*/}
+          {/*        {subtitle && <p>{subtitle}</p>}*/}
+          {/*      </LocationsTitle>*/}
+          {/*      <LocationsList>*/}
+          {/*        {locations.map((location) => (*/}
+          {/*          <li id={location.slug} key={location.revenue_center_id}>*/}
+          {/*            <RevenueCenter*/}
+          {/*              revenueCenter={location}*/}
+          {/*              showImage={true}*/}
+          {/*              isActive={location.revenue_center_id === activeMarker}*/}
+          {/*            />*/}
+          {/*          </li>*/}
+          {/*        ))}*/}
+          {/*      </LocationsList>*/}
+          {/*    </Element>*/}
+          {/*  </Container>*/}
+          {/*</LocationsView>*/}
         </Main>
       </Content>
     </>

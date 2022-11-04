@@ -65,8 +65,8 @@ const navButtons = [
   },
   {
     icon: <Recurrence />,
-    title: 'Recurring Items',
-    path: '/recurrences',
+    title: 'Subscriptions',
+    path: '/subscriptions',
   },
   // {
   //   icon: <Heart />,

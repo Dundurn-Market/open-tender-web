@@ -13,6 +13,7 @@ const MenuCategoryHeaderTitle = styled(Heading)`
   margin: 0 0 0 -0.1rem;
   font-size: ${(props) =>
     props.theme.fonts.sizes[props.isChild ? 'xBig' : 'xxBig']};
+  font-family: 'Full Mrkt Font';
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     font-size: ${(props) =>
       props.theme.fonts.sizes[props.isChild ? 'big' : 'xBig']};

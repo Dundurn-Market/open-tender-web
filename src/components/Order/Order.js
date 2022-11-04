@@ -163,7 +163,7 @@ const Order = ({ order, loading, error, isConfirmation }) => {
   const hasDetails =
     eating_utensils || serving_utensils || person_count || tax_exempt_id
   const orderTitle = revenue_center
-    ? `${orderTypeName} from ${revenue_center.name}`
+    ? `${orderTypeName} from ${revenue_center.name.startsWith('MRKT') ? revenue_center.name.split(' ')[0]: revenue_center.name}`
     : ''
 
   useEffect(() => {

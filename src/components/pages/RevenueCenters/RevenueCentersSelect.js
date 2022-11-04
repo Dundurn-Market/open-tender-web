@@ -28,7 +28,7 @@ import {
   selectConfig,
   selectSettings,
   selectGeoLatLng,
-  selectIsGroupOrder
+  selectIsGroupOrder, openModal
 } from '../../../slices'
 import { Container, Loading, PageContent, RevenueCenter } from '../..'
 import { useTheme } from '@emotion/react'
@@ -161,7 +161,7 @@ const RevenueCentersSelect = () => {
 
   const setShowLocationsCallback = useCallback((show) => {
     setShowLocations(show)
-  }, [showLocations])
+  }, [dispatch])
 
   useEffect(() => {
     if (orderType) {
@@ -201,7 +201,26 @@ const RevenueCentersSelect = () => {
       setError(error)
       setDisplayedRevenueCenters(displayed)
       setTotalRevenueCenters(displayed)
-      setShowLocationsCallback(false)
+
+      if (orderType !== 'OLO') { // AKA if its catering
+        if (serviceType === 'PICKUP') {
+          setShowLocationsCallback(true)
+        } else {
+          setShowLocationsCallback(false)
+          const args = {
+            focusFirst: true,
+            skipClose: true,
+            //TODO not sure if we should support scheduled group orders.. for now, NO
+            isGroupOrder: false,
+            //isGroupOrder: isGroupOrder || cartId ? true : false,
+            style: {},
+            revenueCenter: displayed[0],
+            serviceType: serviceType,
+            orderType,
+          }
+          dispatch(openModal({ type: 'requestedAt', args }))
+        }
+      }
     }
   }, [
     revenueCenters,
@@ -255,7 +274,9 @@ const RevenueCentersSelect = () => {
             </RevenueCentersSelectTitle>
             {showRevenueCenters ? (
               <>
-                {(serviceType === 'DELIVERY' || serviceType === 'PICKUP') && (
+                {(orderType === 'OLO') &&
+                  //(serviceType === 'DELIVERY' || serviceType === 'PICKUP') &&
+                  (
                   <RevenueCenterOrderTypeButtons revenueCenters={totalRevenueCenters}
                                                  orderType={orderType}
                                                  setShowLocations={setShowLocationsCallback}
@@ -263,7 +284,9 @@ const RevenueCentersSelect = () => {
                                                  serviceType={serviceType}
                   />
                 )}
-                {((serviceType !== 'DELIVERY' && serviceType !== 'PICKUP') || showLocations) && (
+                {(
+                  //(serviceType !== 'DELIVERY' && serviceType !== 'PICKUP') ||
+                  showLocations) && (
                   <RevenueCentersSelectList hasBox={hasBox}>
                     {displayedRevenueCenters.map((revenueCenter) => (
                       <li id={revenueCenter.slug} key={revenueCenter.revenue_center_id}>
