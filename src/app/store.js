@@ -43,6 +43,8 @@ const store = configureStore({
   middleware: customizedMiddleware.concat(analytics),
 })
 
+window.store = store; //TODO hack for debugging.. remove later
+
 store.subscribe(
   throttle(() => {
     saveState(store.getState())

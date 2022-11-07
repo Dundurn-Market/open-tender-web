@@ -20,6 +20,7 @@ export const MenuSiteCategoryHeader = styled('div')`
   h2 {
     margin: 0 0 0 -0.1rem;
     font-size: ${(props) => props.theme.fonts.sizes.h1};
+    font-family: "Full Mrkt Font";
     @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
       font-size: ${(props) => props.theme.fonts.sizes.h4};
     }
@@ -27,6 +28,7 @@ export const MenuSiteCategoryHeader = styled('div')`
 
   h3 {
     margin: 0 0 0 -0.1rem;
+    font-family: "Full Mrkt Font";
     @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
       font-size: ${(props) => props.theme.fonts.sizes.h5};
     }

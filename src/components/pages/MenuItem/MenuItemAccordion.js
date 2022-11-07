@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import propTypes from 'prop-types'
 import styled from '@emotion/styled'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
@@ -8,7 +8,7 @@ import {
   ButtonStyled,
   Checkmark,
   Heading,
-  Input,
+  Input, SelectOnly, Textarea
 } from '@open-tender/components'
 import { ChevronDown, ChevronUp } from '../../icons'
 import {
@@ -17,6 +17,10 @@ import {
   MenuItemPriceCals,
 } from '../..'
 import MenuItemQuantity from './MenuItemQuantity'
+import { subscriptionFreqOptions } from '../../../utils/recurringFrequencyUtils'
+import { useSelector } from 'react-redux'
+import { selectOrder, selectOrderType, selectRevenueCenter, selectToken } from '@open-tender/redux'
+import { selectRequestedAt } from '@open-tender/redux/selectors/order'
 
 const MenuItemAccordionView = styled.div`
   padding: ${(props) => props.theme.layout.padding};
@@ -104,6 +108,15 @@ const MenuItemAccordionToggle = ({ isOpen, children }) => {
 
 const MenuItemAccordionQuantity = styled.div`
   margin-right: -0.8rem;
+`
+
+const MenuItemAccordionFrequency = styled.div`
+  margin-right: 0.5rem;
+  width: 8rem;
+  select, select:focus {
+    border-bottom: none;
+    outline: none;
+  }
 `
 
 const MenuItemAccordionSelectedSize = styled(Heading)`
@@ -234,6 +247,7 @@ const MenuItemAccordionInstructions = ({
   notes,
   setNotes,
   allDone,
+  isGreetingCard
 }) => {
   return (
     <MenuItemAccordionInstructionsView>
@@ -244,7 +258,7 @@ const MenuItemAccordionInstructions = ({
             Who is this order for?
           </MenuItemAccordionInstructionsTitle> */}
             <Input
-              label="Who is this order for?"
+              label={isGreetingCard ? "Name of Recipient" : "Who is this order for?"}
               name="made-for"
               type="text"
               value={madeFor || ''}
@@ -257,13 +271,25 @@ const MenuItemAccordionInstructions = ({
             {/* <MenuItemAccordionInstructionsTitle>
             Any special instructions?
           </MenuItemAccordionInstructionsTitle> */}
-            <Input
-              label="Any special instructions?"
-              name="notes"
-              type="text"
-              value={notes || ''}
-              onChange={(evt) => setNotes(evt.target.value)}
-            />
+            {isGreetingCard ? (
+              <Textarea
+                label='Personalized Note'
+                name="notes"
+                value={notes || ''}
+                onChange={(evt) => setNotes(evt.target.value)}
+                style={{marginTop: '3.1rem'}}
+              />
+            ) : (
+              <Input
+                label="Any special instructions?"
+                name="notes"
+                type="text"
+                value={notes || ''}
+                onChange={(evt) => setNotes(evt.target.value)}
+              />
+            )
+            }
+
           </MenuItemAccordionInstructionsInput>
         )}
         <MenuItemAccordionInstructionsFooter>
@@ -282,6 +308,8 @@ const MenuItemAccordion = ({
   toggleOption,
   setMadeFor,
   setNotes,
+  setOrderFrequency,
+  orderFreq,
   displaySettings,
   cartId,
 }) => {
@@ -298,8 +326,11 @@ const MenuItemAccordion = ({
   const hasCals = showCals && totalCals
   const nutritionalInfo = hasCals ? calcNutrition(builtItem) : null
   const hasIngredients = ingredients && ingredients.length > 0
+  const isGreetingCard = builtItem.category === 'Greeting Cards'
   const specialInstructionTitle =
-    hasMadeFor && hasNotes
+    isGreetingCard
+      ? 'Recipient / Note'
+      :hasMadeFor && hasNotes
       ? 'Name / Special Instructions'
       : hasMadeFor
       ? 'Name'
@@ -315,6 +346,21 @@ const MenuItemAccordion = ({
     toggleOption(sizeGroup.id, optionId)
     setOpen(null)
   }
+// TODO this is repeated from menuItem .. can refactor
+  const authToken = useSelector(selectToken)
+  const revenueCenter = useSelector(selectRevenueCenter)
+  const orderType = useSelector(selectOrderType)
+
+  const [isRecurringAllowed, setRecurringAllowed] = useState(!!(revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO'))
+  useEffect(() => {
+    setRecurringAllowed(revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO')
+  }, [revenueCenter, authToken, orderType])
+
+  useEffect(() => {
+    if (isGreetingCard) {
+      setOpen("INSTRUCTIONS")
+    }
+  }, [])
 
   return (
     <MenuItemAccordionView>
@@ -372,6 +418,21 @@ const MenuItemAccordion = ({
             />
           </MenuItemAccordionQuantity>
         </MenuItemAccordionRow>
+        {isRecurringAllowed && (
+          <MenuItemAccordionRow>
+            <MenuItemAccordionLabel>Frequency</MenuItemAccordionLabel>
+            <MenuItemAccordionFrequency>
+              <SelectOnly
+                label='Subscribe'
+                name='subscription-freq'
+                value={orderFreq}
+                onChange={setOrderFrequency}
+                options={subscriptionFreqOptions}
+              />
+            </MenuItemAccordionFrequency>
+          </MenuItemAccordionRow>
+        )}
+
         {!!hasInstructions && (
           <>
             <MenuItemAccordionRowButton
@@ -397,6 +458,7 @@ const MenuItemAccordion = ({
                 hasNotes={hasNotes}
                 notes={notes}
                 setNotes={setNotes}
+                isGreetingCard={isGreetingCard}
                 allDone={() => setOpen(null)}
               />
             </MenuItemAccordionSection>

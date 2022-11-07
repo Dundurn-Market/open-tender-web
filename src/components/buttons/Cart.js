@@ -16,6 +16,10 @@ const CartIcon = styled.div`
     margin: 0 -1rem 0 0.5rem;
   }
 
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    margin: 0 -1rem 0 0;
+  }
+
   button {
     // margin: -0.2rem 0 0;
 

@@ -10,6 +10,7 @@ import { ButtonStyled } from '@open-tender/components'
 import { selectBrand } from '../slices'
 import { NavSiteMenu, User } from './buttons'
 import { Container } from '.'
+import { hexToRgba } from '@open-tender/js'
 
 const HeaderSiteView = styled.div`
   position: fixed;
@@ -21,9 +22,8 @@ const HeaderSiteView = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.25s ease;
-  background-color: ${(props) =>
-    props.stuck ? props.theme.bgColors.dark : 'transparent'};
+  transition: background-color 0.25s ease;
+  background-color: ${(props) => hexToRgba(props.theme.bgColors.dark, .65)};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     height: ${(props) => props.theme.layout.navHeightMobile};
   }
@@ -43,6 +43,10 @@ const HeaderSiteLogo = styled.div`
   margin-left: ${(props) => (props.isMobile ? '1.5rem' : '0')};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     max-width: 13rem;
+  }
+  
+  a {
+    display: inline-block;
   }
 
   img {
@@ -114,7 +118,6 @@ const links = [
   { path: '/menu', title: 'Menu' },
   { path: '/restaurants', title: 'Locations' },
   { path: '/catering', title: 'Catering' },
-  { path: '/careers', title: 'Careers' },
   { path: '/about', title: 'About' },
 ]
 
@@ -126,6 +129,11 @@ const HeaderSite = ({ useLight = true, style = null }) => {
   const logoUrl = useLight || stuck ? logoLight : logo
   const theme = useTheme()
   const { auth } = useSelector(selectCustomer)
+
+  const visibleLinks = [...links]
+  if (!auth) {
+    visibleLinks.push({ path: '/signup', title: 'Sign in' })
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -153,7 +161,7 @@ const HeaderSite = ({ useLight = true, style = null }) => {
               {isMobile ? (
                 <>
                   {auth ? (
-                    <HeaderSiteNavUser onClick={() => navigate('/guest')}>
+                    <HeaderSiteNavUser onClick={() => navigate('/account')}>
                       <User />
                     </HeaderSiteNavUser>
                   ) : (
@@ -161,7 +169,7 @@ const HeaderSite = ({ useLight = true, style = null }) => {
                       <ButtonStyled
                         color="light"
                         size="small"
-                        onClick={() => navigate('/guest')}
+                        onClick={() => navigate('/order-type')}
                       >
                         Order Now
                       </ButtonStyled>
@@ -172,7 +180,7 @@ const HeaderSite = ({ useLight = true, style = null }) => {
               ) : (
                 <>
                   <HeaderSiteLinks>
-                    {links.map((link) => (
+                    {visibleLinks.map((link) => (
                       <li key={link.path}>
                         <Link to={link.path}>{link.title}</Link>
                       </li>
@@ -182,7 +190,7 @@ const HeaderSite = ({ useLight = true, style = null }) => {
                     <ButtonStyled
                       color="light"
                       size="small"
-                      onClick={() => navigate('/guest')}
+                      onClick={() => navigate('/order-type')}
                     >
                       Order Now
                     </ButtonStyled>

@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { capitalize } from '@open-tender/js'
-import { OpenTenderAPI } from '@open-tender/redux'
+import { OpenTenderAPI, RecurrenceApi } from '@open-tender/redux'
 import { isBrowser } from 'react-device-detect'
 
 // for testing
 // const baseUrl = 'http://httpstat.us'
 const baseUrl = process.env.REACT_APP_API_URL
 const authUrl = process.env.REACT_APP_AUTH_URL
+const recurrenceApiUrl = process.env.REACT_APP_RECURRENCE_API_URL
 
 const initialState = {
   app: null,
@@ -18,6 +19,7 @@ const initialState = {
   loading: 'idle',
   error: null,
   retries: 0,
+  recurrenceApi: recurrenceApiUrl? new RecurrenceApi(recurrenceApiUrl): null
 }
 
 const clientId = process.env.REACT_APP_CLIENT_ID

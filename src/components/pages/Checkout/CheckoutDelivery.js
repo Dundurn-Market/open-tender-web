@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import { selectOrder } from '@open-tender/redux'
-import { makeRequestedAtStr, timezoneMap } from '@open-tender/js'
+import { makeReadableDateStrFromOrderWindow, makeRequestedAtStr, timezoneMap } from '@open-tender/js'
 import { ButtonLink } from '@open-tender/components'
 import { openModal } from '../../../slices'
 import CheckoutSection from './CheckoutSection'
@@ -11,14 +11,18 @@ import CheckoutSectionTitle from './CheckoutSectionTitle'
 const CheckoutDelivery = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { address, orderType, requestedAt, revenueCenter, serviceType } =
+  const { address, orderType, requestedAt, revenueCenter, serviceType, orderWindow } =
     useSelector(selectOrder)
   const { street, city, state, postal_code } = address || {}
   const addressLine2 = `${city}, ${state} ${postal_code}`
   const { timezone, first_times } = revenueCenter || {}
   const firstTime = first_times ? first_times['DELIVERY'] : {}
   const tz = timezone ? timezoneMap[timezone] : null
-  const requestedTime = tz ? makeRequestedAtStr(requestedAt, tz, true) : null
+  const requestedTime = tz ?
+    orderWindow ?
+      makeReadableDateStrFromOrderWindow(orderWindow, tz) :
+      makeRequestedAtStr(requestedAt, tz, true)
+    : null
   const isAsap = requestedTime === 'ASAP'
   const waitTime = isAsap ? firstTime.wait_minutes || null : null
   const orderTime = isAsap

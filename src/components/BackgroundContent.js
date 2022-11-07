@@ -5,6 +5,7 @@ import { Headline } from '@open-tender/components'
 
 import { Container } from '.'
 import BackgroundCta from './BackgroundCta'
+import { hexToRgba } from '@open-tender/js'
 
 const BackgroundContentView = styled.div`
   position: absolute;
@@ -36,15 +37,19 @@ const BackgroundContentView = styled.div`
 
 const BackgroundContentText = styled.div`
   max-width: 96rem;
-  // padding: ${(props) => props.theme.layout.padding} 0;
-  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    // padding: ${(props) => props.theme.layout.paddingMobile} 0;
-  }
+  width: fit-content;
+  width: -moz-fit-content;
+  background-color: ${(props) => hexToRgba(props.theme.bgColors.toast, .85)};
+  border-radius: 2rem;
+  padding: 2rem;
 `
 
 const BackgroundContentTitle = styled(Headline)`
+  opacity: 1;
   color: #${(props) => props.textColor};
   font-size: ${(props) => props.fontSize || props.theme.fonts.sizes.mega};
+  font-family: "Full Mrkt Font";
+
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     font-size: ${(props) => props.theme.fonts.sizes.xBig};
   }

@@ -19,7 +19,7 @@ import {
   selectMenu,
   selectMenuVars,
   selectOrder,
-  selectSelectedAllergenNames,
+  selectSelectedAllergenNames, fetchMenuItems, selectMenuItems
 } from '@open-tender/redux'
 import { makeValidDeals } from '@open-tender/js'
 import {
@@ -47,6 +47,7 @@ const MenuPage = () => {
     useSelector(selectMenuVars)
   let { revenueCenters, categories, soldOut, error, loading } =
     useSelector(selectMenu)
+  const {entities: menuItems} = useSelector(selectMenuItems)
   const isLoading = loading === 'pending'
   const allergenAlerts = useSelector(selectSelectedAllergenNames)
   const groupOrderClosed = useSelector(selectGroupOrderClosed)
@@ -74,6 +75,7 @@ const MenuPage = () => {
       dispatch(fetchAllergens())
       dispatch(fetchLocation(revenueCenterId))
       dispatch(fetchMenu({ revenueCenterId, serviceType, requestedAt }))
+      dispatch(fetchMenuItems({ revenueCenterId, serviceType}))
       dispatch(fetchAnnouncementPage('MENU'))
     }
   }, [
@@ -133,6 +135,7 @@ const MenuPage = () => {
           displaySettings,
           hasTop,
           setHasTop,
+          menuItems
         }}
       >
         <Outlet />

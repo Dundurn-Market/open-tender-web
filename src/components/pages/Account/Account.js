@@ -11,7 +11,7 @@ import {
   fetchCustomerCreditCards,
   fetchCustomerFavorites,
   fetchCustomerGroupOrders,
-  fetchCustomerOrders,
+  fetchCustomerOrders, fetchCustomerRecurrences,
   fetchCustomerRewards,
   fetchDeals,
   selectAnnouncementsPage,
@@ -22,6 +22,7 @@ import {
   selectCustomerRewards,
   selectDeals,
   selectHasAnnouncementsPage,
+  fetchGlobalMenuItems
 } from '@open-tender/redux'
 
 import { selectBrand, closeModal, selectContentSection } from '../../../slices'
@@ -230,9 +231,11 @@ const Account = () => {
   useEffect(() => {
     dispatch(fetchCustomer())
     dispatch(fetchCustomerCreditCards(true))
-    dispatch(fetchCustomerOrders(20))
+    dispatch(fetchCustomerOrders())
     dispatch(fetchCustomerFavorites())
     dispatch(fetchCustomerGroupOrders())
+    dispatch(fetchCustomerRecurrences())
+    dispatch(fetchGlobalMenuItems())
   }, [token, dispatch, navigate])
 
   useEffect(() => {

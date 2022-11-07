@@ -5,15 +5,16 @@ import {
   decrementItemInCart,
   incrementItemInCart,
   selectCustomer,
-  selectCustomerFavorites,
+  selectCustomerFavorites, setCartItemFrequency
 } from '@open-tender/redux'
 import {
   formatDollars,
   makeItemSignature,
   makeModifierNames,
 } from '@open-tender/js'
-import { BgImage, Body, ButtonLink, Heading } from '@open-tender/components'
+import { BgImage, Body, ButtonLink, Heading, SelectOnly } from '@open-tender/components'
 import { MenuItemFavorite, Quantity } from '.'
+import { subscriptionFreqOptions } from '../utils/recurringFrequencyUtils'
 
 const CartItemView = styled.span`
   display: flex;
@@ -71,6 +72,20 @@ const CartItemDetails = styled.span`
   align-items: center;
 `
 
+const CartItemFrequency = styled.div`
+  width: 8rem;
+  margin-right: 1rem;
+  flex-shrink: .1;
+  
+  select {
+    padding-right: 0;
+    border-bottom: 0;
+  }
+  select:focus {
+    outline: none;
+  }
+`
+
 const CartItemPrice = styled(Heading)`
   display: block;
   font-size: ${(props) => props.theme.fonts.sizes.small};
@@ -102,7 +117,7 @@ const CartItemFavorite = styled.div`
 
 const CartItem = ({ item, editItem, removeItem }) => {
   const dispatch = useDispatch()
-  const { name, quantity, max, totalPrice, imageUrl, madeFor } = item
+  const { name, quantity, max, totalPrice, imageUrl, madeFor, frequency = 'SINGLE'} = item
   const bgStyle = imageUrl ? { backgroundImage: `url(${imageUrl}` } : null
   const desc = makeModifierNames(item)
   const { auth } = useSelector(selectCustomer)
@@ -115,6 +130,10 @@ const CartItem = ({ item, editItem, removeItem }) => {
       : lookup && signature
       ? lookup[signature]
       : null
+
+  const setFrequency = (event) => {
+    dispatch(setCartItemFrequency({...item, frequency: event.target.value}))
+  }
 
   return (
     <CartItemView>
@@ -137,6 +156,15 @@ const CartItem = ({ item, editItem, removeItem }) => {
           </CartItemLink>
         </CartItemDetails>
       </CartItemInfo>
+      <CartItemFrequency>
+        <SelectOnly
+          label='Subscribe'
+          name='subscription-freq'
+          value={frequency}
+          onChange={setFrequency}
+          options={subscriptionFreqOptions}
+        />
+      </CartItemFrequency>
       <CartItemQuantity>
         <Quantity
           item={item}

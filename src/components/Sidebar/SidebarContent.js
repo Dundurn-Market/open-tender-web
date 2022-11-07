@@ -195,7 +195,9 @@ const Sidebar = React.forwardRef((props, ref) => {
     dispatch(resetOrder())
     dispatch(resetCheckout())
     dispatch(toggleSidebar())
-    navigate(`/account`)
+    if (pathname.includes('menu')) {
+      navigate(`/account`)
+    }
   }
 
   return (

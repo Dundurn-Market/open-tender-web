@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from '@emotion/styled'
 import { selectOrder, resetOrder, resetCheckout } from '@open-tender/redux'
 import { ButtonLink, Heading } from '@open-tender/components'
+import { toggleSidebar } from '../../../slices'
 
 const CheckoutCancelView = styled('div')`
   margin: 3rem 0 0;

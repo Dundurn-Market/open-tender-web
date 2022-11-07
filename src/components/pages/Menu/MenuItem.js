@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import propTypes from 'prop-types'
 import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
@@ -9,15 +9,15 @@ import {
   addItemToCart,
   selectCartCounts,
   selectMenu,
-  selectMenuSlug,
-  selectPointsProgram,
-  selectSelectedAllergenNames,
+  selectMenuSlug, selectOrderFrequency, selectOrderType,
+  selectPointsProgram, selectRevenueCenter,
+  selectSelectedAllergenNames, selectToken,
   setCurrentItem,
-  showNotification,
+  showNotification
 } from '@open-tender/redux'
 import { makeOrderItem, rehydrateOrderItem, slugify } from '@open-tender/js'
 import { useOrderItem } from '@open-tender/hooks'
-import { Body, ButtonStyled, CardMenuItem } from '@open-tender/components'
+import { Body, ButtonStyled, CardMenuItem, SelectOnly } from '@open-tender/components'
 import {
   selectDisplaySettings,
   openModal,
@@ -26,7 +26,7 @@ import {
 } from '../../../slices'
 import { MenuItemButton, MenuItemOverlay, MenuItemTagAlert } from '../..'
 import MenuItemCount from './MenuItemCount'
-
+import { subscriptionFreqOptions } from '../../../utils/recurringFrequencyUtils'
 const MenuItemView = styled(CardMenuItem)`
   position: relative;
   flex: 1;
@@ -52,6 +52,17 @@ const MenuItemButtonsContainer = styled.div`
   align-items: center;
 `
 
+const MenuItemSubscriptionDropdown = styled.div`
+  width: 8.2rem;
+  select {
+    padding-left: 5px;
+    padding-right: 0;
+  }
+  select:focus {
+    outline: none;
+  }
+`
+
 const MenuItemButtonsWarning = styled(Body)`
   display: block;
   width: 100%;
@@ -64,13 +75,14 @@ const MenuItemButtonsWarning = styled(Body)`
 const MenuItemButtonsAdd = styled.div`
   ${(props) =>
     props.disabled
-      ? `
-    button, button:active, button:hover, button:disabled {
-    opacity: 1;
-    color: ${props.theme.colors.primary};
-    background-color: ${props.theme.bgColors.tertiary};
-    border-color: ${props.theme.bgColors.tertiary};
-    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.05);
+      ?
+            `
+  button, button:active, button:hover, button:disabled {
+    border: 0;
+    padding-left: 0;
+    padding-right: 0;
+    background-color: transparent;
+    color: black;
   }`
       : ''}
 `
@@ -107,6 +119,21 @@ const MenuItem = ({
   const { soldOut } = useSelector(selectMenu)
   const displaySettings = useSelector(selectDisplaySettings)
   const pointsProgram = useSelector(selectPointsProgram)
+  const authToken = useSelector(selectToken)
+  const revenueCenter = useSelector(selectRevenueCenter)
+  const orderType = useSelector(selectOrderType)
+
+  const orderFrequency = useSelector(selectOrderFrequency)
+  const [orderFreq, setOrderFreq] = useState(orderFrequency)
+  useEffect(() => {
+    setOrderFreq(orderFrequency)
+  }, [orderFrequency])
+
+  const [isRecurringAllowed, setRecurringAllowed] = useState(!!(revenueCenter && revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO'))
+  useEffect(() => {
+    setRecurringAllowed(revenueCenter && revenueCenter.isScheduledGroceryCenter && authToken && orderType === 'OLO')
+  }, [revenueCenter, authToken, orderType])
+
   const hasPoints = !!pointsProgram
   const orderItem = item.favorite
     ? { ...rehydrateOrderItem(item, item.favorite.item), index: -1 }
@@ -144,7 +171,7 @@ const MenuItem = ({
   const view = () => {
     if (!isSoldOut) {
       dispatch(setMenuPath(pathname || menuSlug))
-      dispatch(setCurrentItem(orderItem))
+      dispatch(setCurrentItem(isRecurringAllowed? { ...orderItem, frequency: orderFreq } : orderItem))
       if (builderType === 'PAGE') {
         navigate(`${menuSlug}/item/${slugify(name)}`)
       } else if (builderType === 'SIDEBAR') {
@@ -157,12 +184,20 @@ const MenuItem = ({
 
   const add = () => {
     if (!isSoldOut && !isIncomplete) {
-      const cartItem = { ...orderItem }
+      const cartItem = isRecurringAllowed? { ...orderItem, frequency: orderFreq } : { ...orderItem}
       if (cartItem.index === -1) delete cartItem.index
-      dispatch(addItemToCart(cartItem))
-      dispatch(showNotification(`${name} added to cart!`))
-      if (addCallback) addCallback()
+      if (item.category_id === 4074) { // A hack for giftcards to go directly to "Add a note"
+        view()
+      } else {
+        dispatch(addItemToCart(cartItem))
+        dispatch(showNotification(`${name} added to cart!`))
+        if (addCallback) addCallback()
+      }
     }
+  }
+
+  const setSubscription = (event) => {
+    setOrderFreq(event.target.value)
   }
 
   const imageOverlay = showImage ? (
@@ -209,6 +244,17 @@ const MenuItem = ({
                 Add To Order
               </ButtonStyled>
             </MenuItemButtonsAdd>
+            {isRecurringAllowed && (
+              <MenuItemSubscriptionDropdown>
+                <SelectOnly
+                  label='Subscribe'
+                  name='subscription-freq'
+                  value={orderFreq}
+                  onChange={setSubscription}
+                  options={subscriptionFreqOptions}
+                />
+              </MenuItemSubscriptionDropdown>
+            )}
             <MenuItemButtonsCustomize customizeIsPrimary={customizeIsPrimary}>
               <ButtonStyled
                 onClick={view}

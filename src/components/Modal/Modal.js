@@ -38,6 +38,9 @@ import {
   Reward,
   SignUp,
   Working,
+  DeleteRecurrence,
+  SkipRecurrence,
+  PostponeOrder, CancelOrder
 } from '../modals'
 
 const makeModal = (type, windowRef, args = {}) => {
@@ -102,6 +105,14 @@ const makeModal = (type, windowRef, args = {}) => {
       return <SignUp windowRef={windowRef} {...args} />
     case 'working':
       return <Working {...args} />
+    case 'deleteRecurrence':
+      return <DeleteRecurrence {...args} />
+    case 'skipRecurrence':
+      return <SkipRecurrence {...args} />
+    case 'postponeOrder':
+      return <PostponeOrder {...args} />
+    case 'cancelOrder':
+      return <CancelOrder {...args} />
     default:
       return null
   }

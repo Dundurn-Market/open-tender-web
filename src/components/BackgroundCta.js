@@ -8,6 +8,8 @@ const BackgroundCtaView = styled.div`
   margin: 2rem 0 0;
 
   button {
+    font-family: "Full Mrkt Font" !important;
+
     font-size: ${(props) => props.theme.fonts.sizes.xBig};
     @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
       font-size: ${(props) => props.theme.fonts.sizes.main};
@@ -31,12 +33,13 @@ const BackgroundCta = ({ url, urlText, children }) => {
           onClick={() => navigate(linkUrl)}
           size="big"
           color="light"
+          style={{fontFamily: 'Full Mrkt Font'}}
         >
           {urlText}
         </ButtonStyled>
       ) : (
         <form action={url}>
-          <ButtonStyled type="submit" size="big" color="light">
+          <ButtonStyled type="submit" size="big" color="light" style={{fontFamily: 'Full Mrkt Font'}}>
             {urlText}
           </ButtonStyled>
         </form>

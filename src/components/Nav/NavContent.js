@@ -15,13 +15,13 @@ import {
   LogOut,
   Mail,
   MapPin,
-  PlusCircle,
+  PlusCircle, Recurrence,
   ShoppingBag,
   Slash,
   Sliders,
   Tag,
   User,
-  UserCircle,
+  UserCircle
 } from '../icons'
 
 const guestButtons = [
@@ -62,6 +62,11 @@ const navButtons = [
     icon: <ShoppingBag />,
     title: 'Order History',
     path: '/orders',
+  },
+  {
+    icon: <Recurrence />,
+    title: 'Subscriptions',
+    path: '/subscriptions',
   },
   // {
   //   icon: <Heart />,

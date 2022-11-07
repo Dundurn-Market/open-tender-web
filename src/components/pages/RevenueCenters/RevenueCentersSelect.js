@@ -10,28 +10,30 @@ import {
   resetOrderType,
   fetchLocations,
   selectRevenueCenters,
-  resetCheckout,
+  resetCheckout
 } from '@open-tender/redux'
 import {
   makeDisplayedRevenueCenters,
   renameLocation,
-  serviceTypeNamesMap,
+  serviceTypeNamesMap
 } from '@open-tender/js'
 import {
   Body,
   ButtonLink,
   ButtonStyled,
   Heading,
-  Preface,
+  Preface
 } from '@open-tender/components'
 import {
   selectConfig,
   selectSettings,
   selectGeoLatLng,
-  selectIsGroupOrder,
+  selectIsGroupOrder, openModal
 } from '../../../slices'
 import { Container, Loading, PageContent, RevenueCenter } from '../..'
 import { useTheme } from '@emotion/react'
+import RevenueCenterButtons from '../../RevenueCenter/RevenueCenterButtons'
+import RevenueCenterOrderTypeButtons from '../../RevenueCenter/RevenueCenterOrderTypeButtons'
 
 const RevenueCentersSelectView = styled('div')`
   position: relative;
@@ -48,8 +50,7 @@ const RevenueCentersSelectView = styled('div')`
 
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     padding: 0;
-    margin: ${(props) => props.theme.layout.navHeightMobile} 0
-      ${(props) => (props.showMap ? '25rem' : '0')};
+    margin: ${(props) => props.theme.layout.navHeightMobile} 0 ${(props) => (props.showMap ? '25rem' : '0')};
     transition: all 0.25s ease;
     transform: translateY(${(props) => (props.showMap ? '25rem' : '0')});
   }
@@ -73,7 +74,7 @@ const RevenueCentersSelectTitle = styled('div')`
     font-size: ${(props) => props.theme.fonts.sizes.small};
     @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
       margin: 1rem 0 0;
-      // font-size: ${(props) => props.theme.fonts.sizes.xSmall};
+        // font-size: ${(props) => props.theme.fonts.sizes.xSmall};
     }
   }
 `
@@ -110,11 +111,9 @@ const RevenueCentersSelectList = styled('ul')`
   & > li {
     margin: ${(props) => props.theme.layout.padding} 0 0;
     @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-      padding: 0 0
-        ${(props) => (props.hasBox ? '0' : props.theme.layout.paddingMobile)};
+      padding: 0 0 ${(props) => (props.hasBox ? '0' : props.theme.layout.paddingMobile)};
       border-bottom: ${(props) =>
-          props.hasBox ? '0' : props.theme.border.width}
-        solid ${(props) => props.theme.border.color};
+              props.hasBox ? '0' : props.theme.border.width} solid ${(props) => props.theme.border.color};
       margin: 0 0 ${(props) => props.theme.layout.paddingMobile};
     }
 
@@ -147,6 +146,8 @@ const RevenueCentersSelect = () => {
   const [msg, setMsg] = useState(rcConfig.subtitle)
   const [error, setError] = useState(null)
   const [displayedRevenueCenters, setDisplayedRevenueCenters] = useState([])
+  const [totalRevenueCenters, setTotalRevenueCenters] = useState([])
+  const [showLocations, setShowLocations] = useState(false)
   const isLoading = loading === 'pending'
   const missingAddress = serviceType === 'DELIVERY' && !address
   const hasCount = displayedRevenueCenters && displayedRevenueCenters.length > 0
@@ -157,6 +158,10 @@ const RevenueCentersSelect = () => {
   const renamedMsg = renameLocation(msg, names)
   const groupOrderNA = isGroupOrder && !showRevenueCenters
   const serviceTypeName = serviceTypeNamesMap[serviceType]
+
+  const setShowLocationsCallback = useCallback((show) => {
+    setShowLocations(show)
+  }, [dispatch])
 
   useEffect(() => {
     if (orderType) {
@@ -195,6 +200,27 @@ const RevenueCentersSelect = () => {
       setMsg(msg)
       setError(error)
       setDisplayedRevenueCenters(displayed)
+      setTotalRevenueCenters(displayed)
+
+      if (orderType !== 'OLO') { // AKA if its catering
+        if (serviceType === 'PICKUP') {
+          setShowLocationsCallback(true)
+        } else {
+          setShowLocationsCallback(false)
+          const args = {
+            focusFirst: true,
+            skipClose: true,
+            //TODO not sure if we should support scheduled group orders.. for now, NO
+            isGroupOrder: false,
+            //isGroupOrder: isGroupOrder || cartId ? true : false,
+            style: {},
+            revenueCenter: displayed[0],
+            serviceType: serviceType,
+            orderType,
+          }
+          dispatch(openModal({ type: 'requestedAt', args }))
+        }
+      }
     }
   }, [
     revenueCenters,
@@ -205,7 +231,7 @@ const RevenueCentersSelect = () => {
     autoSelect,
     autoRouteCallack,
     missingAddress,
-    isGroupOrder,
+    isGroupOrder
   ])
 
   const startOver = () => {
@@ -219,7 +245,7 @@ const RevenueCentersSelect = () => {
       <Container>
         {isLoading ? (
           <PageContent>
-            <Loading text="Retrieving nearest locations..." />
+            <Loading text='Retrieving nearest locations...' />
           </PageContent>
         ) : (
           <>
@@ -231,35 +257,48 @@ const RevenueCentersSelect = () => {
               </RevenueCentersSelectShowMap>
               {groupOrderNA ? (
                 <>
-                  <Heading as="h2">
+                  <Heading as='h2'>
                     We're sorry but Group Ordering {serviceTypeName} isn't
                     available in your area at this time
                   </Heading>
-                  <Body as="p">
+                  <Body as='p'>
                     Please go back and choose a different order type
                   </Body>
                 </>
               ) : (
                 <>
-                  <Heading as="h2">{renamedTitle}</Heading>
-                  <Body as="p">{renamedError || renamedMsg}</Body>
+                  <Heading as='h2'>{renamedTitle}</Heading>
+                  <Body as='p'>{renamedError || renamedMsg}</Body>
                 </>
               )}
             </RevenueCentersSelectTitle>
             {showRevenueCenters ? (
-              <RevenueCentersSelectList hasBox={hasBox}>
-                {displayedRevenueCenters.map((revenueCenter) => (
-                  <li
-                    id={revenueCenter.slug}
-                    key={revenueCenter.revenue_center_id}
-                  >
-                    <RevenueCenter
-                      revenueCenter={revenueCenter}
-                      showImage={true}
-                    />
-                  </li>
-                ))}
-              </RevenueCentersSelectList>
+              <>
+                {(orderType === 'OLO') &&
+                  //(serviceType === 'DELIVERY' || serviceType === 'PICKUP') &&
+                  (
+                  <RevenueCenterOrderTypeButtons revenueCenters={totalRevenueCenters}
+                                                 orderType={orderType}
+                                                 setShowLocations={setShowLocationsCallback}
+                                                 setDisplayedRevenueCenters={setDisplayedRevenueCenters}
+                                                 serviceType={serviceType}
+                  />
+                )}
+                {(
+                  //(serviceType !== 'DELIVERY' && serviceType !== 'PICKUP') ||
+                  showLocations) && (
+                  <RevenueCentersSelectList hasBox={hasBox}>
+                    {displayedRevenueCenters.map((revenueCenter) => (
+                      <li id={revenueCenter.slug} key={revenueCenter.revenue_center_id}>
+                        <RevenueCenter
+                          revenueCenter={revenueCenter}
+                          showImage={true}
+                        />
+                      </li>
+                    ))}
+                  </RevenueCentersSelectList>
+                )}
+              </>
             ) : (
               <div style={{ margin: '3rem auto 0' }}>
                 <ButtonStyled onClick={startOver}>Start Over</ButtonStyled>
@@ -279,6 +318,6 @@ RevenueCentersSelect.propTypes = {
   maps: propTypes.object,
   map: propTypes.object,
   sessionToken: propTypes.object,
-  autocomplete: propTypes.object,
+  autocomplete: propTypes.object
 }
 export default RevenueCentersSelect

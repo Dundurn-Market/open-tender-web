@@ -4,15 +4,17 @@ import styled from '@emotion/styled'
 import { useTheme } from '@emotion/react'
 import {
   addItemToCart,
-  selectMenu,
-  selectSelectedAllergenNames,
-  showNotification,
+  selectMenu, selectMenuSlug,
+  selectSelectedAllergenNames, setCurrentItem,
+  showNotification
 } from '@open-tender/redux'
 import { useBuilder, useOrderItem } from '@open-tender/hooks'
 import { ButtonStyled, CardMenuItem } from '@open-tender/components'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectDisplaySettings } from '../slices'
+import { openModal, selectDisplaySettings, setMenuPath, toggleSidebar, toggleSidebarModal } from '../slices'
 import { MenuItemButton, MenuItemOverlay, MenuItemTagAlert } from '.'
+import { slugify } from '@open-tender/js'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const UpsellItemView = styled(CardMenuItem)`
   position: relative;
@@ -52,12 +54,17 @@ const UpsellItemSizes = styled.div`
 
 const UpsellItem = ({ orderItem, addCallback, showDesc = true }) => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const theme = useTheme()
   const hasBox = theme.cards.menuItem.bgColor !== 'transparent'
   const [hasSize, setHasSize] = useState(false)
   const allergenAlerts = useSelector(selectSelectedAllergenNames)
   const { soldOut } = useSelector(selectMenu)
   const displaySettings = useSelector(selectDisplaySettings)
+
+  const { pathname } = useLocation()
+  const menuSlug = useSelector(selectMenuSlug)
+
   const { item: builtItem, toggleOption } = useBuilder(orderItem)
   const {
     name,
@@ -81,10 +88,27 @@ const UpsellItem = ({ orderItem, addCallback, showDesc = true }) => {
 
   const add = () => {
     if (!isIncomplete) {
-      dispatch(addItemToCart(builtItem))
-      dispatch(showNotification(`${builtItem.name} added to cart!`))
-      if (addCallback) addCallback()
+      if (builtItem.category === "Greeting Cards") { // A hack for giftcards to go directly to "Add a note"
+        dispatch(setMenuPath(pathname || menuSlug))
+        dispatch(setCurrentItem(builtItem))
+        navigate(`${menuSlug}/item/${slugify(name)}?freq=SINGLE`)
+        dispatch(toggleSidebar())
+      } else {
+        dispatch(addItemToCart(builtItem))
+        dispatch(showNotification(`${builtItem.name} added to cart!`))
+        if (addCallback) addCallback()
+      }
     }
+  }
+
+  const view = () => {
+
+
+      // } else if (builderType === 'SIDEBAR') {
+ //       dispatch(toggleSidebarModal())
+      // } else {
+ //        dispatch(openModal({ type: 'item', args: { focusFirst: true } }))
+      // }
   }
 
   const addSize = (optionId) => {

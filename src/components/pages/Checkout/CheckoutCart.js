@@ -12,13 +12,12 @@ import {
 import { formatQuantity } from '@open-tender/js'
 import {
   ButtonLink,
-  CartSummary,
   CheckSummary,
   Heading,
   Text,
 } from '@open-tender/components'
 import { toggleSidebar, selectSidebar } from '../../../slices'
-import { Loading } from '../..'
+import { CartSummary, Loading } from '../..'
 import { Star } from '../../icons'
 
 const CheckoutCartView = styled.div`
