@@ -12,7 +12,6 @@ import { MenuContext } from '../Menu/Menu'
 import CategoryBrowse from './CategoryBrowse'
 
 const MenuCategoryView = styled.div`
-  margin-top: ${(props) => props.theme.layout.navHeight};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     // margin-top: ${(props) => props.theme.layout.navHeightMobile};
     margin-top: 0;
@@ -43,7 +42,7 @@ const Category = () => {
         <MenuHeader backPath={menuSlug} />
         <Main>
           <ScreenreaderTitle>{category.name}</ScreenreaderTitle>
-          <CategoryBrowse />
+          {/*<CategoryBrowse />*/}
           {/* {navItems.length > 0 && <CategoryNav items={navItems} />} */}
           <MenuCategoryView>
             <MenuCategory category={category} />
