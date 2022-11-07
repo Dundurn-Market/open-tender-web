@@ -16,7 +16,7 @@ import styled from '@emotion/styled'
 import { RecurringItemImage } from './Recurrences'
 import Tag from '../../Tag'
 import { isoToDate } from '@open-tender/js/lib/datetimes'
-import { format } from 'date-fns'
+import { add, format } from 'date-fns'
 
 const OrderGroupCard = styled.div`
   margin-bottom: 3rem;
@@ -64,10 +64,12 @@ function RecurringOrderGroup({ order, recurrences, revenueCenter }) {
 
   const orderWindow = orderTimes.find(ot => ot.weekday === orderDay.toUpperCase())
   const orderByTime = orderWindow ? orderWindow.order_by.time : null;
-  const orderByDate = orderByTime ? minutesToDate(time24ToMinutes(orderByTime), isoToDate(order.requested_at, tz)) : null
+  const orderDate = isoToDate(order.requested_at, tz)
+  const orderByDate = orderByTime ? minutesToDate(time24ToMinutes(orderByTime), orderDate) : null
   const formattedOrderByDate = orderByDate ? format(orderByDate, "EEE, MMM dd 'at' HH:mm a") : null
 
   const isEditable = (!orderByDate || orderByDate > Date.now()) && order.is_editable
+  const isError = !isEditable && orderDate < add(Date.now(), {minutes: 30})
 
   const singleItems = order.cart.filter(i => !recurrences.find(r => i.id === r.item_id))
 
@@ -95,14 +97,18 @@ function RecurringOrderGroup({ order, recurrences, revenueCenter }) {
     <OrderGroupCard>
       <OrderGroupTag>
         { formattedOrderByDate && (
-          <Tag text={isEditable? `Edit By ${formattedOrderByDate}`:'No Longer Editable'}
-               bgColor={isEditable? 'success':'error'}
+          <Tag text={isEditable
+            ?`Edit By ${formattedOrderByDate}`
+            : isError
+              ? 'There has been an error renewing your order. please contact MRKTBOX to resolve this.'
+              : 'No Longer Editable'}
+               bgColor={isEditable? 'success': isError? 'error':'primary'}
           />
         )}
       </OrderGroupTag>
       <OrderGroupHeader>
         <div>
-          <OrderGroupTitle>Next {capitalize(order.service_type)} Order Scheduled on {readableDate}</OrderGroupTitle>
+          <OrderGroupTitle>{isError? 'Last':'Next'} {capitalize(order.service_type)} Order {isError?'Received':'Scheduled'} on {readableDate}</OrderGroupTitle>
           {order.address ? (
             <>
               <p>{order.address.street}, {order.address.city}</p>
@@ -132,6 +138,9 @@ function RecurringOrderGroup({ order, recurrences, revenueCenter }) {
           content={
             <>
               <p className='title'>{recurrence.item.name}{recurrence.isSkipped && <> - <b>SKIPPED</b></>}</p>
+              {recurrence.modifiers && recurrence.modifiers.map(m => (
+                <p>{m.name}: {m.opts.join(', ')}</p>
+              ))}
               <p>Quantity: {recurrence.quantity}</p>
               <p>Created on: {recurrence.created_at.split('T')[0]}</p>
               <p>Re-occurs: {getLongName(recurrence.frequency)} on {orderDay}s</p>

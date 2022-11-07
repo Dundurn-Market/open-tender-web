@@ -13,7 +13,7 @@ import {
 } from '../../index'
 import {
   fetchCustomerOrders,
-  fetchCustomerRecurrences, fetchLocations, selectCustomer, selectCustomerOrders,
+  fetchCustomerRecurrences, fetchGlobalMenuItems, fetchLocations, selectCustomer, selectCustomerOrders,
   selectCustomerRecurrences,
   selectCustomerRecurrencesLoadingStatus, selectGlobalMenuItems, selectRevenueCenters, selectTimezone, showNotification
 } from '@open-tender/redux'
@@ -71,6 +71,9 @@ const Recurrences = () => {
     if (!customerOrders.length) {
       dispatch(fetchCustomerOrders())
     }
+    if (menuItems.length === 0) {
+      dispatch(fetchGlobalMenuItems())
+    }
   }, [dispatch])
 
   const orderGroups = []
@@ -79,16 +82,37 @@ const Recurrences = () => {
     for (const recurrence of recurrences) {
       const item = menuItemsMap.get(recurrence.item_id)
       if (item) {
+        let modifiers = null
+        if (recurrence.groups && recurrence.groups.length) {
+          modifiers = []
+          for (let group of recurrence.groups) {
+            const modifierGroup = item.option_groups.find(g => g.id === group.id)
+            const options = []
+            for (let opt of group.options) {
+              let optName = modifierGroup.option_items.find(i => i.id === opt.id).short_name
+              if (optName) {
+                options.push(optName)
+              }
+            }
+
+            if (group && options.length) {
+              modifiers.push({name: modifierGroup.name, opts: options})
+            }
+          }
+
+          if (!modifiers.length) modifiers = null
+        }
+
         const orderGroup = orderGroups.find(g => g.order.order_id === recurrence.next_order_id)
         if (orderGroup) {
           const isSkipped = !orderGroup.order.cart.find(i => i.id === recurrence.item_id)
-          orderGroup.recurrences.push({ ...recurrence, item, isSkipped })
+          orderGroup.recurrences.push({ ...recurrence, item, isSkipped, modifiers })
         } else {
           const order = customerOrders.entities.find(order => order.order_id === recurrence.next_order_id)
           if (order) {
             const revenueCenter = revenueCenters.find(rc => rc.revenue_center_id === order.revenue_center.revenue_center_id)
             const isSkipped = !order.cart.find(i => i.id === recurrence.item_id)
-            orderGroups.push({ order, revenueCenter, recurrences: [{ ...recurrence, item, isSkipped }] })
+            orderGroups.push({ order, revenueCenter, recurrences: [{ ...recurrence, item, isSkipped, modifiers }] })
           } else {
             unconnectedRecurrences.push({ ...recurrence, item })
           }
