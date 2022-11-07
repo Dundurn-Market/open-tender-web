@@ -2,9 +2,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { selectOrder } from '@open-tender/redux'
 import {
+  makeReadableDateStrFromOrderWindow,
   makeRequestedAtStr,
   serviceTypeNamesMap,
-  timezoneMap,
+  timezoneMap
 } from '@open-tender/js'
 import { ButtonLink } from '@open-tender/components'
 import { openModal } from '../../../slices'
@@ -15,7 +16,7 @@ import CheckoutSectionTitle from './CheckoutSectionTitle'
 const CheckoutPickup = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { orderType, requestedAt, revenueCenter, serviceType, prepType } =
+  const { orderType, requestedAt, revenueCenter, serviceType, prepType, orderWindow } =
     useSelector(selectOrder)
 
   if (!revenueCenter) return null
@@ -25,7 +26,11 @@ const CheckoutPickup = () => {
   // const addressLine2 = `${city}, ${state} ${postal_code}`
   const firstTime = first_times ? first_times[serviceType] : {}
   const tz = timezone ? timezoneMap[timezone] : null
-  const requestedTime = tz ? makeRequestedAtStr(requestedAt, tz, true) : null
+  const requestedTime = tz ?
+    orderWindow ?
+      makeReadableDateStrFromOrderWindow(orderWindow, tz) :
+      makeRequestedAtStr(requestedAt, tz, true)
+    : null
   const isAsap = requestedTime === 'ASAP' && serviceType === 'PICKUP'
   const requestedTimeStr = isAsap ? 'Now' : requestedTime
   const waitTime = isAsap ? firstTime.wait_minutes || null : null

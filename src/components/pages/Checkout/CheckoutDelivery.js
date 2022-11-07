@@ -18,10 +18,10 @@ const CheckoutDelivery = () => {
   const { timezone, first_times } = revenueCenter || {}
   const firstTime = first_times ? first_times['DELIVERY'] : {}
   const tz = timezone ? timezoneMap[timezone] : null
-  const requestedTime = tz ?
-    orderWindow ?
-      makeReadableDateStrFromOrderWindow(orderWindow, tz) :
-      makeRequestedAtStr(requestedAt, tz, true)
+  const requestedTime = tz
+    ? orderWindow
+      ? makeReadableDateStrFromOrderWindow(orderWindow, tz)
+      : makeRequestedAtStr(requestedAt, tz, true)
     : null
   const isAsap = requestedTime === 'ASAP'
   const waitTime = isAsap ? firstTime.wait_minutes || null : null
