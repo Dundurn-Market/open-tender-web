@@ -33,6 +33,8 @@ import MenuItemAccordion from './MenuItemAccordion'
 import MenuItemFooter from './MenuItemFooter'
 import MenuItemGroups from './MenuItemGroups'
 import MenuItemUpsell from './MenuItemUpsell'
+import { imageTagnames } from '../Menu/MenuItem'
+import MenuItemTagImages from '../../MenuItemImageTags'
 
 const MenuItemView = styled.div`
   position: relative;
@@ -68,6 +70,18 @@ const MenuItemContent = styled.div`
     width: 100%;
     margin-bottom: ${(props) => props.footerHeight || '10rem'};
   }
+`
+
+const ImageContainer = styled.div`
+  position: relative;
+  width: 100%;
+`
+
+const TagImageContainer = styled.div`
+  position: absolute;
+  z-index: 3;
+  bottom: 4rem;
+  right: 5rem;
 `
 
 const MenuItem = () => {
@@ -112,6 +126,19 @@ const MenuItem = () => {
     setOptionQuantity,
   } = useBuilder(item || {})
 
+
+  let textTags = []
+  let imageTags = []
+  for (let tag of builtItem.tags) {
+    if (imageTagnames.includes(tag)) {
+      imageTags.push(tag) // push the image url
+    } else {
+      textTags.push(tag)
+    }
+  }
+  imageTags = imageTags.sort()
+  const builtItemNoImageTags = {...builtItem, tags: textTags}
+
   const [searchParams] = useSearchParams()
   const orderFrequencyFromUrl = searchParams.get("freq")
 
@@ -130,7 +157,7 @@ const MenuItem = () => {
     dispatch(setCurrentItem(null))
   }
 
-  const addItem = (builtItem) => {
+  const addItem = () => {
     const cartItem = { ...builtItem, frequency: orderFreq }
     if (cartItem.index === -1) delete cartItem.index
     dispatch(addItemToCart(cartItem))
@@ -178,11 +205,17 @@ const MenuItem = () => {
           <ScreenreaderTitle>{item.name}</ScreenreaderTitle>
           <MenuItemView>
             <MenuItemImage>
-              <BackgroundImage imageUrl={builtItem.imageUrl} />
+              <BackgroundImage imageUrl={builtItem.imageUrl}
+              children={imageTags.length !== 0 ? (
+                <TagImageContainer>
+                  <MenuItemTagImages tags={imageTags} imageSize={'7rem'}/>
+                </TagImageContainer>
+              ): null}
+              />
             </MenuItemImage>
             <MenuItemContent footerHeight={footerHeightRem}>
               <MenuItemHeader
-                builtItem={builtItem}
+                builtItem={builtItemNoImageTags}
                 decrementOption={decrementOption}
                 displaySettings={displaySettings}
                 pointsIcon={pointsIcon}

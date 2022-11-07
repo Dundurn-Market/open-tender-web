@@ -3,14 +3,17 @@ import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Body, Heading, Preface } from '@open-tender/components'
 import MenuItemImage from './MenuItemImage'
+import MenuItemTagImages from '../MenuItemImageTags'
 
 const MenuItemButtonView = styled.button`
+  position: relative;
   flex-grow: 1;
   display: block;
   text-align: left;
   width: 100%;
   margin: 0 0 1.3rem;
   cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+  padding-top: 2rem;
 
   .compact & {
     @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
@@ -167,7 +170,8 @@ const MenuItemTagsAllergens = styled.div`
 `
 
 const MenuItemTag = styled(Preface)`
-  font-size: ${(props) => props.theme.fonts.sizes.xxSmall};
+  font-family: "Full Mrkt Font";
+  font-size: ${(props) => props.theme.fonts.sizes.xSmall};
 `
 
 const MenuItemAllergen = styled(Preface)`
@@ -191,6 +195,13 @@ const MenuItemDescription = styled(Body)`
   }
 `
 
+const TagImageContainer = styled.div`
+  position: absolute;
+  z-index: 3;
+  top: -2rem;
+  left: 1rem;
+`
+
 const MenuItemButton = ({
   onClick,
   disabled,
@@ -202,6 +213,7 @@ const MenuItemButton = ({
   price,
   cals,
   tags,
+  imageTags,
   allergens,
 }) => {
   const theme = useTheme()
@@ -236,6 +248,11 @@ const MenuItemButton = ({
           {desc && <MenuItemDescription>{desc}</MenuItemDescription>}
         </MenuItemContent>
       </MenuItemContainer>
+      {imageTags && imageTags.length !== 0 && (
+        <TagImageContainer>
+          <MenuItemTagImages tags={imageTags} />
+        </TagImageContainer>
+      )}
     </MenuItemButtonView>
   )
 }

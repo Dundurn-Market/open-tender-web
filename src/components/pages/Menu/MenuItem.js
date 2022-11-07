@@ -27,12 +27,14 @@ import {
 import { MenuItemButton, MenuItemOverlay, MenuItemTagAlert } from '../..'
 import MenuItemCount from './MenuItemCount'
 import { subscriptionFreqOptions } from '../../../utils/recurringFrequencyUtils'
+import MenuItemTagImages from '../../MenuItemImageTags'
 const MenuItemView = styled(CardMenuItem)`
   position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  border: .5px solid ${(props) => props.theme.colors.success};
 `
 
 const MenuItemButtons = styled.div`
@@ -99,6 +101,13 @@ const MenuItemButtonsCustomize = styled.div`
   }`
       : ''}
 `
+
+export const imageTagnames = [
+  'Gluten-free',
+  'Organic',
+  'Plant Based',
+  'Local'
+]
 
 const MenuItem = ({
   item,
@@ -168,6 +177,17 @@ const MenuItem = ({
   const addDisabled = isIncomplete || isSoldOut
   const customizeIsPrimary = addDisabled && !isSoldOut
 
+  let textTags = []
+  let imageTags = []
+  for (let tag of displayTags) {
+    if (imageTagnames.includes(tag)) {
+      imageTags.push(tag) // push the image url
+    } else {
+      textTags.push(tag)
+    }
+  }
+  imageTags = imageTags.sort()
+
   const view = () => {
     if (!isSoldOut) {
       dispatch(setMenuPath(pathname || menuSlug))
@@ -221,7 +241,8 @@ const MenuItem = ({
         desc={displayDesc}
         price={displayPrice}
         cals={displayCals}
-        tags={displayTags}
+        tags={textTags}
+        imageTags={imageTags}
         allergens={displayAllergens}
       />
       {!showImage ? (
