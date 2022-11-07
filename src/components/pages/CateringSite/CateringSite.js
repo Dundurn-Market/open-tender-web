@@ -65,7 +65,7 @@ const CateringSite = () => {
   useEffect(() => {
     if (revenueCenterId) {
       dispatch(fetchAllergens())
-      dispatch(fetchMenu({ revenueCenterId, serviceType, requestedAt }))
+      dispatch(fetchMenu({ revenueCenterId, serviceType, requestedAt, skipCartValidate: true }))
     }
   }, [revenueCenterId, serviceType, requestedAt, dispatch])
 

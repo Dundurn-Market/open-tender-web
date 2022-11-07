@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { isBrowser, isMobile } from 'react-device-detect'
 import { scroller, Element } from 'react-scroll'
@@ -7,7 +7,7 @@ import styled from '@emotion/styled'
 import { dateToIso, slugify, weekdayAndTimeToDate } from '@open-tender/js'
 import {
   fetchAllergens,
-  fetchAnnouncementPage,
+  fetchAnnouncementPage, fetchLocations,
   fetchMenu,
   selectAnnouncementsPage,
   selectMenu, selectRevenueCenters, selectTimezone
@@ -39,8 +39,6 @@ export const MenuSiteCategories = styled.div`
   align-items: flex-start;
   flex-wrap: wrap;
   margin: 2rem 2rem 0;
-  padding: 2rem 0 0 2rem;
-  background-color: ${props => props.theme.bgColors.dark};
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     max-height: 60rem;
     overflow: scroll;
@@ -85,10 +83,10 @@ const MenuSite = () => {
     })
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (revenueCenterId) {
       dispatch(fetchAllergens())
-      dispatch(fetchMenu({ revenueCenterId, serviceType, requestedAt }))
+      dispatch(fetchMenu({ revenueCenterId, serviceType, requestedAt, skipCartValidate: true }))
     }
   }, [revenueCenterId, serviceType, requestedAt, dispatch])
 
@@ -145,16 +143,18 @@ const MenuSite = () => {
                   />
                 ))}
               </MenuSiteCategories>
-              <Element name="category">
-                <MenuSiteCategory category={category} />
-                {category.children.map((category) => (
-                  <MenuSiteCategory
-                    key={category.id}
-                    category={category}
-                    isChild={true}
-                  />
-                ))}
-              </Element>
+              {category && (
+                <Element name="category">
+                  <MenuSiteCategory category={category} />
+                  {category && (category.children.map((category) => (
+                    <MenuSiteCategory
+                      key={category.id}
+                      category={category}
+                      isChild={true}
+                    />
+                  )))}
+                </Element>
+              )}
             </Element>
           </MenuSiteView>
         </Main>
