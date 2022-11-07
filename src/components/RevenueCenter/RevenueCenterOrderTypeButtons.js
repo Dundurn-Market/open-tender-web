@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux'
 import { isMobileOnly } from 'react-device-detect'
 import {
   setOrderServiceType,
-  setAddress,
   setRevenueCenter, setRequestedAt
 } from '@open-tender/redux'
 import {  ButtonStyled } from '@open-tender/components'
@@ -85,7 +84,6 @@ export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
       setShowLocations(true)
       setDisplayedRevenueCenters(scheduledRevenueCenters)
     }
-
   }
 
   return (
@@ -95,11 +93,10 @@ export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
           label={`Schedule a delivery`}
           onClick={orderLater}
           size={isMobileOnly ? 'small' : 'default'}
-
         >
           Schedule Grocery {capitalize(serviceType)}
         </ButtonStyled>
-        <ReactTooltip id="scheduleButton" place='bottom' effect='solid' backgroundColor={theme.bgColors.dark}>
+        <ReactTooltip id="scheduleButton" place='bottom' effect='solid' backgroundColor={theme.bgColors.dark} disable={isMobileOnly}>
           Shop our entire grocery offering & setup subscriptions to your favorite local products.
         </ReactTooltip>
       </OrderTypeButtonContainer>
@@ -109,12 +106,11 @@ export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
             label={`Order Quick Delivery`}
             onClick={orderAsap}
             size={isMobileOnly ? 'small' : 'default'}
-
           >
             Order Quick Cafe {capitalize(serviceType)}
           </ButtonStyled>
-          <ReactTooltip id="asapButton" place='bottom' effect='solid' backgroundColor={theme.bgColors.dark}>
-            Place a quick cafe or grocery staples order.  Pickup orders ready in as little as 20 minutes and delivery in 1hr.
+          <ReactTooltip id="asapButton" place='bottom' effect='solid' backgroundColor={theme.bgColors.dark} disable={isMobileOnly}>
+            Place a quick cafe or grocery staples order. Pickup orders ready in as little as 20 minutes and delivery in 1hr.
           </ReactTooltip>
         </OrderTypeButtonContainer>
       )}

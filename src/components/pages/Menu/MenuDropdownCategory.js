@@ -90,7 +90,7 @@ const MenuBrowseCategoryTitle = styled(Heading)`
   }
 `
 
-const MenuDropdownCategory = ({ category, onClickOverride = null }) => {
+const MenuDropdownCategory = ({ category, onClickOverride = null, onClickCallback }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const menuSlug = useSelector(selectMenuSlug)
@@ -113,6 +113,7 @@ const MenuDropdownCategory = ({ category, onClickOverride = null }) => {
       dispatch(setCurrentCategory(category))
       navigate(`${menuSlug}/category/${slugify(category.name)}`)
     }
+    if (onClickCallback) onClickCallback()
   })
 
   return (

@@ -132,7 +132,7 @@ const HeaderSite = ({ useLight = true, style = null }) => {
 
   const visibleLinks = [...links]
   if (!auth) {
-    visibleLinks.push({ path: '/signup', title: 'Sign in' })
+    visibleLinks.push({ path: '/signup', title: 'Sign up' })
   }
 
   useEffect(() => {

@@ -146,7 +146,6 @@ const FooterOTLogo = styled.div`
   
   img {
     height: 9rem;
-    width: fit-content;
     margin-bottom: 1rem;
   }
 
