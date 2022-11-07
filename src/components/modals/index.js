@@ -13,11 +13,11 @@ import GiftCardAssignOther from './GiftCardAssignOther'
 import GroupOrder from './GroupOrder'
 import GroupOrderType from './GroupOrderType'
 import GroupOrderLeave from './GroupOrderLeave'
+import ItemModal from './ItemModal'
 import LevelUp from './LevelUp'
 import Login from './Login'
 import LoyaltyTier from './LoyaltyTier'
 import MapsAutocomplete from './MapsAutocomplete'
-import MenuItem from './MenuItem'
 import OrderRating from './OrderRating'
 import OrderType from './OrderType'
 import Points from './Points'
@@ -49,11 +49,11 @@ export {
   GroupOrder,
   GroupOrderType,
   GroupOrderLeave,
+  ItemModal,
   LevelUp,
   Login,
   LoyaltyTier,
   MapsAutocomplete,
-  MenuItem,
   OrderRating,
   OrderType,
   Points,

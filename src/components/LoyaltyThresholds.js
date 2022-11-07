@@ -38,7 +38,7 @@ const LoyaltyThresholdPoints = styled.div`
   justify-content: center;
   align-items: center;
   padding: 1rem 0;
-  color: ${(props) => props.theme.bgColors.success};
+  color: ${(props) => props.theme.bgColors.highlight};
   background-color: ${(props) => props.theme.bgColors.dark};
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     flex: 0 0 8rem;

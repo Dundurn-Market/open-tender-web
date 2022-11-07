@@ -23,12 +23,13 @@ const CheckoutCustomer = () => {
   const { has_thanx } = useSelector(selectBrand)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const { auth, profile } = useSelector(selectCustomer)
-  const { form, check, errors } = useSelector(selectCheckout)
+  const { form, check, errors, loading } = useSelector(selectCheckout)
   const { sso } = check ? check.customer || {} : {}
   const noCustomer = isEmpty(form.customer)
   const { customer_id, first_name, last_name, email, phone, company } =
     profile || {}
   const noCustomerId = customer_id && !form.customer.customer_id
+  const isLoading = !check && loading === 'pending'
   const showCustomer = check && profile
 
   useEffect(() => {
@@ -90,7 +91,11 @@ const CheckoutCustomer = () => {
 
   if (!auth) return null
 
-  return showCustomer ? (
+  return isLoading ? (
+    <CheckoutSection>
+      <Loading text="Loading..." style={{ textAlign: 'left' }} />
+    </CheckoutSection>
+  ) : showCustomer ? (
     <CheckoutSection title="Contact Info">
       <CheckoutSectionTitle>
         {first_name} {last_name}
@@ -107,7 +112,8 @@ const CheckoutCustomer = () => {
       {/* {check && <CheckoutCompany errors={errors} />} */}
     </CheckoutSection>
   ) : (
-    !isLoggingOut && !errors && (
+    !isLoggingOut &&
+    !errors && (
       <CheckoutSection>
         <Loading text="Retrieving your info..." style={{ textAlign: 'left' }} />
       </CheckoutSection>

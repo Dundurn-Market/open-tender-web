@@ -11,13 +11,12 @@ const AlertView = styled.li`
   margin: 1.3rem 0 0;
   line-height: 1;
   padding: 0.8rem 1rem 0.8rem 1.6rem;
-  border-radius: 0.5rem;
   transition: all 500ms ease;
   box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.25);
+  border-radius: ${(props) => props.theme.border.radiusSmall};
   font-size: ${(props) => props.theme.fonts.sizes.small};
-  color: ${(props) => props.theme.colors.light};
-  background-color: ${(props) => props.theme.colors.alert};
-  border-color: ${(props) => props.theme.colors.alert};
+  color: ${(props) => props.theme.alert.color};
+  background-color: ${(props) => props.theme.alert.bgColor};
 
   > span {
     display: flex;
@@ -30,7 +29,7 @@ const AlertView = styled.li`
       position: relative;
       display: block;
       flex-shrink: 0;
-      color: ${(props) => props.theme.colors.light};
+      color: ${(props) => props.theme.alert.color};
     }
 
     span {

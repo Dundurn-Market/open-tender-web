@@ -22,7 +22,6 @@ import {
   selectConfig,
   selectGeoLatLng,
   selectSettings,
-  selectTheme,
 } from '../../../slices'
 import {
   Container,
@@ -35,6 +34,7 @@ import {
 } from '../..'
 import LocationsMap from './LocationsMap'
 import LocationsAutocomplete from './LocationsAutocomplete'
+import { useTheme } from '@emotion/react'
 
 const LocationsView = styled.div`
   // padding: 0 ${(props) => props.theme.layout.padding};
@@ -96,7 +96,7 @@ const LocationsList = styled('ul')`
 
 const Locations = () => {
   const dispatch = useDispatch()
-  const theme = useSelector(selectTheme)
+  const { bgColors } = useTheme()
   const [, setError] = useState(null)
   const [locations, setLocations] = useState([])
   const brand = useSelector(selectBrand)
@@ -183,11 +183,7 @@ const Locations = () => {
                 styles={styles}
                 center={center}
                 loader={
-                  <ClipLoader
-                    size={30}
-                    loading={true}
-                    color={theme.bgColors.light}
-                  />
+                  <ClipLoader size={30} loading={true} color={bgColors.light} />
                 }
                 renderMap={(props) => <LocationsMap {...props} />}
               >

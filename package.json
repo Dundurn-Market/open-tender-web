@@ -1,12 +1,12 @@
 {
   "name": "open-tender-web",
-  "version": "4.2.41",
+  "version": "4.3.2",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
     "@google-pay/button-react": "^3.0.0",
-    "@open-tender/components": "^5.0.6",
+    "@open-tender/components": "^5.1.2",
     "@open-tender/hooks": "^1.0.1",
     "@open-tender/js": "file:/Users/adam/dev/open-tender-js/src",
     "@open-tender/redux": "file:/Users/adam/dev/open-tender-redux/src",
@@ -14,6 +14,7 @@
     "@sentry/react": "^7.11.1",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.5",
+    //TODO double check if this is necessary
     "date-fns": "^2.29.1",
     "date-fns-tz": "^1.3.6",
     "env-cmd": "^10.1.0",

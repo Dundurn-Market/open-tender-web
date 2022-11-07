@@ -18,7 +18,7 @@ export const ProgressPointsFill = styled.div`
   width: 0;
   height: 1.2rem;
   animation: fill-bar 0.5s ease-in-out 0.5s forwards;
-  background-color: ${(props) => props.theme.bgColors.success};
+  background-color: ${(props) => props.theme.bgColors.highlight};
 `
 
 export const ProgressPoint = styled.div`
@@ -53,7 +53,7 @@ export const ProgressPointCircle = styled.div`
   border-color: ${(props) => props.theme.border.color};
   background-color: ${(props) =>
     props.isFilled
-      ? props.theme.bgColors.success
+      ? props.theme.bgColors.highlight
       : props.theme.bgColors.primary};
 `
 

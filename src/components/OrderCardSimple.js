@@ -109,7 +109,7 @@ const OrderCardSimple = ({ order }) => {
     >
       <OrderCardSimpleView>
         <OrderCardSimpleTag>
-          {isUpcoming && <Tag text="Coming Up" icon={null} bgColor="alert" />}
+          {isUpcoming && <Tag text="Coming Up" icon={null} color="alert" />}
         </OrderCardSimpleTag>
         <OrderCardSimpleImage style={bgStyle} />
         <OrderCardSimpleContent>

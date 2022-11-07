@@ -31,6 +31,7 @@ import {
   Guest,
   Home,
   HouseAccounts,
+  Item,
   LevelUp,
   Locations,
   Loyalty,
@@ -39,7 +40,6 @@ import {
   MenuFavorites,
   MenuFeatured,
   MenuRecents,
-  MenuItem,
   MenuSite,
   NotFound,
   Order,
@@ -97,8 +97,8 @@ const AppRoutes = () => {
         <Route path="deals" element={<MenuDeals />} />
         <Route path="vendor/:vendorSlug" element={<Vendor />} />
         <Route path="category/:categorySlug" element={<Category />} />
-        <Route path="item/:itemSlug" element={<MenuItem />} />
         <Route path="search" element={<Search />} />
+        <Route path="item/:itemSlug" element={<Item />} />
       </Route>
       <Route path="join/:token" element={<GroupOrderGuest />} />
       <Route path="add-ons" element={<Upsell />} />

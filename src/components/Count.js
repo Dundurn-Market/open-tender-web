@@ -12,7 +12,7 @@ const CountView = styled.div`
   border-width: ${(props) => props.theme.counts.alerts.borderWidth};
   padding-top: ${(props) => props.theme.counts.alerts.paddingTop};
   padding-bottom: ${(props) => props.theme.counts.alerts.paddingBottom};
-  color: ${(props) => props.theme.counts.alerts.color};
+  color: ${(props) => props.color || props.theme.counts.alerts.color};
   border-color: ${(props) =>
     props.bgColor || props.theme.counts.alerts.borderColor};
   background-color: ${(props) =>
@@ -28,9 +28,10 @@ const CountCount = styled.span`
   font-size: ${(props) => props.theme.fonts.sizes[props.fontSize]};
 `
 
-const Count = ({ count, bgColor, size = 20, fontSize = 'xSmall' }) => {
+const Count = ({ count, color, bgColor, size = 20, fontSize = 'xSmall' }) => {
   return (
     <CountView
+      color={color}
       bgColor={bgColor}
       size={`${size / 10}rem`}
       radius={`${parseFloat(size / 20)}rem`}
@@ -43,7 +44,10 @@ const Count = ({ count, bgColor, size = 20, fontSize = 'xSmall' }) => {
 Count.displayName = 'Count'
 Count.propTypes = {
   count: propTypes.oneOfType([propTypes.number, propTypes.string]),
+  color: propTypes.string,
   bgColor: propTypes.string,
+  size: propTypes.number,
+  fontSize: propTypes.string,
 }
 
 export default Count

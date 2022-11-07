@@ -239,7 +239,7 @@ const Reward = ({ item }) => {
     <RewardButton onClick={redeem} label={`Apply ${reward.name}`}>
       <RewardView>
         <RewardTag>
-          {todayOnly && <Tag text="Today only!" icon={null} bgColor="alert" />}
+          {todayOnly && <Tag text="Today only!" icon={null} color="alert" />}
         </RewardTag>
         <RewardImage style={bgStyle} />
         <RewardContent>

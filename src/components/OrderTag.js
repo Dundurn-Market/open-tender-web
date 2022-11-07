@@ -14,24 +14,24 @@ const OrderTag = ({ isUpcoming, status }) => {
     ? {
         text: status === 'IN_PROGRESS' ? 'In Progress' : 'Coming up',
         icon: <AlertCircle />,
-        bgColor: 'alert',
+        color: 'alert',
       }
     : status === 'REFUNDED'
     ? {
         text: 'Refunded',
-        bgColor: 'error',
+        color: 'error',
       }
     : {
         text: 'Completed',
         icon: <CheckCircle />,
-        bgColor: 'success',
+        color: 'success',
       }
 
   if (tag.text === 'Completed') return null
 
   return (
     <OrderTagView>
-      <Tag text={tag.text} icon={tag.icon} bgColor={tag.bgColor} />
+      <Tag text={tag.text} icon={tag.icon} color={tag.color} />
     </OrderTagView>
   )
 }

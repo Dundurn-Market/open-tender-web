@@ -8,8 +8,12 @@ const TagView = styled('span')`
   padding: 0.5rem 1rem 0.5rem;
   border-radius: 1.5rem;
   line-height: 0;
-  color: ${(props) => props.theme.colors.light};
-  background-color: ${(props) => props.theme.colors[props.bgColor]};
+  // color: ${(props) => props.theme.colors.light};
+  // background-color: ${(props) => props.theme.colors[props.bgColor]};
+  color: ${(props) =>
+    props.color ? props.theme[props.color].color : props.theme.colors.light};
+  background-color: ${(props) =>
+    props.color ? props.theme[props.color].bgColor : props.theme.bgColors.dark};
 `
 
 const TagContainer = styled('span')`
@@ -31,20 +35,23 @@ const TagIcon = styled('span')`
   padding: 0;
   margin-right: 0.5rem;
   flex-shrink: 0;
+  color: ${(props) =>
+    props.color ? props.theme[props.color].color : props.theme.colors.light};
 `
 
 const TagText = styled(Preface)`
   font-size: ${(props) => props.theme.fonts.sizes.xSmall};
-  color: ${(props) => props.theme.colors.light};
+  color: ${(props) =>
+    props.color ? props.theme[props.color].color : props.theme.colors.light};
   line-height: 1.2;
 `
 
-const Tag = ({ text, icon, bgColor = 'secondary' }) => {
+const Tag = ({ text, icon, color }) => {
   return (
-    <TagView bgColor={bgColor}>
+    <TagView color={color}>
       <TagContainer>
-        {icon && <TagIcon>{icon}</TagIcon>}
-        <TagText>{text}</TagText>
+        {icon && <TagIcon color={color}>{icon}</TagIcon>}
+        <TagText color={color}>{text}</TagText>
       </TagContainer>
     </TagView>
   )

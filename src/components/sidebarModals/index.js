@@ -1,3 +1,3 @@
-import MenuItemSidebar from './MenuItemSidebar'
+import ItemSidebar from './ItemSidebar'
 
-export { MenuItemSidebar }
+export { ItemSidebar }

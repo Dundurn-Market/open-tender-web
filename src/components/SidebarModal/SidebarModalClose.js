@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import { ButtonStyled } from '@open-tender/components'
 
 import { toggleSidebarModal } from '../../slices'
-import { X } from '../../icons'
+import { X } from '../icons'
 
 const SidebarModalCloseX = styled('button')`
   position: absolute;

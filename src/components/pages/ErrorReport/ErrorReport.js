@@ -17,18 +17,18 @@ import {
 } from '../..'
 import styled from '@emotion/styled'
 
-const ErrorReportView = styled('div')`
+const ErrorReportView = styled.div`
   margin: ${(props) => props.theme.layout.padding} 0;
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     margin: ${(props) => props.theme.layout.paddingMobile} 0;
   }
 `
 
-const ErrorReportDetails = styled('div')`
+const ErrorReportDetails = styled.div`
   padding: 2rem;
   overflow-x: scroll;
-  color: ${(props) => props.theme.colors.error};
-  background-color: ${(props) => props.theme.bgColors.error};
+  color: ${(props) => props.theme.error.color};
+  background-color: ${(props) => props.theme.error.bgColor};
   border-radius: ${(props) => props.theme.border.radius};
   margin: ${(props) => props.theme.layout.padding} 0;
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {

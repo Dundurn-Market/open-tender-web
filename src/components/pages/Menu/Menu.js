@@ -30,6 +30,8 @@ import {
   selectIsGroupOrder,
   setIsGroupOrder,
 } from '../../../slices'
+import SidebarModal from '../../SidebarModal'
+import { ItemSidebar } from '../../sidebarModals'
 
 export const MenuContext = createContext(null)
 
@@ -140,6 +142,9 @@ const MenuPage = () => {
       >
         <Outlet />
       </MenuContext.Provider>
+      <SidebarModal>
+        <ItemSidebar />
+      </SidebarModal>
     </>
   )
 }

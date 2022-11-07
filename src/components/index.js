@@ -50,6 +50,7 @@ import LoyaltyStatus from './LoyaltyStatus'
 import LoyaltyThresholds from './LoyaltyThresholds'
 import Main from './Main'
 import MapsAutocomplete from './MapsAutocomplete'
+import MenuItem from './MenuItem'
 import MenuItemButton from './MenuItemButton'
 import MenuItemFavorite from './MenuItemFavorite'
 import MenuItemIngredients from './MenuItemIngredients'
@@ -168,6 +169,7 @@ export {
   LoyaltyThresholds,
   Main,
   MapsAutocomplete,
+  MenuItem,
   MenuItemButton,
   MenuItemFavorite,
   MenuItemIngredients,

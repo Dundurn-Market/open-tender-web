@@ -9,9 +9,6 @@ const QuantityView = styled.div`
   align-items: center;
   text-align: center;
   min-width: 9.2rem;
-  // min-height: 4rem;
-  // border-radius: 2rem;
-  // background-color: ${(props) => props.theme.bgColors.secondary};
 
   label {
     display: block;
@@ -43,7 +40,6 @@ const QuantityAdd = styled.button`
 const QuantityRemove = styled(QuantityAdd)`
   border-color: ${(props) => props.theme.colors.error};
   color: ${(props) => props.theme.colors.error};
-  // background-color: ${(props) => props.theme.bgColors.error};
 `
 
 const QuantityInput = styled.input`
@@ -51,6 +47,7 @@ const QuantityInput = styled.input`
   height: 2.4rem;
   border-radius: 1.2rem;
   padding: 0;
+  border: 0;
   line-height: 1;
   text-align: center;
   color: ${(props) => props.theme.colors.light};

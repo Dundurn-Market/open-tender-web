@@ -236,7 +236,6 @@ const makeGlobalStyles = (theme) => css`
 
   a {
     cursor: pointer;
-    // text-decoration: ${theme.links.textDecoration};
     transition: ${theme.links.transition};
     color: ${theme.links.primary.color};
     &:hover,
@@ -244,102 +243,6 @@ const makeGlobalStyles = (theme) => css`
     &:focus {
       color: ${theme.links.primary.hover};
     }
-  }
-
-  input,
-  textarea,
-  select {
-    width: 100%;
-    line-height: ${theme.inputs.lineHeight};
-    padding: ${theme.inputs.padding};
-    padding-bottom: ${theme.inputs.paddingBottom};
-    border: ${theme.inputs.bottomBorderOnly
-      ? '0'
-      : `${theme.inputs.borderWidth} solid ${theme.inputs.borderColor}`};
-    border-bottom: ${theme.inputs.borderWidth} solid ${theme.inputs.borderColor};
-    border-radius: ${theme.inputs.bottomBorderOnly
-      ? '0'
-      : `${theme.inputs.radius}`};
-    font-family: ${theme.inputs.family};
-    font-size: ${theme.inputs.fontSize};
-    font-weight: ${theme.inputs.weight};
-    letter-spacing: ${theme.inputs.letterSpacing};
-    text-transform: ${theme.inputs.textTransform};
-    -webkit-font-smoothing: ${theme.inputs.fontSmoothing};
-    color: ${theme.inputs.color};
-    background-color: ${theme.inputs.bottomBorderOnly
-      ? 'transparent'
-      : `${theme.inputs.bgColor}`};
-    box-shadow: ${theme.inputs.boxShadow};
-    transition: ${theme.links.transition};
-    @media (max-width: ${theme.breakpoints.tablet}) {
-      font-size: ${theme.inputs.fontSizeMobile};
-    }
-
-    &::placeholder {
-      color: ${theme.inputs.placeholderColor};
-    }
-
-    &::selection {
-      color: ${theme.colors.light};
-      background-color: ${theme.inputs.color};
-    }
-
-    &:active,
-    &:focus {
-      color: ${theme.inputs.colorFocus};
-      background-color: ${theme.inputs.bgColorFocus};
-      border-color: ${theme.inputs.borderColorFocus};
-    }
-
-    &:disabled,
-    &:read-only {
-      cursor: default;
-      opacity: 0.5;
-      color: ${theme.inputs.color};
-      background-color: ${theme.inputs.bgColor};
-      border-color: ${theme.inputs.borderColor};
-    }
-  }
-
-  input,
-  textarea {
-    box-shadow: ${theme.inputs.boxShadow};
-
-    &:active,
-    &:focus {
-      box-shadow: ${theme.inputs.boxShadow};
-    }
-  }
-
-  textarea {
-    border: ${theme.inputs.borderWidth} solid ${theme.inputs.borderColor};
-    border-radius: ${theme.inputs.radius};
-    padding-top: ${theme.inputs.paddingVertical};
-    padding-bottom: ${theme.inputs.paddingVertical};
-    padding-left: ${theme.inputs.paddingVertical} !important;
-    padding-right: ${theme.inputs.paddingVertical};
-    height: 5em;
-  }
-
-  select {
-    position: relative;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    cursor: pointer;
-  }
-
-  select:read-only {
-    opacity: 1;
-    cursor: pointer;
-    background-color: ${theme.inputs.bottomBorderOnly
-      ? 'transparent'
-      : `${theme.inputs.bgColor}`};
-    border: ${theme.inputs.bottomBorderOnly
-      ? '0'
-      : `${theme.inputs.borderWidth} solid ${theme.inputs.borderColor}`};
-    border-bottom: ${theme.inputs.borderWidth} solid ${theme.inputs.borderColor};
   }
 
   @keyframes fade-in {

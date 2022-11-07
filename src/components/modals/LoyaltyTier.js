@@ -65,7 +65,7 @@ const LoyaltyTier = ({ tier }) => {
           {tier.discount ? (
             <TierDiscount>
               <TierTagView>
-                <Tag icon={<Award />} text="Reward" bgColor="dark" />
+                <Tag icon={<Award />} text="Reward" />
               </TierTagView>
               <Heading as="p">{tier.discount.title}</Heading>
               <p>{tier.discount.description}</p>

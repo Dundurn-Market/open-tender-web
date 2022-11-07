@@ -9,12 +9,12 @@ const MenuItemPriceCalsView = styled.span`
 `
 
 const MenuItemPrice = styled(Heading)`
-  line-height: 1;
+  // line-height: 1;
   font-size: ${(props) => props.theme.fonts.sizes[props.size]};
 `
 
 const MenuItemCals = styled(Body)`
-  line-height: 1;
+  // line-height: 1;
   font-size: ${(props) => props.theme.fonts.sizes[props.size]};
 
   span {

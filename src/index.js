@@ -30,6 +30,8 @@ Sentry.init({
     "Either header 'client-id' or 'origin' is required",
     'Object Not Found Matching',
     'Map: Expected mapDiv of type HTMLElement but was passed null.',
+    "Can't find variable: adroll",
+    'adroll is not defined',
   ],
 })
 

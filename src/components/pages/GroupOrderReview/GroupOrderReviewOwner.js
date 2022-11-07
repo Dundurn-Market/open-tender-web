@@ -92,7 +92,6 @@ const GroupOrderReviewOwner = () => {
     serviceType,
   } = groupOrder
   const prevGroupCart = usePrevious(groupCart)
-  console.log(guestCartLookup)
 
   useEffect(() => {
     dispatch(fetchMenuItems({ revenueCenterId, serviceType }))

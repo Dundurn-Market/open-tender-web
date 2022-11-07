@@ -72,6 +72,7 @@ const CheckoutCreditCards = ({ apply, remove, isPaid }) => {
           <CheckoutButton
             key={customer_card_id}
             icon={<img src={cardIconMap[card_type]} alt={card_type_name} />}
+            // icon={cardIconMap[card_type]}
             title={title}
             subtitle={subtitle}
             onPress={onPress}

@@ -9,7 +9,7 @@ import { Heart } from './icons'
 
 const MenuItemFavoriteView = styled.button`
   padding: 0.5rem;
-  opacity: ${(props) => (props.disabled ? '0.3' : '1')};
+  opacity: ${(props) => (props.disabled ? '0.2' : '1')};
 `
 
 const MenuItemFavoriteContainer = styled.div`

@@ -279,11 +279,15 @@ const Checkout = () => {
               </CheckoutTitle>
               <CheckoutInfo>
                 {auth ? <CheckoutCustomer /> : <CheckoutGuest />}
-                {['WALKIN', 'PICKUP'].includes(serviceType) ? (
-                  <CheckoutPickup />
-                ) : serviceType === 'DELIVERY' ? (
-                  <CheckoutDelivery />
-                ) : null}
+                {check && (
+                  <>
+                    {['WALKIN', 'PICKUP'].includes(serviceType) ? (
+                      <CheckoutPickup />
+                    ) : serviceType === 'DELIVERY' ? (
+                      <CheckoutDelivery />
+                    ) : null}
+                  </>
+                )}
               </CheckoutInfo>
               {formTitle && (
                 <CheckoutSection title={formTitle} style={{ padding: '0' }}>

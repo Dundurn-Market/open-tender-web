@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
 import { selectCheckout } from '@open-tender/redux'
 import { ButtonLink } from '@open-tender/components'
+import { Loading } from '../..'
 import CheckoutSection from './CheckoutSection'
 import CheckoutSectionFootnote from './CheckoutSectionFootnote'
 import CheckoutSectionTitle from './CheckoutSectionTitle'
 
 const CheckoutGuest = () => {
   const navigate = useNavigate()
-  const { form, check } = useSelector(selectCheckout)
+  const { form, check, loading } = useSelector(selectCheckout)
   const { first_name, last_name, email, phone } = form.customer
 
   const updateInfo = () => {
@@ -28,7 +29,10 @@ const CheckoutGuest = () => {
           <ButtonLink onClick={updateInfo}>Update your contact info</ButtonLink>
         </p>
       </CheckoutSectionFootnote>
-      {/* {check && <CheckoutCompany errors={errors} />} */}
+    </CheckoutSection>
+  ) : loading === 'pending' ? (
+    <CheckoutSection>
+      <Loading text="Loading..." style={{ textAlign: 'left' }} />
     </CheckoutSection>
   ) : null
 }

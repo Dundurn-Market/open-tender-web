@@ -32,9 +32,9 @@ const MenuItemOverlay = ({ isSoldOut, allergenAlert }) => {
   const color = isSoldOut ? 'dark' : 'alert'
 
   const itemTag = isSoldOut ? (
-    <Tag icon={<Slash />} text={soldOutMsg} bgColor="alert" />
+    <Tag icon={<Slash />} text={soldOutMsg} color="alert" />
   ) : allergenAlert ? (
-    <Tag icon={<AlertCircle />} text={allergenAlert} bgColor="alert" />
+    <Tag icon={<AlertCircle />} text={allergenAlert} color="alert" />
   ) : null
 
   return itemTag ? (

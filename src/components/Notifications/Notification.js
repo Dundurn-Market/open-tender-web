@@ -12,11 +12,11 @@ const NotificationView = styled('li')`
   line-height: 1.2;
   padding: 0.8rem 1.6rem;
   transition: all 500ms ease;
-  border-radius: 0.5rem;
   box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.25);
+  border-radius: ${(props) => props.theme.border.radiusSmall};
   font-size: ${(props) => props.theme.fonts.sizes.small};
-  color: ${(props) => props.theme.colors.toast};
-  background-color: ${(props) => props.theme.bgColors.toast};
+  color: ${(props) => props.theme.toast.color};
+  background-color: ${(props) => props.theme.toast.bgColor};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     float: left;
     clear: left;

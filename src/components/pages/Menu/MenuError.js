@@ -8,8 +8,8 @@ const MenuErrorView = styled('div')`
   padding: 3rem;
   margin: 3rem auto;
   text-align: center;
-  color: ${(props) => props.theme.colors.error};
-  background-color: ${(props) => props.theme.bgColors.error};
+  color: ${(props) => props.theme.error.color};
+  background-color: ${(props) => props.theme.error.bgColor};
   border-radius: ${(props) => props.theme.border.radius};
   opacity: 0;
   animation: slide-up 0.25s ease-in-out 0.125s forwards;
