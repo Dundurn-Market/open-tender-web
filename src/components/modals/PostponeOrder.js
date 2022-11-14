@@ -1,7 +1,7 @@
 import { ModalContent, ModalView } from '../Modal'
 import { ButtonStyled, SelectOnly } from '@open-tender/components'
-import { closeModal, toggleSidebar } from '../../slices'
-import React, { useEffect, useState } from 'react'
+import { closeModal } from '../../slices'
+import React, {  useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   editOrder,
@@ -9,11 +9,10 @@ import {
   resetOrder,
   selectTimezone,
   setRequestedAt,
-  setSubmitting, showNotification,
+  setSubmitting,
   submitOrder
 } from '@open-tender/redux'
-import { dateToIso, isoToDateStr } from '@open-tender/js'
-import { format, parseISO } from 'date-fns'
+import { adjustIso, dateToIso, isoToDateStr } from '@open-tender/js'
 import { isoToDate } from '@open-tender/js/lib/datetimes'
 import styled from '@emotion/styled'
 
@@ -39,9 +38,10 @@ const PostponeOrder = ({ order }) => {
     {name: '1 Week', value: '1'},
     {name: '2 Weeks',  value: '2'},
     {name: '3 Weeks', value: '3'},
+    {name: '4 Weeks', value: '4'},
   ]
 
-  const maxDate = new Date().setDate(new Date().getDate() + 28)
+  const maxDate = new Date().setDate(new Date().getDate() + 31)
 
   let availableOptions = []
   for (const opt of postponeOptions) {
@@ -52,7 +52,7 @@ const PostponeOrder = ({ order }) => {
   }
 
   const [weeks, setWeeks] = useState(1)
-  const date = new Date(isoToDate(order.requested_at, tz).getTime() + weeks * 6.048e+8)
+  const date = adjustIso(order.requested_at, tz, {weeks})
 
   const postponeOrder = async () => {
     await dispatch(editOrder(order, false))
@@ -67,13 +67,7 @@ const PostponeOrder = ({ order }) => {
 
   const setPostponeWeeks = (event) => {
     const weekInt = parseInt(event.target.value)
-    const postponedDate = new Date(isoToDate(order.requested_at, tz).getTime() + weekInt * 6.048e+8)
-
-    if (postponedDate < maxDate) {
-      setWeeks(weekInt)
-    } else {
-      dispatch(showNotification('Too far in the future!'))
-    }
+    setWeeks(weekInt)
   }
 
   return (
@@ -87,7 +81,7 @@ const PostponeOrder = ({ order }) => {
             </p>
             <SelectOnly value={weeks} onChange={setPostponeWeeks} options={availableOptions} />
             <p>
-              The order will be rescheduled for {format(date, 'EEEE, MMMM dd')}
+              The order will be rescheduled for {isoToDateStr(date, tz, 'EEEE, MMMM dd')}
             </p>
           </PostponeBody>
           ) : (
