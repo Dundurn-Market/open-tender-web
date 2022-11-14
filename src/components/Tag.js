@@ -8,12 +8,10 @@ const TagView = styled('span')`
   padding: 0.5rem 1rem 0.5rem;
   border-radius: 1.5rem;
   line-height: 0;
-  // color: ${(props) => props.theme.colors.light};
-  // background-color: ${(props) => props.theme.colors[props.bgColor]};
-  color: ${(props) =>
-    props.color ? props.theme[props.color].color : props.theme.colors.light};
-  background-color: ${(props) =>
-    props.color ? props.theme[props.color].bgColor : props.theme.bgColors.dark};
+  color: ${(props) => props.theme.colors.light};
+  background-color: ${(props) => props.theme.colors[props.bgColor]};
+  // color: ${(props) => props.color ? props.theme[props.color].color : props.theme.colors.light};
+  // background-color: ${(props) => props.color ? props.theme[props.color].bgColor : props.theme.bgColors.dark};
 `
 
 const TagContainer = styled('span')`
@@ -35,23 +33,21 @@ const TagIcon = styled('span')`
   padding: 0;
   margin-right: 0.5rem;
   flex-shrink: 0;
-  color: ${(props) =>
-    props.color ? props.theme[props.color].color : props.theme.colors.light};
+  color: ${(props) => props.color ? props.theme[props.color].color : props.theme.colors.light};
 `
 
 const TagText = styled(Preface)`
   font-size: ${(props) => props.theme.fonts.sizes.xSmall};
-  color: ${(props) =>
-    props.color ? props.theme[props.color].color : props.theme.colors.light};
+  color: ${(props) => props.color ? props.theme[props.color].color : props.theme.colors.light};
   line-height: 1.2;
 `
 
-const Tag = ({ text, icon, color }) => {
+const Tag = ({ text, icon, bgColor }) => {
   return (
-    <TagView color={color}>
+    <TagView bgColor={bgColor}>
       <TagContainer>
-        {icon && <TagIcon color={color}>{icon}</TagIcon>}
-        <TagText color={color}>{text}</TagText>
+        {icon && <TagIcon>{icon}</TagIcon>}
+        <TagText>{text}</TagText>
       </TagContainer>
     </TagView>
   )
