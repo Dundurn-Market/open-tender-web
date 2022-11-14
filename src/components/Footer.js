@@ -171,7 +171,7 @@ const Footer = ({ hasRouter = true }) => {
             <FooterNav>
               {logoLight && (
                 <>
-                  <FooterLogo href={'/'} rel="noopener noreferrer">
+                  <FooterLogo href={'/about'} rel="noopener noreferrer">
                     MRKTBOX
                     {/*<img src={logoLight} alt="logo" />*/}
                   </FooterLogo>

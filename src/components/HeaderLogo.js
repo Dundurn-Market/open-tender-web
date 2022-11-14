@@ -23,7 +23,7 @@ const HeaderLogo = ({ useLight = false }) => {
   return (
     <HeaderLogoLink
       isMobile={isMobile}
-      href={'/'}
+      href={'/about'}
       rel="noopener noreferrer"
     >
       <img src={logoUrl} alt="logo" />

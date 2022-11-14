@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { useTheme } from '@emotion/react'
 import { isMobile } from 'react-device-detect'
-import { selectCustomer } from '@open-tender/redux'
+import { selectCustomer, selectOrder } from '@open-tender/redux'
 import { ButtonStyled } from '@open-tender/components'
 import { selectBrand } from '../slices'
 import { NavSiteMenu, User } from './buttons'
@@ -129,6 +129,8 @@ const HeaderSite = ({ useLight = true, style = null }) => {
   const logoUrl = useLight || stuck ? logoLight : logo
   const theme = useTheme()
   const { auth } = useSelector(selectCustomer)
+  const { revenueCenter, serviceType, cart } = useSelector(selectOrder)
+  const isCurrentOrder = revenueCenter && serviceType && cart.length > 0
 
   const visibleLinks = [...links]
   if (!auth) {
@@ -186,13 +188,18 @@ const HeaderSite = ({ useLight = true, style = null }) => {
                       </li>
                     ))}
                   </HeaderSiteLinks>
+                  {auth && (
+                    <HeaderSiteNavUser onClick={() => navigate('/account')} style={{marginRight:'2rem'}}>
+                      <User />
+                    </HeaderSiteNavUser>
+                  )}
                   <HeaderSiteNavButton>
                     <ButtonStyled
                       color="light"
                       size="small"
-                      onClick={() => navigate('/order-type')}
+                      onClick={() => navigate(isCurrentOrder? `/menu/${revenueCenter.slug}`:'/order-type')}
                     >
-                      Order Now
+                      {isCurrentOrder ? 'Continue Order':'Order Now'}
                     </ButtonStyled>
                   </HeaderSiteNavButton>
                 </>

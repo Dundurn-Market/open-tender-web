@@ -30,7 +30,8 @@ const Home = () => {
   }, [dispatch])
 
   useEffect(() => {
-    navigate('/about')
+    if (auth) navigate('/account')
+    else navigate('/about')
   }, [navigate, auth])
 
   useEffect(() => {
