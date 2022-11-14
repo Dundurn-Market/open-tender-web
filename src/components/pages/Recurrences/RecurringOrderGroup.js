@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { editOrder, selectRevenueCenters, selectTimezone } from '@open-tender/redux'
+import { editOrder, selectTimezone } from '@open-tender/redux'
 import {
   capitalize,
   isoToDateStr,
@@ -63,13 +63,15 @@ function RecurringOrderGroup({ order, recurrences, revenueCenter }) {
   const orderTimes = revenueCenter.order_times[order.service_type]
 
   const orderWindow = orderTimes.find(ot => ot.weekday === orderDay.toUpperCase())
-  const orderByTime = orderWindow ? orderWindow.order_by.time : null;
+  //This ternary avoids a bug where an order window starting 1 week from today on the
+  //same day won't show up, so we just need to fake it and grab the first window
+  const orderByTime = (orderWindow ? orderWindow : orderTimes[0]).order_by.time;
   const orderDate = isoToDate(order.requested_at, tz)
   const orderByDate = orderByTime ? minutesToDate(time24ToMinutes(orderByTime), orderDate) : null
-  const formattedOrderByDate = orderByDate ? format(orderByDate, "EEE, MMM dd 'at' HH:mm a") : null
+  const formattedOrderByDate = orderByDate? format(orderByDate, "EEE, MMM dd 'at' HH:mm a"):null
 
   const isEditable = (!orderByDate || orderByDate > Date.now()) && order.is_editable
-  const isError = !isEditable && orderDate < add(Date.now(), {minutes: 30})
+  const isError = !isEditable && orderDate < add(Date.now(), {minutes: -30})
 
   const singleItems = order.cart.filter(i => !recurrences.find(r => i.id === r.item_id))
 
@@ -167,7 +169,7 @@ function RecurringOrderGroup({ order, recurrences, revenueCenter }) {
               </ButtonStyled>
             </>
           }
-          style={recurrence.isSkipped ? {opacity: .65} : null}
+          style={recurrence.isSkipped ? {backgroundColor: 'rgba(255, 255, 255, .3)'} : null}
         />
       ))}
       {singleItems.length > 0 && (
