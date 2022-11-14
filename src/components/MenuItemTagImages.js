@@ -1,5 +1,4 @@
 import propTypes from 'prop-types'
-import MenuItemOverlay from './MenuItemOverlay'
 import styled from '@emotion/styled'
 import gfTag from '../assets/GF-01.png'
 import localTag from '../assets/LOCAL-01.png'
@@ -26,7 +25,7 @@ const MenuItemTagImages = ({tags, imageSize = null}) => {
   return (
     <MenuItemImageTagsView imageSize={imageSize} >
       {tags.map(tag => (
-        <img src={tagMapping[tag]}/>
+        <img key={tag} src={tagMapping[tag]}/>
       ))}
     </MenuItemImageTagsView>
   )

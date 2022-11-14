@@ -13,10 +13,9 @@ import {
 import { ChevronDown, ChevronUp } from '../icons'
 import { MenuItemIngredients, MenuItemNutrition, MenuItemPriceCals } from '..'
 import MenuItemQuantity from './MenuItemQuantity'
-import { subscriptionFreqOptions } from '../../../utils/recurringFrequencyUtils'
+import { subscriptionFreqOptions } from '../../utils/recurringFrequencyUtils'
 import { useSelector } from 'react-redux'
 import { selectOrder, selectOrderType, selectRevenueCenter, selectToken } from '@open-tender/redux'
-import { selectRequestedAt } from '@open-tender/redux/selectors/order'
 
 const MenuItemAccordionView = styled.div`
   padding: ${(props) => props.theme.item.desktop.padding};

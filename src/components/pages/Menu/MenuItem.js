@@ -27,7 +27,6 @@ import {
 import { MenuItemButton, MenuItemOverlay, MenuItemTagAlert } from '../..'
 import MenuItemCount from './MenuItemCount'
 import { subscriptionFreqOptions } from '../../../utils/recurringFrequencyUtils'
-import MenuItemTagImages from '../../MenuItemImageTags'
 const MenuItemView = styled(CardMenuItem)`
   position: relative;
   flex: 1;

@@ -42,8 +42,9 @@ const ItemPageImage = styled.div`
 `
 
 const ItemPageContent = styled.div`
-  flex: 0 0 ${(props) => props.theme.item.desktop.maxWidth};
-  width: ${(props) => props.theme.item.desktop.maxWidth};
+
+  flex: 0 0 100%;
+  width: 100%;
   height: 100%;
   overflow: hidden;
   background-color: ${(props) => props.theme.bgColors.primary};

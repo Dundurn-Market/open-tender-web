@@ -3,7 +3,7 @@ import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Body, Heading, Preface } from '@open-tender/components'
 import MenuItemImage from './MenuItemImage'
-import MenuItemTagImages from '../MenuItemImageTags'
+import { MenuItemTagImages } from '..'
 
 const MenuItemButtonView = styled.button`
   position: relative;
