@@ -13,8 +13,6 @@ import { selectMenuSlug } from '@open-tender/redux'
 
 const SearchContainer = styled.div`
   margin: 5rem 30%;
-  display: flex;
-  justify-content: center;
   position: relative;
 
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
@@ -33,6 +31,7 @@ const SearchBar = styled.input`
   border-radius: 6px;
   border: .1rem  solid ${(props) => props.theme.border.color};
   border-bottom: .2rem solid ${(props) => props.theme.border.color};
+  width: 100%;
   
   :focus {
     outline: none;
