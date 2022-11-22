@@ -76,7 +76,7 @@ const SearchButton = styled.button`
   border:2px solid black;  /* ${(props) => props.theme.border.color}; */
   padding: .5rem 2rem;
   
-  background-color: ${(props) => props.isSearchPage? props.theme.bgColors.toast : 'transparent' };
+  background-color: ${(props) => props.isSearchPage? props.theme.colors.success : 'transparent' };
   color: ${(props) => props.isSearchPage? 'white':'black' };
   display: flex;
   align-items: center;
