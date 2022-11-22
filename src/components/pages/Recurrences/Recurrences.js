@@ -14,14 +14,13 @@ import {
 import {
   fetchCustomerOrders,
   fetchCustomerRecurrences, fetchGlobalMenuItems, fetchLocations, selectCustomer, selectCustomerOrders,
-  selectCustomerRecurrences,
-  selectCustomerRecurrencesLoadingStatus, selectGlobalMenuItems, selectRevenueCenters, selectTimezone, showNotification
+  selectCustomerRecurrences, selectGlobalMenuItems, selectRevenueCenters, selectTimezone, showNotification
 } from '@open-tender/redux'
 import { useDispatch, useSelector } from 'react-redux'
-import { BgImage, ButtonLink, ButtonStyled } from '@open-tender/components'
+import { BgImage, ButtonStyled } from '@open-tender/components'
 import styled from '@emotion/styled'
 import { openModal} from '../../../slices'
-import { isoToDateStr } from '@open-tender/js'
+import { isDateOld, isoToDateStr } from '@open-tender/js'
 import { parseISO } from 'date-fns'
 import { getLongName } from '../../../utils'
 import RecurringOrderGroup from './RecurringOrderGroup'
@@ -43,13 +42,13 @@ const Recurrences = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const recurrences = useSelector(selectCustomerRecurrences)
-  const loading = useSelector(selectCustomerRecurrencesLoadingStatus)
+  const {entities: recurrences, loading, last_updated} = useSelector(selectCustomerRecurrences)
   const isLoading = loading === 'pending'
   const { entities: menuItems } = useSelector(selectGlobalMenuItems)
   const customerOrders = useSelector(selectCustomerOrders)
   const { auth } = useSelector(selectCustomer)
-  const { revenueCenters } = useSelector(selectRevenueCenters)
+  const { revenueCenters, last_updated: revenueCentersLastUpdated } = useSelector(selectRevenueCenters)
+  const tz = useSelector(selectTimezone)
 
   const menuItemsMap = new Map(menuItems.map(item => [item.id, item]))
 
@@ -59,13 +58,10 @@ const Recurrences = () => {
 
   useEffect(() => {
     if (!auth) return navigate('/guest')
-  }, [auth, navigate])
-
-  useLayoutEffect(() => {
-    if (!recurrences.length) {
+    if (!recurrences.length || !last_updated || isDateOld(last_updated)) {
       dispatch(fetchCustomerRecurrences())
     }
-    if (!revenueCenters.length) {
+    if (!revenueCenters.length || !revenueCentersLastUpdated || isDateOld(revenueCentersLastUpdated)) {
       dispatch(fetchLocations({type: 'OLO'}))
     }
     if (!customerOrders.length) {
@@ -74,7 +70,7 @@ const Recurrences = () => {
     if (menuItems.length === 0) {
       dispatch(fetchGlobalMenuItems())
     }
-  }, [dispatch])
+  }, [])
 
   const orderGroups = []
   const unconnectedRecurrences = []
