@@ -150,7 +150,7 @@ const RevenueCentersSelect = () => {
   const [showLocations, setShowLocations] = useState(false)
   const isLoading = loading === 'pending'
   const missingAddress = serviceType === 'DELIVERY' && !address
-  const hasCount = displayedRevenueCenters && displayedRevenueCenters.length > 0
+  const hasCount = totalRevenueCenters && totalRevenueCenters.length
   const showRevenueCenters = hasCount && !isLoading && !error && !missingAddress
   const names = locationName[isOutpost ? 'OUTPOST' : serviceType]
   const renamedTitle = renameLocation(title, names)
@@ -199,10 +199,10 @@ const RevenueCentersSelect = () => {
       setTitle(title)
       setMsg(msg)
       setError(error)
-      setDisplayedRevenueCenters(displayed)
       setTotalRevenueCenters(displayed)
 
       if (orderType !== 'OLO') { // AKA if its catering
+        setDisplayedRevenueCenters(displayed)
         if (serviceType === 'PICKUP') {
           setShowLocationsCallback(true)
         } else {
