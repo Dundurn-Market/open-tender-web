@@ -13,6 +13,7 @@ global.appVersion = packageJson.version
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
   environment: process.env.NODE_ENV,
+  release: process.env.npm_package_version,
   ignoreErrors: [
     'TypeError: Failed to fetch',
     'TypeError: NetworkError when attempting to fetch resource.',
