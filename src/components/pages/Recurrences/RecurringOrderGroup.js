@@ -15,7 +15,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { RecurringItemImage } from './Recurrences'
 import Tag from '../../Tag'
-import { isoToDate } from '@open-tender/js/lib/datetimes'
+import { isoToDate } from '@open-tender/js'
 import { add, format } from 'date-fns'
 
 const OrderGroupCard = styled.div`
@@ -34,7 +34,7 @@ const OrderGroupHeader = styled.div`
   p {
     margin-bottom: .2rem;
   }
-  
+
   button:not(:last-child) {
     margin: 0 1rem 0.5rem 0;
   }

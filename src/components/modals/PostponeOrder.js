@@ -13,7 +13,7 @@ import {
   submitOrder
 } from '@open-tender/redux'
 import { adjustIso, dateToIso, isoToDateStr } from '@open-tender/js'
-import { isoToDate } from '@open-tender/js/lib/datetimes'
+import { isoToDate } from '@open-tender/js'
 import styled from '@emotion/styled'
 
 
@@ -22,11 +22,11 @@ const PostponeBody = styled.div`
     width: 50%;
     margin: .5rem 0;
   }
-  
+
   select:focus {
     outline: none;
   }
-  
+
 `
 
 const PostponeOrder = ({ order }) => {
