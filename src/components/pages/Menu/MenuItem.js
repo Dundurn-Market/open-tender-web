@@ -27,6 +27,8 @@ import {
 import { MenuItemButton, MenuItemOverlay, MenuItemTagAlert } from '../..'
 import MenuItemCount from './MenuItemCount'
 import { subscriptionFreqOptions } from '../../../utils/recurringFrequencyUtils'
+import { imageTagnames } from '../../MenuItemTagImages'
+
 const MenuItemView = styled(CardMenuItem)`
   position: relative;
   flex: 1;
@@ -108,13 +110,6 @@ const MenuItemButtonsCustomize = styled.div`
   }
 `
 
-export const imageTagnames = [
-  'Gluten-free',
-  'Organic',
-  'Plant Based',
-  'Local'
-]
-
 const MenuItem = ({
   item,
   isSimple = false,
@@ -184,16 +179,8 @@ const MenuItem = ({
   const addDisabled = isIncomplete || isSoldOut
   const customizeIsPrimary = addDisabled && !isSoldOut
 
-  let textTags = []
-  let imageTags = []
-  for (let tag of displayTags) {
-    if (imageTagnames.includes(tag)) {
-      imageTags.push(tag) // push the image url
-    } else {
-      textTags.push(tag)
-    }
-  }
-  imageTags = imageTags.sort()
+  let textTags = displayTags.filter(t => !imageTagnames.includes(t))
+  let imageTags = displayTags.filter(t => imageTagnames.includes(t))
 
   const view = () => {
     if (!isSoldOut) {

@@ -15,10 +15,12 @@ import {
   Content,
   Main,
   MenuItem,
+  MenuItemTagImages,
   ScreenreaderTitle,
 } from '../..'
 import { MenuHeader } from '../Menu'
 import { MenuContext } from '../Menu/Menu'
+import { imageTagnames } from '../../MenuItemTagImages'
 
 const ItemPageView = styled.div`
   label: ItemPageView;
@@ -42,9 +44,8 @@ const ItemPageImage = styled.div`
 `
 
 const ItemPageContent = styled.div`
-
-  flex: 0 0 100%;
-  width: 100%;
+  flex: 0 0 ${(props) => props.theme.item.desktop.maxWidth};
+  width: ${(props) => props.theme.item.desktop.maxWidth};
   height: 100%;
   overflow: hidden;
   background-color: ${(props) => props.theme.bgColors.primary};
@@ -52,6 +53,13 @@ const ItemPageContent = styled.div`
     width: 100%;
     flex: 1 1 auto;
   }
+`
+
+const TagImageContainer = styled.div`
+  position: absolute;
+  z-index: 3;
+  bottom: 4rem;
+  right: 5rem;
 `
 
 const Item = () => {
@@ -75,6 +83,8 @@ const Item = () => {
 
   if (!item) return null
 
+  const imageTags = item.tags.filter(t => imageTagnames.includes(t))
+
   return (
     <>
       <Helmet>
@@ -88,7 +98,13 @@ const Item = () => {
           <ScreenreaderTitle>{item.name}</ScreenreaderTitle>
           <ItemPageView>
             <ItemPageImage>
-              <BackgroundImage imageUrl={item.imageUrl} />
+              <BackgroundImage imageUrl={item.imageUrl}>
+                { !!imageTags.length && <>
+                  <TagImageContainer>
+                    <MenuItemTagImages tags={imageTags} imageSize={'7rem'}/>
+                  </TagImageContainer>
+                </> }
+              </BackgroundImage>
             </ItemPageImage>
             <ItemPageContent>
               <MenuItem

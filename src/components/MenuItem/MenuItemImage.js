@@ -56,7 +56,7 @@ const MenuItemBackgroundImage = styled(BgImage)`
   animation: fade-in 0.25s ease-in-out 0s forwards;
 `
 
-const MenuItemImage = ({ imageUrl, hasBack }) => {
+const MenuItemImage = ({ imageUrl, hasBack, children }) => {
   const { bgColors } = useTheme()
   const { hasLoaded, hasError } = useImage(imageUrl)
   const isLoading = !hasLoaded && !hasError
@@ -74,7 +74,7 @@ const MenuItemImage = ({ imageUrl, hasBack }) => {
       {hasLoaded && (
         <MenuItemBackgroundImageContainer>
           <MenuItemBackgroundImage style={bgStyle}>
-            &nbsp;
+            { children ? children : <>&nbsp;</> }
           </MenuItemBackgroundImage>
         </MenuItemBackgroundImageContainer>
       )}
