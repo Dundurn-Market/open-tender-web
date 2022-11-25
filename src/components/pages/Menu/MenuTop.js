@@ -113,6 +113,7 @@ const MenuTopItems = styled.div`
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: stretch;
+  overflow-x: auto;
   margin: 0 -${(props) => props.theme.layout.padding} -1.5rem;
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     margin: 0 -${(props) => props.theme.layout.paddingMobile} -1.5rem;
