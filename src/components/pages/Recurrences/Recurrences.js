@@ -42,7 +42,7 @@ const Recurrences = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const {entities: recurrences, loading, last_updated} = useSelector(selectCustomerRecurrences)
+  const { entities: recurrences, loading, last_updated} = useSelector(selectCustomerRecurrences)
   const isLoading = loading === 'pending'
   const { entities: menuItems } = useSelector(selectGlobalMenuItems)
   const customerOrders = useSelector(selectCustomerOrders)
@@ -85,7 +85,8 @@ const Recurrences = () => {
             const modifierGroup = item.option_groups.find(g => g.id === group.id)
             const options = []
             for (let opt of group.options) {
-              let optName = modifierGroup.option_items.find(i => i.id === opt.id).short_name
+              const foundOpt = modifierGroup.option_items.find(i => i.id === opt.id)
+              const optName = foundOpt ? foundOpt.short_name : ''
               if (optName) {
                 options.push(optName)
               }
