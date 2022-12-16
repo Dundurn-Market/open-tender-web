@@ -75,16 +75,16 @@ const SearchButton = styled.button`
   border-radius: 2rem;
   border:2px solid black;  /* ${(props) => props.theme.border.color}; */
   padding: .5rem 2rem;
-  
+
   background-color: ${(props) => props.isSearchPage? props.theme.colors.success : 'transparent' };
   color: ${(props) => props.isSearchPage? 'white':'black' };
   display: flex;
   align-items: center;
-  
+
   svg {
     vertical-align: bottom;
   }
-  
+
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     background-color: transparent;
     color: black;
@@ -104,7 +104,7 @@ const Categories = styled.button`
   //padding: 0 1rem;
   height: inherit;
   align-items: center;
-  
+
 
     transition: background-color, color .2s ease;
   background-color: ${(props) => props.showCategories ? props.theme.bgColors.primary : 'transparent'};
@@ -114,7 +114,7 @@ const Categories = styled.button`
   border-left: ${(props) => props.showCategories ? '1px solid '+props.theme.border.color: 'none'};
   border-right: ${(props) => props.showCategories ? '1px solid '+props.theme.border.color: 'none'};
   padding: ${(props) => props.showCategories ? '0 .9rem': '0 1rem'};
-  
+
   :hover {
     background-color: ${(props) => props.theme.bgColors.toast};
     color: white;
@@ -194,7 +194,9 @@ const MenuHeader = ({ backPath = '/locations', backClick }) => {
   const menuSlug = useSelector(selectMenuSlug)
   const path = useLocation().pathname
   const isSearchPage = path.endsWith('/search')
-  const { categories } = useContext(MenuContext)
+  const menuContext = useContext(MenuContext)
+
+  const categoriesAvailable = !!menuContext
 
   const leave = () => {
     dispatch(openModal({ type: 'groupOrderLeave' }))
@@ -239,9 +241,11 @@ const MenuHeader = ({ backPath = '/locations', backClick }) => {
         left={
         <>
           { onClick ? <Back onClick={onClick} /> : <Back path={backPath} /> }
-          <Categories onClick={toggleShowCategories(!showCategories)} showCategories={showCategories}>
-            <Grid size={24} />&nbsp;SHOP
-          </Categories>
+          { categoriesAvailable &&
+            <Categories onClick={toggleShowCategories(!showCategories)} showCategories={showCategories}>
+              <Grid size={24} />&nbsp;SHOP
+            </Categories>
+          }
         </>
         }
         right={
@@ -268,11 +272,13 @@ const MenuHeader = ({ backPath = '/locations', backClick }) => {
         showMenu={showMenu}
         setShowMenu={setShowMenu}
       />
-      <MenuCategoriesDropdown
-        showCategories={showCategories}
-        setShowCategories={setShowCategories}
-        categories={categories}
-      />
+      { categoriesAvailable &&
+        <MenuCategoriesDropdown
+          showCategories={showCategories}
+          setShowCategories={setShowCategories}
+          categories={menuContext.categories}
+        />
+      }
     </>
   )
 }
