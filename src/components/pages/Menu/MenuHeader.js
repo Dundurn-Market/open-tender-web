@@ -85,7 +85,7 @@ const SearchButton = styled.button`
     vertical-align: bottom;
   }
 
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     background-color: transparent;
     color: black;
     border: none;
@@ -120,7 +120,7 @@ const Categories = styled.button`
     color: white;
   }
 
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     //margin: 0;
     font-size: 0;
     margin-left: 0;
