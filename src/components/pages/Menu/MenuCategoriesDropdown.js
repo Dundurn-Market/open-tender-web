@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { MenuBrowseCategories } from './MenuBrowse'
+import MenuBrowse from './MenuBrowse'
 import MenuDropdownCategory from './MenuDropdownCategory'
 
 const MenuCategoriesDropdownView = styled.div`
@@ -17,11 +18,11 @@ const MenuCategoriesDropdownView = styled.div`
   background-color: ${(props) => props.theme.bgColors.primary};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     top: ${(props) => props.theme.layout.navHeightMobile};
-    left: 5.75rem;
-    width: 20rem;
     padding: 0;
   }
-`
+  `
+  // width: 20rem;
+  // left: 5.75rem;
 
 const MenuCategoriesDropdownOverlay = styled.div`
   position: fixed;
@@ -38,15 +39,7 @@ const MenuCategoriesDropdown = ({ categories, showCategories, setShowCategories 
   return (
     <>
       <MenuCategoriesDropdownView show={showCategories}>
-        <MenuBrowseCategories>
-          {categories.map((category, index) => (
-            <MenuDropdownCategory
-              key={category.name}
-              category={category}
-              onClickCallback={() => setShowCategories(false)}
-            />
-          ))}
-        </MenuBrowseCategories>
+        <MenuBrowse categories={categories} collapsed={true}/>
       </MenuCategoriesDropdownView>
       <TransitionGroup component={null}>
         {showCategories ? (

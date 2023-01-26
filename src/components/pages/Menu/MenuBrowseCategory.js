@@ -11,14 +11,14 @@ import {
 import { BgImage, Heading } from '@open-tender/components'
 
 const MenuBrowseCategoryView = styled.div`
-  width: 20% ;
+  width: 25% ;
   padding: 0 2rem 2rem 0;
   @media (max-width: ${(props) => props.theme.breakpoints.narrow}) {
     width: 50%;
   }
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     width: 100%;
-    padding: 0;
+    padding: 0 1rem 1rem 0;
   }
 `
 
@@ -34,10 +34,7 @@ const MenuBrowseCategoryButton = styled.button`
   // border-style: solid;
   // border-color: ${(props) => props.theme.border.color};
   // border-bottom-width: ${(props) => props.theme.border.width};
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    padding: 1rem 0;
-  }
-  
+
   :hover {
     transform: scale(1.05);
   }
