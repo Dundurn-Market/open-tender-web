@@ -6,9 +6,10 @@ import { selectCheckout, updateForm } from '@open-tender/redux'
 import {
   capitalize,
   checkAmountRemaining,
-  validateCreditCard,
 } from '@open-tender/js'
-import { CreditCard, useCreditCard } from '@open-tender/components'
+import CreditCard from '../../forms/CanadianCreditCard'
+import useCreditCard from '../../../hooks/useCreditCard'
+import { validateCreditCard } from '../../../utils/validateCreditCard'
 import { cardIconMap } from '../../../assets/cardIcons'
 
 const CheckoutGuestCreditCardView = styled('div')`
