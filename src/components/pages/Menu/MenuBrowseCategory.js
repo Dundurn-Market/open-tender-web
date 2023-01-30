@@ -68,12 +68,20 @@ const MenuBrowseCategoryText = styled.span`
   }
 `
 
-const MenuBrowseCategory = ({ category, isLast = false, onClickCallback }) => {
+const MenuBrowseCategory = ({
+  category,
+  name,
+  image,
+  isLast = false,
+  buttonRef,
+  onClickCallback,
+  preventDefault = false,
+}) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const menuSlug = useSelector(selectMenuSlug)
   const {
-    name,
+    name : categoryName,
     small_image_url,
     large_image_url,
     app_image_url,
@@ -84,24 +92,29 @@ const MenuBrowseCategory = ({ category, isLast = false, onClickCallback }) => {
 
   const view = (evt) => {
     evt.preventDefault()
-    if (revenue_center_id) {
-      dispatch(setCurrentVendor(category))
-      navigate(`${menuSlug}/vendor/${slugify(category.name)}`)
-    } else {
-      dispatch(setCurrentCategory(category))
-      navigate(`${menuSlug}/category/${slugify(category.name)}`)
+
+    if (!preventDefault) {
+      if (revenue_center_id) {
+        dispatch(setCurrentVendor(category))
+        navigate(`${menuSlug}/vendor/${slugify(category.name)}`)
+      } else {
+        dispatch(setCurrentCategory(category))
+        navigate(`${menuSlug}/category/${slugify(category.name)}`)
+      }
     }
 
     if (onClickCallback)
       onClickCallback()
   }
 
+  const displayName = name ? name : categoryName
+
   return (
     <MenuBrowseCategoryView>
-      <MenuBrowseCategoryButton onClick={view} isLast={isLast}>
-        <MenuBrowseCategoryImage style={bgStyle} />
+      <MenuBrowseCategoryButton key={name} ref={buttonRef} onClick={view} isLast={isLast}>
+        {!!image ? image : <MenuBrowseCategoryImage style={bgStyle}/>}
         <MenuBrowseCategoryText>
-          {name}
+          {displayName}
         </MenuBrowseCategoryText>
       </MenuBrowseCategoryButton>
     </MenuBrowseCategoryView>
