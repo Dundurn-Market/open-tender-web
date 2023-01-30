@@ -100,13 +100,10 @@ const Categories = styled.button`
   font-size:2rem;
   font-family: "Full Mrkt Font";
 
-  //margin-left: 1rem;
-  //padding: 0 1rem;
   height: inherit;
   align-items: center;
 
-
-    transition: background-color, color .2s ease;
+  transition: background-color, color .2s ease;
   background-color: ${(props) => props.showCategories ? props.theme.bgColors.primary : 'transparent'};
   padding-bottom: ${(props) => props.showCategories ? '1px': 'none'};
   margin-bottom: ${(props) => props.showCategories ? '-1px': 'none'};
@@ -121,7 +118,6 @@ const Categories = styled.button`
   }
 
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    //margin: 0;
     font-size: 0;
     margin-left: 0;
   }
@@ -243,7 +239,8 @@ const MenuHeader = ({ backPath = '/locations', backClick }) => {
           { onClick ? <Back onClick={onClick} /> : <Back path={backPath} /> }
           { categoriesAvailable &&
             <Categories onClick={toggleShowCategories(!showCategories)} showCategories={showCategories}>
-              <Grid size={24} />&nbsp;SHOP
+              <Grid size={24} />
+              <span>&nbsp;SHOP</span>
             </Categories>
           }
         </>

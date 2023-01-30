@@ -25,15 +25,14 @@ const MenuBrowseCategoryView = styled.div`
 const MenuBrowseCategoryButton = styled.button`
   width: 100%;
   display: flex;
+  gap: 2rem;
+  overflow: hidden;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
   background-color: ${(props) => props.theme.bgColors.tertiary};
   border-radius: 6px;
   border: .1rem solid ${(props) => props.theme.border.color};
-  // border-style: solid;
-  // border-color: ${(props) => props.theme.border.color};
-  // border-bottom-width: ${(props) => props.theme.border.width};
 
   :hover {
     transform: scale(1.05);
@@ -62,43 +61,11 @@ const MenuBrowseCategoryText = styled.span`
   flex-grow: 1;
   line-height: ${(props) => props.theme.fonts.body.lineHeight};
   text-align: left;
-  display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0 2.5rem;
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     padding: 0 2rem;
   }
-`
-
-const MenuBrowseCategoryTitle = styled(Heading)`
-  display: block;
-  margin: 0 0 0 -0.1rem;
-  transition: ${(props) => props.theme.links.transition};
-  font-family: 'Full Mrkt Font';
-  font-size: ${(props) => props.theme.fonts.sizes.big};
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    font-size: ${(props) => props.theme.fonts.sizes.big};
-  }
-`
-
-const MenuBrowseCategoryArrow = styled.span`
-  position: relative;
-  width: 2.2rem;
-  height: 2.2rem;
-  line-height: 0;
-  flex-shrink: 0;
-  color: ${(props) => props.theme.fonts.headings.color};
-  transition: ${(props) => props.theme.links.transition};
-  transform: translateX(0);
-
-  // button:hover & {
-  //   transform: translateX(1rem);
-  //
-  //   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-  //     transform: translateX(0);
-  //   }
-  // }
 `
 
 const MenuBrowseCategory = ({ category, isLast = false, onClickCallback }) => {
@@ -134,8 +101,7 @@ const MenuBrowseCategory = ({ category, isLast = false, onClickCallback }) => {
       <MenuBrowseCategoryButton onClick={view} isLast={isLast}>
         <MenuBrowseCategoryImage style={bgStyle} />
         <MenuBrowseCategoryText>
-          <MenuBrowseCategoryTitle>{name}</MenuBrowseCategoryTitle>
-          {/* <MenuBrowseCategorySubtitle>{description}</MenuBrowseCategorySubtitle> */}
+          {name}
         </MenuBrowseCategoryText>
       </MenuBrowseCategoryButton>
     </MenuBrowseCategoryView>

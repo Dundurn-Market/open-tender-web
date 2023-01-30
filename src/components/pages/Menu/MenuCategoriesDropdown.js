@@ -1,8 +1,6 @@
 import styled from '@emotion/styled'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import { MenuBrowseCategories } from './MenuBrowse'
 import MenuBrowse from './MenuBrowse'
-import MenuDropdownCategory from './MenuDropdownCategory'
 
 const MenuCategoriesDropdownView = styled.div`
   position: fixed;
@@ -10,7 +8,7 @@ const MenuCategoriesDropdownView = styled.div`
   top: ${(props) => props.theme.layout.navHeight};
   left: 0;
   right: 0;
-  padding: 2rem 2rem 0 2rem;
+  padding: 2rem 0 0 0;
   transition: all 0.125s ease;
   opacity: ${(props) => (props.show ? 1 : 0)};
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
@@ -21,8 +19,6 @@ const MenuCategoriesDropdownView = styled.div`
     padding: 0;
   }
   `
-  // width: 20rem;
-  // left: 5.75rem;
 
 const MenuCategoriesDropdownOverlay = styled.div`
   position: fixed;
@@ -48,7 +44,9 @@ const MenuCategoriesDropdown = ({ categories, showCategories, setShowCategories 
             classNames="overlay"
             timeout={250}
           >
-            <MenuCategoriesDropdownOverlay onClick={() => setShowCategories(false)} />
+            <MenuCategoriesDropdownOverlay
+              onClick={() => setShowCategories(false)}
+            />
           </CSSTransition>
         ) : null}
       </TransitionGroup>

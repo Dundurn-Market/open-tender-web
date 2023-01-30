@@ -48,9 +48,9 @@ export const MenuBrowseCategories = styled.div`
 
 export const MenuBrowseCategoriesCollapsed = styled.div`
   display: flex;
-  overflow: scroll;
+  overflow: auto;
   max-height: calc(100vh - ${(props) => props.theme.layout.navHeight});
-  padding: 1rem 2rem 8rem;
+  padding: 1rem 2rem 2rem;
   justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: wrap;
