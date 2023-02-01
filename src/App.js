@@ -8,6 +8,7 @@ import TagManager from 'react-gtm-module'
 import { fetchConfig } from './slices/configSlice'
 import GlobalStyles from './GlobalStyles'
 import AppRoutes from './components/AppRoutes'
+import Intercom from './components/Intercom'
 import {
   Alerts,
   CartButton,
@@ -74,16 +75,18 @@ class App extends React.Component {
               </Helmet>
               <AppContext.Provider value={{ windowRef: this.windowRef }}>
                 <ErrorBoundary>
-                  <BrowserRouter>
-                    <Modal />
-                    <Alerts />
-                    <Notifications />
-                    <CartButton />
-                    <AppRoutes />
-                    <Sidebar />
-                    <Nav />
-                    <NavSite />
-                  </BrowserRouter>
+                  <Intercom>
+                    <BrowserRouter>
+                      <Modal />
+                      <Alerts />
+                      <Notifications />
+                      <CartButton />
+                      <AppRoutes />
+                      <Sidebar />
+                      <Nav />
+                      <NavSite />
+                    </BrowserRouter>
+                  </Intercom>
                 </ErrorBoundary>
               </AppContext.Provider>
             </AppView>

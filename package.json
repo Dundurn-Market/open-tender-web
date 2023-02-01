@@ -1,6 +1,6 @@
 {
   "name": "mrktbox-web",
-  "version": "0.1.1-dev.2",
+  "version": "0.1.1-dev.3",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.6.0",
@@ -32,7 +32,8 @@
     "react-spinners": "^0.12.0",
     "react-swipeable": "^7.0.0",
     "react-tooltip": "^4.4.3",
-    "react-transition-group": "^4.4.1"
+    "react-transition-group": "^4.4.1",
+    "react-use-intercom": "^2.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
