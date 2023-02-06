@@ -22,44 +22,11 @@ import {
   Content,
   Header,
   Main,
-  MapsAutocomplete as OpenTenderAutoComplete,
+  MapsAutocomplete,
   ScreenreaderTitle,
 } from '../..'
 import RevenueCentersSelect from './RevenueCentersSelect'
 import { Back, Cart, NavMenu } from '../../buttons'
-
-function MapsAutocomplete({
-  setCenter,
-  maps,
-  map,
-  sessionToken,
-  autocomplete,
-  center,
-}) {
-  useEffect(() => {
-    if (!autocomplete) return
-    if (!Object.hasOwn(autocomplete, 'baseGetPlacePredictions')) {
-      autocomplete.baseGetPlacePredictions = autocomplete.getPlacePredictions
-    }
-
-    autocomplete.getPlacePredictions = (...args) => {
-      const request = args[0]
-      request.location = new maps.LatLng(center.lat, center.lng)
-      request.radius = 10000 // TODO: config
-      request.region = 'ca'
-      return autocomplete.baseGetPlacePredictions(...args)
-    }
-  }, [autocomplete, center, maps])
-
-  return <OpenTenderAutoComplete
-    setCenter={ setCenter }
-    maps={ maps }
-    map={ map }
-    sessionToken={ sessionToken }
-    autocomplete={ autocomplete }
-  >
-  </OpenTenderAutoComplete>
-}
 
 const RevenueCenters = () => {
   const navigate = useNavigate()

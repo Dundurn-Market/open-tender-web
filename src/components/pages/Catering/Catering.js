@@ -136,7 +136,6 @@ const CateringPage = () => {
             />
             {hasCatering ? (
               <CateringContent>
-                <CateringAutocomplete />
                 <CateringButtons>
                   <ButtonStyled
                     onClick={() => chooseServiceType('DELIVERY')}

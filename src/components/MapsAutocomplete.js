@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react'
 import propTypes from 'prop-types'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
@@ -58,8 +59,42 @@ const MapsAutocomplete = ({
   )
 }
 
-MapsAutocomplete.displayName = 'MapsAutocomplete'
-MapsAutocomplete.propTypes = {
+const LocalizedMapsAutocomplete = ({
+  setCenter,
+  maps,
+  map,
+  sessionToken,
+  autocomplete,
+  center,
+}) => {
+  useEffect(() => {
+    if (!autocomplete) return
+    if (!Object.hasOwn(autocomplete, 'baseGetPlacePredictions')) {
+      autocomplete.baseGetPlacePredictions = autocomplete.getPlacePredictions
+    }
+
+    autocomplete.getPlacePredictions = (...args) => {
+      const request = args[0]
+      request.location = new maps.LatLng(center.lat, center.lng)
+      request.radius = 10000 // TODO: config
+      request.region = 'ca'
+      return autocomplete.baseGetPlacePredictions(...args)
+    }
+  }, [autocomplete, center, maps])
+
+  const safeSetCenter = setCenter ? setCenter : (c) => {}
+
+  return <MapsAutocomplete
+    setCenter={ safeSetCenter }
+    maps={ maps }
+    map={ map }
+    sessionToken={ sessionToken }
+    autocomplete={ autocomplete }
+  />
+}
+
+LocalizedMapsAutocomplete.displayName = 'MapsAutocomplete'
+LocalizedMapsAutocomplete.propTypes = {
   revenueCenters: propTypes.array,
   setCenter: propTypes.func,
   maps: propTypes.object,
@@ -67,4 +102,5 @@ MapsAutocomplete.propTypes = {
   sessionToken: propTypes.object,
   autocomplete: propTypes.object,
 }
-export default MapsAutocomplete
+
+export default LocalizedMapsAutocomplete
