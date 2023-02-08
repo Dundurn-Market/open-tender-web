@@ -176,9 +176,11 @@ MenuHeaderTitle.propTypes = {
 const MenuHeader = ({ backPath = '/locations', backClick }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const { colors, border } = useTheme()
   const [showMenu, setShowMenu] = useState(false)
-  const [showCategories, setShowCategories] = useState(false)
+  const inCategory = pathname.includes('/category/')
+  const [showCategories, setShowCategories] = useState(inCategory)
   const { allergens: displayAllergens } = useSelector(selectDisplaySettings)
   const order = useSelector(selectOrder)
   const { revenueCenter } = order
@@ -188,8 +190,7 @@ const MenuHeader = ({ backPath = '/locations', backClick }) => {
   const showAllergens = displayAllergens && !isMobile ? true : false
   const allowLeave = cartGuest && backPath === '/locations'
   const menuSlug = useSelector(selectMenuSlug)
-  const path = useLocation().pathname
-  const isSearchPage = path.endsWith('/search')
+  const isSearchPage = pathname.endsWith('/search')
   const menuContext = useContext(MenuContext)
 
   const categoriesAvailable = !!menuContext

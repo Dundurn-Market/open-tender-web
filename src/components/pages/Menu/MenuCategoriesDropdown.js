@@ -154,7 +154,6 @@ const MenuCategoriesDropdown = ({
       return
     }
     if (showSubCategories === false && firstCategory.current) {
-      console.log('fire')
       firstCategory.current.focus()
     }
 
