@@ -5,7 +5,7 @@ import { openModal } from '../../slices'
 import { UserCircle } from '../icons'
 import Icon from './Icon'
 
-const User = () => {
+const User = ({ onClick }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { auth } = useSelector(selectCustomer)
@@ -17,7 +17,9 @@ const User = () => {
   const goToSettings = () => navigate('/account/settings')
 
   return (
-    <Icon margin="0 0 0 -1.1rem" onClick={auth ? goToSettings : login}>
+    <Icon
+      margin="0 0 0 -1.1rem"
+      onClick={onClick ? onClick : (auth ? goToSettings : login)}>
       <UserCircle size={28} isFilled={!!auth} />
     </Icon>
   )

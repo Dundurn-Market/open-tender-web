@@ -84,7 +84,7 @@ const HeaderSiteLinks = styled.ul`
   }
 `
 
-const HeaderSiteNavUser = styled.button`
+const HeaderSiteNavUser = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -163,8 +163,8 @@ const HeaderSite = ({ useLight = true, style = null }) => {
               {isMobile ? (
                 <>
                   {auth ? (
-                    <HeaderSiteNavUser onClick={() => navigate('/account')}>
-                      <User />
+                    <HeaderSiteNavUser>
+                      <User onClick={() => navigate('/account')} />
                     </HeaderSiteNavUser>
                   ) : (
                     <HeaderSiteNavButton>
@@ -189,8 +189,8 @@ const HeaderSite = ({ useLight = true, style = null }) => {
                     ))}
                   </HeaderSiteLinks>
                   {auth && (
-                    <HeaderSiteNavUser onClick={() => navigate('/account')} style={{marginRight:'2rem'}}>
-                      <User />
+                    <HeaderSiteNavUser style={{marginRight:'2rem'}}>
+                      <User onClick={() => navigate('/account')} />
                     </HeaderSiteNavUser>
                   )}
                   <HeaderSiteNavButton>
