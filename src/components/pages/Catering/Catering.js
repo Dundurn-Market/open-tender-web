@@ -139,14 +139,12 @@ const CateringPage = () => {
                 <CateringButtons>
                   <ButtonStyled
                     onClick={() => chooseServiceType('DELIVERY')}
-                    disabled={!address}
                     size={isMobile ? 'small' : 'default'}
                   >
                     Order Delivery
                   </ButtonStyled>
                   <ButtonStyled
                     onClick={() => chooseServiceType('PICKUP')}
-                    disabled={!address}
                     size={isMobile ? 'small' : 'default'}
                     color="secondary"
                   >

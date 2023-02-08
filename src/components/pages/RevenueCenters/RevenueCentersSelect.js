@@ -28,7 +28,9 @@ import {
   selectConfig,
   selectSettings,
   selectGeoLatLng,
-  selectIsGroupOrder, openModal
+  selectIsGroupOrder,
+  openModal,
+  selectModal,
 } from '../../../slices'
 import { Container, Loading, PageContent, RevenueCenter } from '../..'
 import { useTheme } from '@emotion/react'
@@ -142,12 +144,15 @@ const RevenueCentersSelect = () => {
   const coords = address || geoLatLng
   const autoSelect = useSelector(selectAutoSelect)
   const isGroupOrder = useSelector(selectIsGroupOrder)
+  const { type : modalType } = useSelector(selectModal)
   const [title, setTitle] = useState(rcConfig.title)
   const [msg, setMsg] = useState(rcConfig.subtitle)
   const [error, setError] = useState(null)
   const [displayedRevenueCenters, setDisplayedRevenueCenters] = useState([])
   const [totalRevenueCenters, setTotalRevenueCenters] = useState([])
   const [showLocations, setShowLocations] = useState(false)
+  const [, setIsModalOpen] = useState(modalType !== null)
+  const [showModalButton, setShowModalButton] = useState(false)
   const isLoading = loading === 'pending'
   const missingAddress = serviceType === 'DELIVERY' && !address
   const hasCount = totalRevenueCenters && totalRevenueCenters.length
@@ -183,6 +188,39 @@ const RevenueCentersSelect = () => {
     [dispatch, navigate]
   )
 
+  const showModal = useCallback(() => {
+    const { displayed } = makeDisplayedRevenueCenters(
+      revenueCenters,
+      serviceType,
+      address,
+      geoLatLng,
+      maxDistance,
+      isGroupOrder,
+    )
+    if (!displayed.length) return
+
+    // TODO: handle group ordering (?)
+    const args = {
+      focusFirst: true,
+      skipClose: true,
+      isGroupOrder: false, // isGroupOrder || cartId ? true : false
+      style: {},
+      revenueCenter: displayed[0],
+      serviceType: serviceType,
+      orderType,
+    }
+    dispatch(openModal({ type: 'requestedAt', args }))
+  }, [
+    revenueCenters,
+    serviceType,
+    address,
+    geoLatLng,
+    maxDistance,
+    isGroupOrder,
+    dispatch,
+    openModal,
+  ])
+
   useEffect(() => {
     const { title, msg, error, displayed } = makeDisplayedRevenueCenters(
       revenueCenters,
@@ -201,26 +239,24 @@ const RevenueCentersSelect = () => {
       setError(error)
       setTotalRevenueCenters(displayed)
 
-      if (orderType !== 'OLO') { // AKA if its catering
-        setDisplayedRevenueCenters(displayed)
-        if (serviceType === 'PICKUP') {
-          setShowLocationsCallback(true)
-        } else {
-          setShowLocationsCallback(false)
-          const args = {
-            focusFirst: true,
-            skipClose: true,
-            //TODO not sure if we should support scheduled group orders.. for now, NO
-            isGroupOrder: false,
-            //isGroupOrder: isGroupOrder || cartId ? true : false,
-            style: {},
-            revenueCenter: displayed[0],
-            serviceType: serviceType,
-            orderType,
-          }
-          dispatch(openModal({ type: 'requestedAt', args }))
-        }
+      if (orderType === 'OLO' || error || !address) {
+        setShowModalButton(false)
+        return
       }
+      setDisplayedRevenueCenters(displayed)
+
+      if (serviceType === 'PICKUP') {
+        setShowLocations(true)
+        setShowModalButton(false)
+        return
+      }
+      setShowLocations(false)
+
+      if (!count) {
+        setShowModalButton(false)
+        return
+      }
+      setShowModalButton(true)
     }
   }, [
     revenueCenters,
@@ -231,8 +267,13 @@ const RevenueCentersSelect = () => {
     autoSelect,
     autoRouteCallack,
     missingAddress,
-    isGroupOrder
+    isGroupOrder,
+    showModal,
   ])
+
+  useEffect(() => {
+    setIsModalOpen(modalType !== null)
+  }, [modalType])
 
   const startOver = () => {
     dispatch(resetOrderType())
@@ -272,6 +313,11 @@ const RevenueCentersSelect = () => {
                 </>
               )}
             </RevenueCentersSelectTitle>
+            {showModalButton && (
+              <div style={{ margin: '3rem auto 0' }}>
+                <ButtonStyled onClick={showModal}>Schedule Order</ButtonStyled>
+              </div>
+            )}
             {showRevenueCenters ? (
               <>
                 {(orderType === 'OLO') &&
@@ -279,6 +325,7 @@ const RevenueCentersSelect = () => {
                   (
                   <RevenueCenterOrderTypeButtons revenueCenters={totalRevenueCenters}
                                                  orderType={orderType}
+                                                 showLocations={showLocations}
                                                  setShowLocations={setShowLocationsCallback}
                                                  setDisplayedRevenueCenters={setDisplayedRevenueCenters}
                                                  serviceType={serviceType}

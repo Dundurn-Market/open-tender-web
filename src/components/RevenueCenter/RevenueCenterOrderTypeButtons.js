@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import propTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -26,6 +27,9 @@ export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
   const navigate = useNavigate()
   const theme = useTheme()
 
+  const [displayingAsap, setDisplayingAsap] = useState(false)
+  const [displayingScheduled, setDisplayingScheduled] = useState(false)
+
   const scheduledRevenueCenters = []
   const asapRevenueCenters = []
 
@@ -37,7 +41,12 @@ export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
     }
   }
 
-  const hasAsapDelivery = asapRevenueCenters.length > 0
+  const hasAsapDelivery = asapRevenueCenters.length > 0 &&
+    asapRevenueCenters[0].first_times &&
+    asapRevenueCenters[0].first_times[serviceType.toUpperCase()]
+  const hasScheduledDelivery = scheduledRevenueCenters.length > 0 &&
+    scheduledRevenueCenters[0].order_times &&
+    scheduledRevenueCenters[0].order_times[serviceType.toUpperCase()]
 
   // const handleDelivery = () => {
   //   dispatch(setOrderServiceType(rcType, 'DELIVERY', isOutpost))
@@ -52,38 +61,46 @@ export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
   //   }
   // }
 
+  const scheduleOrder = (revenueCenter) => {
+    const args = {
+      focusFirst: true,
+      skipClose: true,
+      //TODO not sure if we should support scheduled group orders.. for now, NO
+      isGroupOrder: false,
+      //isGroupOrder: isGroupOrder || cartId ? true : false,
+      style: (revenueCenter && revenueCenter.order_times)
+        ? { alignItems: 'flex-start' }
+        : {},
+      revenueCenter: revenueCenter,
+      serviceType: serviceType,
+      orderType,
+    }
+    dispatch(openModal({ type: 'requestedAt', args }))
+  }
+
   const orderAsap = () => {
     if (!hasAsapDelivery) return
     if (serviceType === 'DELIVERY' && asapRevenueCenters.length === 1) {
-      dispatch(setRequestedAt('asap'))
-      dispatch(setRevenueCenter(asapRevenueCenters[0]))
-      dispatch(setOrderServiceType(asapRevenueCenters[0].revenue_center_type, serviceType))
-      navigate(`/menu/${asapRevenueCenters[0].slug}`)
+      scheduleOrder(asapRevenueCenters[0])
+      setShowLocations(false)
     } else {
       setShowLocations(true)
+      setDisplayingAsap(true)
       setDisplayedRevenueCenters(asapRevenueCenters)
     }
+    setDisplayingScheduled(false)
   }
 
   const orderLater = () => {
     if (serviceType === 'DELIVERY') {
-      const args = {
-        focusFirst: true,
-        skipClose: true,
-        //TODO not sure if we should support scheduled group orders.. for now, NO
-        isGroupOrder: false,
-        //isGroupOrder: isGroupOrder || cartId ? true : false,
-        style: scheduledRevenueCenters[0].orderTimes ? { alignItems: 'flex-start' } : {},
-        revenueCenter: scheduledRevenueCenters[0],
-        serviceType: serviceType,
-        orderType,
-      }
+      scheduleOrder(scheduledRevenueCenters[0])
       setShowLocations(false)
-      dispatch(openModal({ type: 'requestedAt', args }))
     } else {
       setShowLocations(true)
+      setDisplayingScheduled(true)
       setDisplayedRevenueCenters(scheduledRevenueCenters)
     }
+    setDisplayingAsap(false)
   }
 
   return (
@@ -93,27 +110,33 @@ export const RevenueCenterOrderTypeButtons = ({ revenueCenters,
           label={`Schedule a delivery`}
           onClick={orderLater}
           size={isMobileOnly ? 'small' : 'default'}
-        >
+          disabled={!hasScheduledDelivery || displayingScheduled}
+          >
           Schedule Grocery {capitalize(serviceType)}
         </ButtonStyled>
         <ReactTooltip id="scheduleButton" place='bottom' effect='solid' backgroundColor={theme.bgColors.dark} disable={isMobileOnly}>
-          Shop our entire grocery offering & setup subscriptions to your favorite local products.
+          { hasScheduledDelivery
+            ? `Shop our entire grocery offering & setup subscriptions to your favorite local products.`
+            : `Scheduled ${capitalize(serviceType)} is not available at your location.`
+          }
         </ReactTooltip>
       </OrderTypeButtonContainer>
-      {hasAsapDelivery && (
-        <OrderTypeButtonContainer data-tip data-for="asapButton" style={{"margin": '0 0 2rem 0'}}>
-          <ButtonStyled
-            label={`Order Quick Delivery`}
-            onClick={orderAsap}
-            size={isMobileOnly ? 'small' : 'default'}
-          >
-            Order Quick Cafe {capitalize(serviceType)}
-          </ButtonStyled>
-          <ReactTooltip id="asapButton" place='bottom' effect='solid' backgroundColor={theme.bgColors.dark} disable={isMobileOnly}>
-            Place a quick cafe or grocery staples order. Pickup orders ready in as little as 20 minutes and delivery in 1hr.
-          </ReactTooltip>
-        </OrderTypeButtonContainer>
-      )}
+      <OrderTypeButtonContainer data-tip data-for="asapButton" style={{"margin": '0 0 2rem 0'}}>
+        <ButtonStyled
+          label={`Order Quick Delivery`}
+          onClick={orderAsap}
+          size={isMobileOnly ? 'small' : 'default'}
+          disabled={!hasAsapDelivery || displayingAsap}
+        >
+          Order Quick Cafe {capitalize(serviceType)}
+        </ButtonStyled>
+        <ReactTooltip id="asapButton" place='bottom' effect='solid' backgroundColor={theme.bgColors.dark} disable={isMobileOnly}>
+          { hasAsapDelivery
+            ? `Place a quick cafe or grocery staples order. Pickup orders ready in as little as 20 minutes and delivery in 1hr.`
+            : `Quick ${capitalize(serviceType)} is not available at your location.`
+          }
+        </ReactTooltip>
+      </OrderTypeButtonContainer>
     </>
   )
 }
