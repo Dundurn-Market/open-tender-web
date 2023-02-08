@@ -1,48 +1,56 @@
-import { useEffect} from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { scroller } from 'react-scroll'
 import { Helmet } from 'react-helmet'
+import styled from '@emotion/styled'
+
 import { fetchLocations } from '@open-tender/redux'
+
 import { selectBrand } from '../../../slices'
 import { HeaderSite } from '../..'
 
+const VevScreen = styled.div`
+  position: fixed;
+  z-index: 1;
+  height: 100vh;
+  width: 100vw;
+
+  opacity: ${(props) => props.show ? 0 : 1};
+  background-color: white;
+
+  transition-property: opacity;
+  transition-duration: 1s;
+  transition-delay: 600ms;
+`
+
+const VevContainer = styled.div`
+  position: absolute;
+  height: 100hw;
+  width: 100vw;
+`
 
 const About = () => {
   const dispatch = useDispatch()
   const brand = useSelector(selectBrand)
 
-  const scrollToMenu = () => {
-    scroller.scrollTo('aboutCards', {
-      duration: 500,
-      smooth: true,
-      offset: -120,
-    })
-  }
+  const [vevLoaded, setVevLoaded] = useState(false)
+  const container = useRef(null)
+  const vevScript = useRef(null)
+  const vevDelay = useRef(null)
 
   useEffect(() => {
     dispatch(fetchLocations({type: 'OLO'}))
-    const container = document.createElement('div');
-    container.id = 'vev-container'
 
-    const script = document.createElement('script');
-    script.src = "https://embed.vev.page/v1/gqVii9xVtn/p-21isBUPPR?target=vev-container";
-    script.async = true;
-
-    document.body.appendChild(container)
-    container.appendChild(script)
-
-    const root = document.getElementById('root')
-    root.style.height = '0px'
+    if (!vevScript.current) {
+      const script = document.createElement('script');
+      script.src = "https://embed.vev.page/v1/gqVii9xVtn/p-21isBUPPR?target=vev-container";
+      script.onload = () => { setVevLoaded(true) }
+      vevScript.current = script
+      container.current.appendChild(script)
+    }
 
     return () => {
-      document.body.removeChild(container)
-      const scriptTags = document.body.getElementsByTagName('script')
-      const len = scriptTags.length
-      for(let i = len - 1;i >= 0; i--) {
-        scriptTags[i].remove()
-      }
-
-      root.style.height = null
+      vevScript.current.remove()
+      if (vevDelay.current !== null) clearTimeout(vevDelay.current)
     }
   }, []);
 
@@ -52,32 +60,8 @@ const About = () => {
         <title>About | {brand.title}</title>
       </Helmet>
       <HeaderSite />
-
-      {/*<Content>*/}
-      {/*  /!*<Main style={{ paddingTop: '0' }}>*!/*/}
-      {/*  /!*  <PageHero*!/*/}
-      {/*  /!*    announcements={announcements}*!/*/}
-      {/*  /!*    imageUrl={isBrowser ? background : mobile}*!/*/}
-      {/*  /!*  >*!/*/}
-      {/*  /!*    <BackgroundContent*!/*/}
-      {/*  /!*      title={title}*!/*/}
-      {/*  /!*      subtitle={subtitle}*!/*/}
-      {/*  /!*      title_color={colors.light}*!/*/}
-      {/*  /!*      subtitle_color={colors.light}*!/*/}
-      {/*  /!*      vertical="BOTTOM"*!/*/}
-      {/*  /!*      horizontal="LEFT"*!/*/}
-      {/*  /!*    >*!/*/}
-      {/*  /!*      <ButtonStyled onClick={scrollToMenu} size="big" color="light">*!/*/}
-      {/*  /!*        Learn More*!/*/}
-      {/*  /!*      </ButtonStyled>*!/*/}
-      {/*  /!*    </BackgroundContent>*!/*/}
-      {/*  /!*  </PageHero>*!/*/}
-      {/*  /!*  <AboutView>*!/*/}
-      {/*  /!*    <PageIntro content={translated} />*!/*/}
-      {/*  /!*    <Element name="aboutCards"></Element>*!/*/}
-      {/*  /!*  </AboutView>*!/*/}
-      {/*  /!*</Main>*!/*/}
-      {/*</Content>*/}
+      <VevScreen show={vevLoaded} />
+      <VevContainer id='vev-container' ref={container} />
     </>
   )
 }
