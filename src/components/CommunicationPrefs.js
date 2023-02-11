@@ -42,7 +42,7 @@ const makeAreaTypes = (accepts_marketing, order_notifications) => {
 }
 
 const makeChannelTypes = (has_app, has_sms) => {
-  const channelTypes = ['EMAIL', 'SMS', 'PUSH']
+  const channelTypes = ['EMAIL']
   let removed = []
   if (!has_sms) removed.push('SMS')
   if (!has_app) removed.push('PUSH')
