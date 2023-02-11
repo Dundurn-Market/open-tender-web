@@ -129,6 +129,7 @@ const HeaderSite = ({ useLight = true, style = null }) => {
   const logoUrl = useLight || stuck ? logoLight : logo
   const theme = useTheme()
   const { auth } = useSelector(selectCustomer)
+  // TODO: packing current order check for reuse
   const { revenueCenter, serviceType, cart } = useSelector(selectOrder)
   const isCurrentOrder = revenueCenter && serviceType && cart.length > 0
 

@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { isMobile } from 'react-device-detect'
 import styled from '@emotion/styled'
 import { contains } from '@open-tender/js'
-import { selectCartQuantity } from '@open-tender/redux'
+import { selectCartQuantity, selectOrder } from '@open-tender/redux'
 import { toggleSidebar } from '../slices'
 import { ShoppingBag } from './icons'
 
@@ -119,8 +119,11 @@ const CartButton = () => {
   const dispatch = useDispatch()
   const { pathname } = useLocation()
   const cartQuantity = useSelector(selectCartQuantity)
+  const { revenueCenter, serviceType, cart } = useSelector(selectOrder)
+  const isCurrentOrder = revenueCenter && serviceType && cart.length > 0
   const isItem = pathname.includes('/item/')
-  const showCart = contains(pathname, ['menu']) && !isItem
+  const notOrdering = pathname === '/menu' && !isCurrentOrder
+  const showCart = contains(pathname, ['menu']) && !isItem && !notOrdering
 
   const toggle = (evt) => {
     evt.preventDefault()

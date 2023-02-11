@@ -153,7 +153,8 @@ const Sidebar = React.forwardRef((props, ref) => {
   const canOrder = useSelector(selectCanOrder)
   const { orderMinimum, orderMaximum } = useSelector(selectOrderLimits)
   const { auth } = useSelector(selectCustomer)
-  const isMenu = pathname.includes('menu')
+  const isCatalogue = pathname === '/menu'
+  const isMenu = pathname.includes('menu') && !isCatalogue
   const isCheckout = pathname.includes('checkout')
   const isReview = pathname.includes('review')
   const belowMinimum = orderMinimum && cartTotal < orderMinimum

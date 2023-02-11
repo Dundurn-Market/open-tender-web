@@ -7,7 +7,7 @@ import { ButtonStyled } from '@open-tender/components'
 const BackgroundCtaView = styled.div`
   margin: 2rem 0 0;
 
-  button {
+  div > button {
     font-family: "Full Mrkt Font" !important;
 
     font-size: ${(props) => props.theme.fonts.sizes.xBig};
