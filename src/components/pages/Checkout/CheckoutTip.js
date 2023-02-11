@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import styled from '@emotion/styled'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectCheckout, updateForm, validateOrder } from '@open-tender/redux'
+import {
+  selectCheckout,
+  selectOrder,
+  updateForm,
+  validateOrder
+} from '@open-tender/redux'
 import { formatDollars, formatQuantity } from '@open-tender/js'
 import { ButtonStyled, Checkmark, Input } from '@open-tender/components'
 
@@ -56,12 +61,19 @@ const makeTipOptions = (options) => {
 const CheckoutTip = () => {
   const dispatch = useDispatch()
   const { check, form, loading } = useSelector(selectCheckout)
+  const { revenueCenter, serviceType } = useSelector(selectOrder)
+
+  const isQuickDelivery = revenueCenter.delivery_zone.priority !== 1 &&
+    serviceType === 'DELIVERY'
+  const showTip = isQuickDelivery
+
   const tipSettings = check.config.gratuity
   const { has_tip, options } = tipSettings
   const tipOptions = makeTipOptions(options)
   const initialTip =
     form.tip && !tipOptions.find((i) => i.amount === form.tip) ? form.tip : null
   const [customTip, setCustomTip] = useState(initialTip)
+  const [deliberateTip, setDeliberateTip] = useState(false)
   const customTipApplied = customTip && customTip === check.totals.tip
 
   useEffect(() => {
@@ -70,6 +82,13 @@ const CheckoutTip = () => {
       dispatch(updateForm({ tip: check.totals.tip }))
     }
   }, [has_tip, form.tip, loading, check.totals.tip, dispatch])
+
+  useEffect(() => {
+    if (isQuickDelivery) return
+    setCustomTip('0.00')
+    dispatch(updateForm({ tip: '0.00' }))
+    dispatch(validateOrder())
+  }, [isQuickDelivery, setCustomTip, dispatch])
 
   if (!has_tip) return null
 
@@ -81,6 +100,7 @@ const CheckoutTip = () => {
 
   const handleCustomTip = (txt) => {
     setCustomTip(txt)
+    setDeliberateTip(true)
   }
 
   const applyCustomTip = () => {
@@ -93,21 +113,23 @@ const CheckoutTip = () => {
   return (
     <CheckoutSection title="Add a Tip">
       <CheckoutTipView>
-        <CheckoutTipOptions>
-          {tipOptions.map((i) => {
-            const isApplied = !customTip && form.tip === i.amount
-            return (
-              <CheckoutTipButton
-                key={`${i.percent}-${i.amount}`}
-                title={`${formatQuantity(i.percent)}%`}
-                subtitle={formatDollars(i.amount)}
-                onPress={isApplied ? null : () => chooseTip(i.amount)}
-                isApplied={isApplied}
-                disabled={isApplied}
-              />
-            )
-          })}
-        </CheckoutTipOptions>
+        { showTip &&
+          <CheckoutTipOptions>
+            {tipOptions.map((i) => {
+              const isApplied = !customTip && form.tip === i.amount
+              return (
+                <CheckoutTipButton
+                  key={`${i.percent}-${i.amount}`}
+                  title={`${formatQuantity(i.percent)}%`}
+                  subtitle={formatDollars(i.amount)}
+                  onPress={isApplied ? null : () => chooseTip(i.amount)}
+                  isApplied={isApplied}
+                  disabled={isApplied}
+                />
+              )
+            })}
+          </CheckoutTipOptions>
+        }
         <CheckoutTipCustom>
           <CheckoutTipCustomInput>
             <Input
@@ -118,7 +140,7 @@ const CheckoutTip = () => {
               onChange={(evt) => handleCustomTip(evt.target.value)}
               style={{ margin: 0 }}
             />
-            {customTipApplied && (
+            { customTipApplied && deliberateTip && (
               <CheckoutTipCustomCheckmark>
                 <Checkmark />
               </CheckoutTipCustomCheckmark>
