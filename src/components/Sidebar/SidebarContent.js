@@ -279,7 +279,7 @@ const Sidebar = React.forwardRef((props, ref) => {
                       : null
                   }
                 >
-                  Menu
+                  Shop
                 </ButtonStyled>
               )}
             </SidebarBack>

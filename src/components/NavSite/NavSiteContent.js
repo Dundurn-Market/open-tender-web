@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectCustomer, logoutCustomer } from '@open-tender/redux'
+import { selectCustomer, selectOrder, logoutCustomer } from '@open-tender/redux'
 import { ButtonStyled } from '@open-tender/components'
 import { openModal, selectBrand, toggleNavSite } from '../../slices'
 import { LogOut, UserCircle } from '../icons'
@@ -10,11 +10,7 @@ import NavSiteClose from './NavSiteClose'
 
 const navSiteButtons = [
   {
-    title: 'Home',
-    path: '/',
-  },
-  {
-    title: 'Menu',
+    title: 'Catalogue',
     path: '/menu',
   },
   {
@@ -23,15 +19,7 @@ const navSiteButtons = [
   },
   {
     title: 'Catering',
-    path: '/catering',
-  },
-  {
-    title: 'Careers',
-    path: '/careers',
-  },
-  {
-    title: 'About',
-    path: '/about',
+    path: '/catering-address',
   },
 ]
 
@@ -157,6 +145,8 @@ const NavSiteContent = React.forwardRef((props, ref) => {
   const navigate = useNavigate()
   const { logo, title } = useSelector(selectBrand)
   const { auth } = useSelector(selectCustomer)
+  const { revenueCenter, serviceType, cart } = useSelector(selectOrder)
+  const isCurrentOrder = revenueCenter && serviceType && cart.length > 0
 
   const closeGo = (evt, path) => {
     evt.target.blur()
@@ -209,7 +199,7 @@ const NavSiteContent = React.forwardRef((props, ref) => {
               size="small"
               onClick={() => orderNow(auth ? '/account' : '/guest')}
             >
-              Order Now
+              {isCurrentOrder ? 'Continue Order' : 'Order Now'}
             </ButtonStyled>
           </NavSiteButton>
           {auth ? (

@@ -44,7 +44,7 @@ const HeaderSiteLogo = styled.div`
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     max-width: 13rem;
   }
-  
+
   a {
     display: inline-block;
   }
@@ -115,10 +115,9 @@ const HeaderSiteNavButton = styled.div`
 `
 
 const links = [
-  { path: '/menu', title: 'Menu' },
+  { path: '/menu', title: 'Catalogue' },
   { path: '/restaurants', title: 'Locations' },
-  { path: '/catering', title: 'Catering' },
-  { path: '/about', title: 'About' },
+  { path: '/catering-address', title: 'Catering' },
 ]
 
 const HeaderSite = ({ useLight = true, style = null }) => {
