@@ -8,9 +8,11 @@ import {
   selectOrder,
   setOrderServiceType,
 } from '@open-tender/redux'
-import { ButtonStyled, GoogleMapsAutocomplete } from '@open-tender/components'
+import { ButtonStyled } from '@open-tender/components'
 import { Navigation } from '../../icons'
-import { hexToRgba } from '@open-tender/js'
+import {
+  LocalizedGoogleMapsAutocomplete as GoogleMapsAutocomplete,
+} from '../../MapsAutocomplete'
 
 const LocationsAutocompleteView = styled('div')`
   position: absolute;
@@ -23,7 +25,6 @@ const LocationsAutocompleteView = styled('div')`
   align-items: center;
   padding: 0 ${(props) => props.theme.layout.padding};
   // background-color: ${(props) => props.theme.bgColors.primary};
-
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     width: 100%;
     bottom: ${(props) => props.theme.layout.marginMobile};
@@ -38,29 +39,25 @@ const LocationsAutocompleteForm = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  // padding: 2rem;
-  // border-radius: 1rem;
-  // background-color: ${(props) => props.theme.overlay.dark};
-
+  background-color: ${(props) => props.theme.bgColors.primary + '88'};
+  padding: 1rem;
+  border-radius: 1rem;
   label {
-    display: block;
+    display: block
     flex: 1 1 auto;
-    color: black;
+    color: ${(props) => props.theme.colors.dark};
   }
-
   input {
-    color: black;
-    background-color: white;
-    border-radius: .6rem;
-    border: 1px solid;
-
+    color: ${(props) => props.theme.colors.dark};
+    background-color: transparent;
+    border-color: ${(props) => props.theme.colors.dark};
     &:active,
     &:focus {
-      background-color: white;
+      background-color: transparent;
+      border-color: ${(props) => props.theme.colors.dark};
     }
-
     &::placeholder {
-      color: black;
+      color: ${(props) => props.theme.colors.dark};
     }
   }
 `
@@ -70,9 +67,9 @@ const LocationsAutocompleteButtons = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
   > button {
-    border: none; 
+    border: none;
     transition: none;
     &:hover {
       color: black;
@@ -85,7 +82,6 @@ const LocationsAutocompleteButtons = styled.div`
 const LocationsAutocompleteToggle = styled.div`
   flex: 0 0 auto;
   margin: 0 2rem;
-
   button {
     &:first-of-type {
       border-radius: 0;
@@ -93,7 +89,6 @@ const LocationsAutocompleteToggle = styled.div`
       border-bottom-left-radius: 0.5rem;
       border-right: 0;
     }
-
     &:last-of-type {
       border-radius: 0;
       border-top-right-radius: 0.5rem;
@@ -111,7 +106,7 @@ const LocationsAutocompleteButton = styled.button`
   color: ${(props) =>
     props.isActive ? props.theme.colors.light : props.theme.colors.dark};
   background-color: ${(props) =>
-    props.isActive ? props.theme.bgColors.toast : props.theme.colors.light};
+    props.isActive ? props.theme.bgColors.toast : props.theme.bgColors.primary};
 `
 
 const LocationsAutocomplete = ({
