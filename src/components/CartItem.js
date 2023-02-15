@@ -15,6 +15,7 @@ import {
 import { BgImage, Body, ButtonLink, Heading, SelectOnly } from '@open-tender/components'
 import { MenuItemFavorite, Quantity } from '.'
 import { subscriptionFreqOptions } from '../utils/recurringFrequencyUtils'
+import OrderFrequency from './buttons/OrderFrequency'
 
 const CartItemView = styled.span`
   display: flex;
@@ -73,10 +74,10 @@ const CartItemDetails = styled.span`
 `
 
 const CartItemFrequency = styled.div`
-  width: 8rem;
-  margin-right: 1rem;
+  width: 7.5rem;
+  margin: 0.4rem 1.5rem 0;
   flex-shrink: .1;
-  
+
   select {
     padding-right: 0;
     border-bottom: 0;
@@ -157,12 +158,10 @@ const CartItem = ({ item, editItem, removeItem }) => {
         </CartItemDetails>
       </CartItemInfo>
       <CartItemFrequency>
-        <SelectOnly
-          label='Subscribe'
-          name='subscription-freq'
-          value={frequency}
-          onChange={setFrequency}
-          options={subscriptionFreqOptions}
+        <OrderFrequency
+          orderFrequency={frequency}
+          setOrderFrequency={setFrequency}
+          shortOptions={true}
         />
       </CartItemFrequency>
       <CartItemQuantity>

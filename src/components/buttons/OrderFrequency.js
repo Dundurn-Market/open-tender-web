@@ -1,30 +1,40 @@
 import propTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
-import {
-  selectOrderFrequency,
-  setDefaultOrderFrequency, showNotification
-} from '@open-tender/redux'
-import { SelectOnly } from '@open-tender/components'
 import styled from '@emotion/styled'
+
+import { SelectOnly } from '@open-tender/components'
+
 import { subscriptionFreqOptions } from '../../utils/recurringFrequencyUtils'
+
 const OrderFrequencyDropdown = styled.div`
   flex-grow: 0;
-  width: 11.5rem;
+  width: 100%;
+  max-width: 12rem;
+
   select, select:focus {
     border-bottom: none;
     outline: none;
   }
+
+  > span > span {
+    padding: 0.5rem 0 0;
+  }
+
+  > span > select {
+    padding: 0.5rem 0;
+  }
 `
 
-const OrderFrequency = () => {
-  const dispatch = useDispatch()
-  const orderFrequency = useSelector(selectOrderFrequency)
-
-  const setOrderFrequency = (event) => {
-    dispatch(setDefaultOrderFrequency(event.target.value))
-    dispatch(showNotification('You just updated your global order frequency! ' +
-      'You can still alter the frequency for individual items in the menu.'))
-  }
+const OrderFrequency = ({
+  orderFrequency,
+  setOrderFrequency,
+  shortOptions = false,
+}) => {
+  const options = subscriptionFreqOptions.map(
+    (opt) => ({
+      name: shortOptions ? opt.name : opt.longName,
+      value: opt.value,
+    })
+  )
 
   return (
     <OrderFrequencyDropdown>
@@ -33,7 +43,7 @@ const OrderFrequency = () => {
         name='subscription-freq'
         value={orderFrequency}
         onChange={setOrderFrequency}
-        options={subscriptionFreqOptions.map((opt) => {return {name: opt.longName, value: opt.value}})}
+        options={options}
       />
     </OrderFrequencyDropdown>
   )

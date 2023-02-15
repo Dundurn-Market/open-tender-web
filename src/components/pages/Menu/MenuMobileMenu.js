@@ -1,7 +1,15 @@
 import styled from '@emotion/styled'
 import { Preface } from '@open-tender/components'
-import { useSelector } from 'react-redux'
-import { selectAutoSelect, selectGroupOrder, selectToken, setAlert } from '@open-tender/redux'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  selectAutoSelect,
+  selectGroupOrder,
+  selectToken,
+  setAlert,
+  selectOrderFrequency,
+  setDefaultOrderFrequency,
+  showNotification,
+} from '@open-tender/redux'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
 import {
@@ -74,13 +82,20 @@ const MenuMobileMenuRow = styled.div`
 `
 
 const MenuMobileMenu = ({ order, showMenu, setShowMenu }) => {
+  const dispatch = useDispatch()
   const { orderId, revenueCenter, serviceType, requestedAt } = order
   const autoSelect = useSelector(selectAutoSelect)
   const { cartGuest, isCartOwner } = useSelector(selectGroupOrder)
   const authToken = useSelector(selectToken)
   const settings = revenueCenter ? revenueCenter.settings || revenueCenter : {}
   const hasGroupOrdering = settings.group_ordering
+  const orderFrequency = useSelector(selectOrderFrequency)
 
+  const setOrderFrequency = (event) => {
+    dispatch(setDefaultOrderFrequency(event.target.value))
+    dispatch(showNotification('You just updated your global order frequency! ' +
+      'You can still alter the frequency for individual items in the menu.'))
+  }
 
   if (cartGuest) return null
 
@@ -134,7 +149,10 @@ const MenuMobileMenu = ({ order, showMenu, setShowMenu }) => {
               {authToken && revenueCenter && revenueCenter.isScheduledGroceryCenter && (
                 <MenuMobileMenuRow>
                   <Preface size="xSmall">Order Frequency</Preface>
-                  <OrderFrequency />
+                  <OrderFrequency
+                    orderFrequency={orderFrequency}
+                    setOrderFrequency={setOrderFrequency}
+                  />
                 </MenuMobileMenuRow>
               )}
             </>
