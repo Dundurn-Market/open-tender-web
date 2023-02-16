@@ -96,7 +96,6 @@ const MenuCategoriesDropdown = ({
   const location = useLocation()
   const theme = useTheme()
 
-  const [elements, setElements] = useState([])
   const active = useRef(null)
   const categoryDropdown = useRef(null)
   const subCategoryDropdown = useRef(null)
@@ -105,6 +104,9 @@ const MenuCategoriesDropdown = ({
   const firstSubCategory = useRef(null)
   const lastSubCategory = useRef(null)
 
+  const [elements, setElements] = useState([])
+
+  const [loaded, setLoaded] = useState(false)
   const [parentCategory, setParentCategory] = useState(
     resolveCurrentCategory(categories, location)
   )
@@ -147,6 +149,13 @@ const MenuCategoriesDropdown = ({
     },
     [elements, firstCategory, lastCategory, firstSubCategory, lastSubCategory]
   )
+
+  useEffect(() => {
+    if (parentCategory === null || !parentCategory.children?.length) {
+      setShowCategories(false)
+    }
+    setLoaded(true)
+  }, [])
 
   useEffect(() => {
     if (showCategories === false) {
@@ -209,13 +218,14 @@ const MenuCategoriesDropdown = ({
   }
 
   const openSubcategories = (
+    loaded &&
     showCategories &&
     showSubCategories &&
     parentCategory &&
     subCategories &&
     subCategories.length
   )
-  const openCategories = showCategories && !openSubcategories
+  const openCategories = loaded && showCategories && !openSubcategories
 
   return (
     <>
