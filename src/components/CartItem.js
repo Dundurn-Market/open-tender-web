@@ -5,7 +5,9 @@ import {
   decrementItemInCart,
   incrementItemInCart,
   selectCustomer,
-  selectCustomerFavorites, setCartItemFrequency
+  selectCustomerFavorites,
+  setCartItemFrequency,
+  selectOrder,
 } from '@open-tender/redux'
 import {
   formatDollars,
@@ -123,6 +125,7 @@ const CartItem = ({ item, editItem, removeItem }) => {
   const desc = makeModifierNames(item)
   const { auth } = useSelector(selectCustomer)
   const { lookup } = useSelector(selectCustomerFavorites)
+  const { revenueCenter, serviceType } = useSelector(selectOrder)
   const signature =
     item.favorite && item.favorite.favorite_id ? null : makeItemSignature(item)
   const favoriteId =
@@ -135,6 +138,8 @@ const CartItem = ({ item, editItem, removeItem }) => {
   const setFrequency = (event) => {
     dispatch(setCartItemFrequency({...item, frequency: event.target.value}))
   }
+
+  const showFreq = !!revenueCenter?.order_times?.[serviceType.toUpperCase()]
 
   return (
     <CartItemView>
@@ -157,13 +162,15 @@ const CartItem = ({ item, editItem, removeItem }) => {
           </CartItemLink>
         </CartItemDetails>
       </CartItemInfo>
-      <CartItemFrequency>
-        <OrderFrequency
-          orderFrequency={frequency}
-          setOrderFrequency={setFrequency}
-          shortOptions={true}
-        />
-      </CartItemFrequency>
+      {showFreq &&
+        <CartItemFrequency>
+          <OrderFrequency
+            orderFrequency={frequency}
+            setOrderFrequency={setFrequency}
+            shortOptions={true}
+          />
+        </CartItemFrequency>
+      }
       <CartItemQuantity>
         <Quantity
           item={item}
