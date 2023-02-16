@@ -1,9 +1,11 @@
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {
   setCurrentItem,
   selectCart,
   removeItemFromCart,
+  selectOrder,
   selectMenuSlug,
 } from '@open-tender/redux'
 import { slugify } from '@open-tender/js'
@@ -20,9 +22,17 @@ const Cart = () => {
   const navigate = useNavigate()
   const cart = useSelector(selectCart)
   const menuSlug = useSelector(selectMenuSlug)
+  const { revenueCenter, serviceType } = useSelector(selectOrder)
   // const displaySettings = useSelector(selectDisplaySettings)
   // const { builderType } = displaySettings
   const builderType = 'PAGE'
+
+  useEffect(() => {
+    if (revenueCenter?.order_times?.[serviceType.toUpperCase()]) return
+    if (cart.some(item => !!item.frequency)) {
+      dispatch(openModal({ type: 'recurrenceErrors', args: {} }))
+    }
+  }, [cart, revenueCenter])
 
   const editItem = (item) => {
     dispatch(setCurrentItem(item))

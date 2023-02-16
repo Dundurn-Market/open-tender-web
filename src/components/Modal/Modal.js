@@ -40,7 +40,9 @@ import {
   Working,
   DeleteRecurrence,
   SkipRecurrence,
-  PostponeOrder, CancelOrder
+  RecurrenceErrors,
+  PostponeOrder,
+  CancelOrder
 } from '../modals'
 
 const makeModal = (type, windowRef, args = {}) => {
@@ -109,6 +111,8 @@ const makeModal = (type, windowRef, args = {}) => {
       return <DeleteRecurrence {...args} />
     case 'skipRecurrence':
       return <SkipRecurrence {...args} />
+    case 'recurrenceErrors':
+      return <RecurrenceErrors {...args} />
     case 'postponeOrder':
       return <PostponeOrder {...args} />
     case 'cancelOrder':
