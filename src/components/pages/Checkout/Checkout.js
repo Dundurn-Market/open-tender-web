@@ -19,9 +19,13 @@ import {
   validateOrder,
 } from '@open-tender/redux'
 import { isEmpty, isString } from '@open-tender/js'
-import { FormError } from '@open-tender/components'
+import { FormError, Message } from '@open-tender/components'
 
-import { selectBrand, selectConfig } from '../../../slices'
+import {
+  selectBrand,
+  selectConfig,
+  toggleSidebar,
+} from '../../../slices'
 import { Content, Main } from '../..'
 import CheckoutCancelEdit from './CheckoutCancelEdit'
 import CheckoutCustomer from './CheckoutCustomer'
@@ -204,7 +208,7 @@ const Checkout = () => {
   const { checkout: config } = useSelector(selectConfig)
   const cartTotal = useSelector(selectCartTotal)
   const menuSlug = useSelector(selectMenuSlug)
-  const { serviceType, revenueCenter } = useSelector(selectOrder)
+  const { cart, serviceType, revenueCenter } = useSelector(selectOrder)
   const { revenue_center_id: revenueCenterId } = revenueCenter || {}
   const { auth } = useSelector(selectCustomer)
   const hasCustomer = auth ? true : false
@@ -260,6 +264,14 @@ const Checkout = () => {
     hasFormCustomer,
   ])
 
+  const editCart = () => {
+    dispatch(toggleSidebar())
+  }
+
+  const isScheduled = revenueCenter?.order_times?.[serviceType.toUpperCase()]
+  const hasRecurring = cart.some(i => i.frequency)
+  const recurringError = !isScheduled && hasRecurring
+
   return (
     <>
       <Helmet>
@@ -305,7 +317,20 @@ const Checkout = () => {
                   {isMobile && <CheckoutCart />}
                   <CheckoutGiftCards />
                   <CheckoutTenders />
-                  <CheckoutSubmit />
+                  {recurringError &&
+                    <CheckoutSection>
+                      <Message
+                        as="div"
+                        size="small"
+                        color="alert"
+                        style={{ width: '100%', padding: '1rem 1.5rem' }}
+                      >
+                        We do not offer subscriptions for this order type.
+                          Please remove subscriptions to continue.
+                      </Message>
+                    </CheckoutSection>
+                  }
+                  <CheckoutSubmit disabled={recurringError}/>
                 </>
               )}
             </CheckoutContent>
