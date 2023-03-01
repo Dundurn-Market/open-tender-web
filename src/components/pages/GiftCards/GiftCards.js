@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
-import { FormWrapper } from '@open-tender/components'
+import { ButtonLink, FormWrapper } from '@open-tender/components'
 import {
   selectGiftCards,
   resetGiftCards,
@@ -13,7 +13,12 @@ import {
   selectCustomerCreditCardsForPayment,
   setAlert,
 } from '@open-tender/redux'
-import { selectBrand, selectConfig, selectRecaptcha } from '../../../slices'
+import {
+  openModal,
+  selectBrand,
+  selectConfig,
+  selectRecaptcha,
+} from '../../../slices'
 import { Minus, Plus } from '../../icons'
 import {
   Content,
@@ -60,6 +65,18 @@ const GiftCards = () => {
     return () => dispatch(resetGiftCards())
   }, [dispatch])
 
+  const login = () => {
+    dispatch(openModal({ type: 'login' }))
+  }
+
+  const goToPaymentMethods = () => {
+    navigate('/account/credit-cards')
+  }
+
+  const registed = !!customer
+  const hasCreditCard = !!creditCards?.length
+  const canPurchase = registed && hasCreditCard
+
   return (
     <>
       <Helmet>
@@ -71,21 +88,53 @@ const GiftCards = () => {
         <HeaderDefault />
         <Main>
           <PageContainer style={{ maxWidth: '76.8rem' }}>
-            <PageTitle {...config} />
+            <PageTitle
+              {...config}
+              {...(!hasCreditCard && {
+                subtitle : <>
+                  <p>
+                    <span>Please </span>
+                    <ButtonLink onClick={goToPaymentMethods}>
+                      add a credit card
+                    </ButtonLink>
+                    <span> to purchase online gift cards.</span>
+                  </p>
+                  <p>
+                    Currently,
+                    gift cards purchased here are only applicable online.
+                  </p>
+                </>
+              })}
+              {...(!registed && {
+                subtitle : <>
+                  <p>
+                    <span>Please </span>
+                    <ButtonLink onClick={login}>sign-in</ButtonLink>
+                    <span> to purchase online gift cards.</span>
+                  </p>
+                  <p>
+                    Currently,
+                    gift cards purchased here are only applicable online.
+                  </p>
+                </>
+              })}
+            />
             <FormWrapper>
-              <GiftCardsForm
-                customer={customer}
-                creditCards={creditCards}
-                purchase={purchase}
-                setAlert={showAlert}
-                reset={reset}
-                success={success}
-                purchasedCards={giftCards}
-                loading={loading}
-                error={error}
-                iconMap={giftCardIconMap}
-                recaptchaKey={includeRecaptcha ? recaptchaKey : null}
-              />
+              { canPurchase &&
+                <GiftCardsForm
+                  customer={customer}
+                  creditCards={creditCards}
+                  purchase={purchase}
+                  setAlert={showAlert}
+                  reset={reset}
+                  success={success}
+                  purchasedCards={giftCards}
+                  loading={loading}
+                  error={error}
+                  iconMap={giftCardIconMap}
+                  recaptchaKey={includeRecaptcha ? recaptchaKey : null}
+                />
+              }
             </FormWrapper>
             {success && (
               <PageContent>
