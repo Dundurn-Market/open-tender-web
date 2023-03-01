@@ -331,7 +331,11 @@ const GiftCardsForm = ({
               <FormRow
                 key={`card-${index}`}
                 as="div"
-                input={
+                style={{
+                  margin : '-1rem 0 0',
+                  borderTopWidth : 0,
+                }}
+                input={<>
                   <GiftCardsRow>
                     <SelectOnly
                       label={`Gift card ${index} amount`}
@@ -342,17 +346,19 @@ const GiftCardsForm = ({
                       required={true}
                       options={options}
                     />
-                    <Quantity
-                      id={`gift-card-quantity-${index}`}
-                      name={`Gift card ${index}`}
-                      quantity={card.quantity}
-                      update={(quantity) => handleQuantity(index, quantity)}
-                      iconMap={iconMap}
-                    />
-                    <span>
-                      <input
-                        aria-label={`Gift card ${index} email recipient`}
-                        id={`email-${index}`}
+                    <span style={{ margin : '1rem 0 0' }}>
+                      <Quantity
+                        id={`gift-card-quantity-${index}`}
+                        name={`Gift card ${index}`}
+                        quantity={card.quantity}
+                        update={(quantity) => handleQuantity(index, quantity)}
+                        iconMap={iconMap}
+                      />
+                    </span>
+                    <span style={{ margin : '0 1rem -3rem' }}>
+                      <Input
+                        label={`Gift card ${index} email recipient`}
+                        showLabel={false}
                         name={`email-${index}`}
                         type="email"
                         autoComplete={null}
@@ -362,13 +368,14 @@ const GiftCardsForm = ({
                         onChange={handleChange}
                       />
                     </span>
-                  </GiftCardsRow>
+                  </GiftCardsRow></>
                 }
                 errMsg={errors[`gift_cards.${index}.email`]}
               />
             ))}
             <FormRow
               as="div"
+              style={{ borderTopWidth : 0 }}
               label={
                 <ButtonStyled
                   onClick={handleAddAnother}
