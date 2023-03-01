@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
-import { GiftCardsForm, FormWrapper } from '@open-tender/components'
+import { FormWrapper } from '@open-tender/components'
 import {
   selectGiftCards,
   resetGiftCards,
@@ -23,6 +23,7 @@ import {
   HeaderDefault,
   PageContainer,
 } from '../..'
+import GiftCardsForm from '../../forms/GiftCardForm';
 
 const giftCardIconMap = {
   plus: <Plus strokeWidth={2} />,
