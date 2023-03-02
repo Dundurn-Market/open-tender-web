@@ -6,7 +6,7 @@ import {
   updateCustomerAddress,
   resetCustomerAddressesError,
 } from '@open-tender/redux'
-import { AddressForm } from '@open-tender/components'
+import AddressForm from '../forms/AddressForm'
 
 import { closeModal } from '../../slices'
 import { ModalContent, ModalView } from '..'
