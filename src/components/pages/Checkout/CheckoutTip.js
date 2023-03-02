@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { useDispatch, useSelector } from 'react-redux'
+import { isMobileOnly } from 'react-device-detect'
+import ReactTooltip from 'react-tooltip'
 import {
   selectCheckout,
   selectOrder,
@@ -8,7 +11,13 @@ import {
   validateOrder
 } from '@open-tender/redux'
 import { formatDollars, formatQuantity } from '@open-tender/js'
-import { ButtonStyled, Checkmark, Input } from '@open-tender/components'
+import {
+  ButtonLink,
+  ButtonStyled,
+  Checkmark,
+  Input,
+  Text,
+} from '@open-tender/components'
 
 import CheckoutSection from './CheckoutSection'
 import CheckoutTipButton from './CheckoutTipButton'
@@ -59,6 +68,7 @@ const makeTipOptions = (options) => {
 }
 
 const CheckoutTip = () => {
+  const theme = useTheme()
   const dispatch = useDispatch()
   const { check, form, loading } = useSelector(selectCheckout)
   const { revenueCenter, serviceType } = useSelector(selectOrder)
@@ -158,6 +168,35 @@ const CheckoutTip = () => {
           </CheckoutTipCustomButton>
         </CheckoutTipCustom>
       </CheckoutTipView>
+      <p
+        data-tip
+        data-for="tipToolTip"
+        style={{ width : !isMobileOnly ? 'fit-content' : undefined }}
+      >
+        <Text size='small'>
+          <ButtonLink color='dark' onClick={() => {}}>
+            Where does my tip go?
+          </ButtonLink>
+        </Text>
+      </p>
+      <ReactTooltip
+        id='tipToolTip'
+        place='bottom'
+        effect='solid'
+        backgroundColor={theme.bgColors.dark}
+      >
+        <div style={{ maxWidth : '200px', lineHeight : 1.25 }}>
+          <Text size='small'>
+            <span>The tip for your order will be split equally between the
+            MRKTBOX location staff and the delivery driver. If your order is
+            delivered by <i>Uber&nbsp;Eats</i>, <i>Doordash</i>, or
+            other </span>
+            <span style={{ whiteSpace: 'nowrap' }}> on-demand </span>
+            <span> couriers, half of this tip will still be forwarded to the
+            driver along with your order.</span>
+          </Text>
+        </div>
+      </ReactTooltip>
     </CheckoutSection>
   )
 }
