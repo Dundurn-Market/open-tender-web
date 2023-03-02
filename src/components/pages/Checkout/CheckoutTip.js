@@ -61,10 +61,13 @@ const CheckoutTipCustomButton = styled.div`
   flex-shrink: 0;
 `
 
-const percentages = [10.0, 15.0, 18.0, 20.0]
+const percentages = [0.0, 5.0, 10.0, 15.0]
 
-const makeTipOptions = (options) => {
-  return options.filter((i) => percentages.includes(parseFloat(i.percent)))
+const makeTipOptions = (subtotal) => {
+  return percentages.map(percentage => ({
+    amount : (subtotal * percentage / 100).toFixed(2),
+    percent : percentage.toFixed(2),
+  }))
 }
 
 const CheckoutTip = () => {
@@ -72,14 +75,14 @@ const CheckoutTip = () => {
   const dispatch = useDispatch()
   const { check, form, loading } = useSelector(selectCheckout)
   const { revenueCenter, serviceType } = useSelector(selectOrder)
-
+  const checkout = useSelector(selectCheckout)
   const isQuickDelivery = revenueCenter.delivery_zone.priority !== 1 &&
     serviceType === 'DELIVERY'
   const showTip = isQuickDelivery
 
   const tipSettings = check.config.gratuity
-  const { has_tip, options } = tipSettings
-  const tipOptions = makeTipOptions(options)
+  const { has_tip } = tipSettings
+  const tipOptions = makeTipOptions(check.totals.subtotal)
   const initialTip =
     form.tip && !tipOptions.find((i) => i.amount === form.tip) ? form.tip : null
   const [customTip, setCustomTip] = useState(initialTip)
@@ -89,14 +92,18 @@ const CheckoutTip = () => {
   useEffect(() => {
     if (has_tip && !form.tip && loading !== 'pending') {
       setCustomTip('')
-      dispatch(updateForm({ tip: check.totals.tip }))
+      dispatch(updateForm({ tip: tipOptions[3] }))
     }
   }, [has_tip, form.tip, loading, check.totals.tip, dispatch])
 
   useEffect(() => {
-    if (isQuickDelivery) return
-    setCustomTip('0.00')
-    dispatch(updateForm({ tip: '0.00' }))
+    if (isQuickDelivery) {
+      setCustomTip('')
+      dispatch(updateForm({ tip: check.totals.tip }))
+    } else {
+      setCustomTip('0.00')
+      dispatch(updateForm({ tip: '0.00' }))
+    }
     dispatch(validateOrder())
   }, [isQuickDelivery, setCustomTip, dispatch])
 
