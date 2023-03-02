@@ -4,7 +4,8 @@ import styled from '@emotion/styled'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCheckout, selectOrder, updateForm } from '@open-tender/redux'
 import { isEmpty, makeNumeric } from '@open-tender/js'
-import { Input, Switch, Textarea } from '@open-tender/components'
+import { Input, Switch } from '@open-tender/components'
+import Textarea from '../../TextArea'
 
 import CheckoutInputs from './CheckoutInputs'
 
@@ -94,7 +95,7 @@ const CheckoutDetails = ({ hasAddress }) => {
     return input && input.included ? true : false
   })
   const notesConfig = detailsConfig['notes']
-  const showNotes = notesConfig && notesConfig.included ? true : false
+  const showNotes = true
   const formDetails = useMemo(() => form.details, [form.details])
   const { notes, person_count, tax_exempt_id } = check.details
 
@@ -187,6 +188,7 @@ const CheckoutDetails = ({ hasAddress }) => {
             error={detailsErrors['notes']}
             required={notesConfig.required}
             style={{ width: '100%', margin: '1rem 0 0' }}
+            rows={6}
           />
         )}
       </CheckoutInputs>
