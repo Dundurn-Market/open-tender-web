@@ -325,8 +325,9 @@ const Checkout = () => {
                         color="alert"
                         style={{ width: '100%', padding: '1rem 1.5rem' }}
                       >
-                        We do not offer subscriptions for this order type.
-                          Please remove subscriptions to continue.
+                        We only offer subscriptions for scheduled pickup and
+                          scehduled delivery. Please remove subscriptions to
+                          continue.
                       </Message>
                     </CheckoutSection>
                   }
