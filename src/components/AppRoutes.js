@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Geolocation from './Geolocation'
 import {
   About,
-  Accessibility,
   AccountAddresses,
   Account,
   AccountAllergens,
@@ -45,21 +44,23 @@ import {
   Order,
   OrderHistory,
   OrderType,
+  Pricing,
+  Privacy,
   Profile,
   QR,
   Rating,
-  Refunds,
   ResetPassword,
   RevenueCenters,
   RevenueCenter,
   Rewards,
   SignUp,
+  Terms,
   Thanx,
   Upsell,
   Vendor,
   VerifyAccount,
   Recurrences,
-  Search
+  Search,
 } from './pages'
 import MenuNew from './pages/Menu/MenuNew'
 
@@ -133,8 +134,9 @@ const AppRoutes = () => {
       <Route path="gift-cards" element={<GiftCards />} />
       <Route path="donations" element={<Donations />} />
       <Route path="deals" element={<Deals />} />
-      <Route path="accessibility" element={<Accessibility />} />
-      <Route path="refunds" element={<Refunds />} />
+      <Route path="terms" element={<Terms />} />
+      <Route path="privacy" element={<Privacy />} />
+      <Route path="pricing" element={<Pricing />} />
       <Route path="order" element={<Navigate to="/account" replace />} />
       <Route
         path="order/catering"

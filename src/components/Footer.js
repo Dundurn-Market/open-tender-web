@@ -144,7 +144,7 @@ const CCorpLogo = styled.div`
 `
 
 const PowerdBy = styled.div`
-margin: 8rem 0 0;
+margin: 6rem 0 0;
 
 span {
   opacity: 0.3;
@@ -212,31 +212,16 @@ const Footer = ({ hasRouter = true }) => {
             </FooterNav>
             <FooterTerms aria-label="Legal Policies Navigation">
               <ul>
-                <li>
-                  <a
-                    href="https://www.opentender.io/terms"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Terms of Use
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.opentender.io/privacy"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Privacy
-                  </a>
-                </li>
                 {hasRouter && (
                   <>
                     <li>
-                      <Link to="/accessibility">Accessibility</Link>
+                      <Link to="/terms">Terms & Conditions</Link>
                     </li>
                     <li>
-                      <Link to="/refunds">Refunds</Link>
+                      <Link to="/privacy">Privacy</Link>
+                    </li>
+                    <li>
+                      <Link to="/pricing">Pricing Policy</Link>
                     </li>
                   </>
                 )}

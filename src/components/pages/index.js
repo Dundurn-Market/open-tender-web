@@ -1,5 +1,4 @@
 import About from './About'
-import Accessibility from './Accessibility'
 import Account from './Account'
 import AccountAddresses from './AccountAddresses'
 import AccountAllergens from './AccountAllergens'
@@ -43,15 +42,17 @@ import NotFound from './NotFound'
 import Order from './Order'
 import OrderHistory from './OrderHistory'
 import OrderType from './OrderType'
+import Privacy from './Privacy'
+import Pricing from './Pricing'
 import Profile from './Profile'
 import QR from './QR'
 import Rating from './Rating'
-import Refunds from './Refunds'
 import ResetPassword from './ResetPassword'
 import RevenueCenters from './RevenueCenters'
 import RevenueCenter from './RevenueCenter'
 import Rewards from './Rewards'
 import SignUp from './SignUp'
+import Terms from './Terms'
 import Thanx from './Thanx'
 import Upsell from './Upsell'
 import Vendor from './Vendor'
@@ -61,7 +62,6 @@ import { Search } from './Search'
 
 export {
   About,
-  Accessibility,
   Account,
   AccountAddresses,
   AccountAllergens,
@@ -105,15 +105,17 @@ export {
   Order,
   OrderHistory,
   OrderType,
+  Pricing,
+  Privacy,
   Profile,
   QR,
   Rating,
-  Refunds,
   ResetPassword,
   RevenueCenters,
   RevenueCenter,
   Rewards,
   SignUp,
+  Terms,
   Thanx,
   Upsell,
   Vendor,
