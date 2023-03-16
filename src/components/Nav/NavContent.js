@@ -60,7 +60,7 @@ const navButtons = [
   },
   {
     icon: <ShoppingBag />,
-    title: 'Order History',
+    title: 'Upcoming Orders',
     path: '/orders',
   },
   {
