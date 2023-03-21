@@ -1,75 +1,78 @@
-import { ModalContent, ModalView } from '../Modal'
-import { ButtonStyled } from '@open-tender/components'
-import { closeModal, toggleSidebar } from '../../slices'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
 import {
-  addItemToCart, deleteCustomerOrder,
-  editOrder, incrementItemInCart,
-  removeItemFromCartById, resetCheckout,
-  resetOrder, selectCart, selectOrder,
+  deleteCustomerOrder,
+  editOrder,
+  fetchCustomerOrders,
+  removeItemFromCartById,
+  resetCheckout,
+  resetOrder,
   selectTimezone,
-  setSubmitting, showNotification,
+  setSubmitting,
+  showNotification,
   submitOrder
 } from '@open-tender/redux'
+import { ButtonStyled } from '@open-tender/components'
 import { isoToDateStr } from '@open-tender/js'
 
+import { ModalContent, ModalView } from '../Modal'
+import { closeModal } from '../../slices'
 
-const SkipRecurrence = ({ recurrence, order }) => {
-  const tz = useSelector(selectTimezone)
-  const readableDate = isoToDateStr(order.requested_at, tz, 'EEEE, MMMM dd')
+const SkipRecurrence = ({ item, order }) => {
   const dispatch = useDispatch()
+  const tz = useSelector(selectTimezone)
 
-  const toggleSkipRecurrence = async () => {
+  const dateText = isoToDateStr(order.requested_at, tz, 'EEEE, MMMM dd')
+
+  const skipRecurrence = async () => {
     await dispatch(editOrder(order, false))
 
-    if (recurrence.isSkipped) {
-      dispatch(addItemToCart(
-        {...recurrence.item,
-          groups: [],
-          quantity: recurrence.quantity,
-          frequency: recurrence.frequency,
-          recurrence_id: recurrence.id
-        }))
-
-    } else {
-      const cart = dispatch(removeItemFromCartById(recurrence.item))
-
-      if (cart.length === 0) {
-        dispatch(deleteCustomerOrder(order.order_id))
-      }
+    const cart = dispatch(removeItemFromCartById(item))
+    if (cart.length === 0) {
+      dispatch(deleteCustomerOrder(order.order_id))
+      showNotification(
+        `Your upcoming order on ${dateText} has been cancelled`
+      )
     }
+    else {
+      dispatch(setSubmitting(true))
+      await dispatch(submitOrder())
 
-    dispatch(setSubmitting(true))
-    await dispatch(submitOrder())
-
-    dispatch(showNotification(`${recurrence.item.name} was ${recurrence.isSkipped?'re-added to':'skipped on'} your upcoming order on ${readableDate}`))
+      dispatch(
+        showNotification(
+          `${item.name} was skipped on your upcoming order on ${dateText}`
+        )
+      )
+    }
     dispatch(resetOrder())
     dispatch(resetCheckout())
+    dispatch(fetchCustomerOrders())
   }
 
   return (
     <ModalView>
       <ModalContent
-        title={`Are you sure you want to ${recurrence.isSkipped? 'un-skip':'skip'} this item in the next order?`}
+        title='Are you sure you want to skip this item?'
         subtitle={
           <>
             <p>
-              {recurrence.item.name} will be {recurrence.isSkipped? 're-added to':'removed from'} the upcoming order on {readableDate}.
+              {item.name} will be removed from the upcoming order on {dateText}.
             </p>
-            { !recurrence.isSkipped &&
-              <p>
-                It will continue to be added to future recurring orders.
-              </p>
-            }
+            <p>
+              It will continue to be added to future recurring orders.
+            </p>
           </>
         }
         footer={
           <div>
-            <ButtonStyled onClick={toggleSkipRecurrence}>
-              {recurrence.isSkipped && 'Un-'}Skip This Item
+            <ButtonStyled onClick={skipRecurrence}>
+              Skip This Item
             </ButtonStyled>
-            <ButtonStyled onClick={() => dispatch(closeModal())} color='secondary'>
+            <ButtonStyled
+              onClick={() => dispatch(closeModal())}
+              color='secondary'
+            >
               Cancel
             </ButtonStyled>
           </div>

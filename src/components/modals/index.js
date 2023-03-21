@@ -30,6 +30,7 @@ import SignUp from './SignUp'
 import Working from './Working'
 import DeleteRecurrence from './DeleteRecurrence'
 import SkipRecurrence from './SkipRecurrence'
+import RestoreRecurrence from './RestoreRecurrence'
 import RecurrenceErrors from './SubscriptionErrors'
 import PostponeOrder from './PostponeOrder'
 import CancelOrder from './CancelOrder'
@@ -67,6 +68,7 @@ export {
   Working,
   DeleteRecurrence,
   SkipRecurrence,
+  RestoreRecurrence,
   RecurrenceErrors,
   PostponeOrder,
   CancelOrder
