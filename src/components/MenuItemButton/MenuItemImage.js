@@ -8,7 +8,8 @@ const MenuItemImageView = styled.div`
   position: relative;
   z-index: 1;
   padding: 33.33333% 0;
-  background-color: ${(props) => props.theme.bgColors.tertiary};
+  background-color: white;
+  //background-color: ${(props) => props.theme.bgColors.tertiary};
   border-radius: ${(props) => props.theme.cards.menuItem.borderRadius};
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
@@ -34,6 +35,7 @@ const MenuItemBackgroundImage = styled(BgImage)`
   position: absolute;
   z-index: 2;
   top: 0;
+  top: 2rem;
   bottom: 0;
   left: 0;
   right: 0;

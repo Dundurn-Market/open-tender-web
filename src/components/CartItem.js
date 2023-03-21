@@ -5,7 +5,9 @@ import {
   decrementItemInCart,
   incrementItemInCart,
   selectCustomer,
-  selectCustomerFavorites, setCartItemFrequency
+  selectCustomerFavorites,
+  setCartItemFrequency,
+  selectOrder,
 } from '@open-tender/redux'
 import {
   formatDollars,
@@ -15,6 +17,7 @@ import {
 import { BgImage, Body, ButtonLink, Heading, SelectOnly } from '@open-tender/components'
 import { MenuItemFavorite, Quantity } from '.'
 import { subscriptionFreqOptions } from '../utils/recurringFrequencyUtils'
+import OrderFrequency from './buttons/OrderFrequency'
 
 const CartItemView = styled.span`
   display: flex;
@@ -73,10 +76,10 @@ const CartItemDetails = styled.span`
 `
 
 const CartItemFrequency = styled.div`
-  width: 8rem;
-  margin-right: 1rem;
+  width: 7.5rem;
+  margin: 0.4rem 1.5rem 0;
   flex-shrink: .1;
-  
+
   select {
     padding-right: 0;
     border-bottom: 0;
@@ -122,6 +125,7 @@ const CartItem = ({ item, editItem, removeItem }) => {
   const desc = makeModifierNames(item)
   const { auth } = useSelector(selectCustomer)
   const { lookup } = useSelector(selectCustomerFavorites)
+  const { revenueCenter, serviceType } = useSelector(selectOrder)
   const signature =
     item.favorite && item.favorite.favorite_id ? null : makeItemSignature(item)
   const favoriteId =
@@ -134,6 +138,8 @@ const CartItem = ({ item, editItem, removeItem }) => {
   const setFrequency = (event) => {
     dispatch(setCartItemFrequency({...item, frequency: event.target.value}))
   }
+
+  const showFreq = !!revenueCenter?.order_times?.[serviceType.toUpperCase()]
 
   return (
     <CartItemView>
@@ -156,15 +162,15 @@ const CartItem = ({ item, editItem, removeItem }) => {
           </CartItemLink>
         </CartItemDetails>
       </CartItemInfo>
-      <CartItemFrequency>
-        <SelectOnly
-          label='Subscribe'
-          name='subscription-freq'
-          value={frequency}
-          onChange={setFrequency}
-          options={subscriptionFreqOptions}
-        />
-      </CartItemFrequency>
+      {showFreq &&
+        <CartItemFrequency>
+          <OrderFrequency
+            orderFrequency={frequency}
+            setOrderFrequency={setFrequency}
+            shortOptions={true}
+          />
+        </CartItemFrequency>
+      }
       <CartItemQuantity>
         <Quantity
           item={item}

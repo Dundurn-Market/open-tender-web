@@ -5,6 +5,13 @@ import localTag from '../assets/LOCAL-01.png'
 import orgTag from '../assets/ORGANIC-01.png'
 import plantTag from '../assets/PLANTBASED-01.png'
 
+export const imageTagnames = [
+  'Gluten-free',
+  'Organic',
+  'Plant Based',
+  'Local',
+]
+
 const tagMapping = {
   'Gluten-free': gfTag,
   'Organic': orgTag,

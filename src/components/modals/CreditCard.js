@@ -6,11 +6,11 @@ import {
   resetCustomerCreditCardsError,
   selectCustomerCreditCards,
 } from '@open-tender/redux'
-import { CreditCardForm } from '@open-tender/components'
 
 import { closeModal, selectRecaptcha } from '../../slices'
 import { ModalContent, ModalView } from '..'
 import { cardIconMap } from '../../assets/cardIcons'
+import CreditCardForm from '../forms/CreditCardForm'
 
 const recaptchaKey = process.env.REACT_APP_RECAPTCHA_KEY
 

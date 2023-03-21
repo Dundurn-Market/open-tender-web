@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { isMobile } from 'react-device-detect'
 import { Container } from '.'
 import logo from '../assets/logo_footer.png'
 import bcorpLogo from '../assets/bcorp.png'
@@ -17,7 +18,7 @@ const FooterView = styled('footer')`
 `
 
 const FooterContainer = styled.div`
-  height: 20rem;
+  height: ${(props) => props.tall ? '32rem' : '28rem'};
   padding: ${(props) => props.theme.layout.margin} 0
     ${(props) => props.theme.layout.padding};
   display: flex;
@@ -33,7 +34,7 @@ const FooterContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     // justify-content: flex-start;
   }
@@ -64,6 +65,7 @@ const FooterLogo = styled.a`
 const FooterLinks = styled.ul`
   margin: 2rem 0 0;
   display: flex;
+  justify-content: flex-start;
   font-size: ${(props) => props.theme.fonts.sizes.small};
 
   li {
@@ -117,11 +119,11 @@ const FooterTerms = styled.nav`
   }
 `
 
-const FooterOTLogo = styled.div`
+const CCorpLogo = styled.div`
   max-width: 14rem;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-end;
   text-align: right;
   font-size: ${(props) => props.theme.fonts.sizes.xSmall};
@@ -129,21 +131,6 @@ const FooterOTLogo = styled.div`
     text-align: left;
   }
 
-  span {
-    opacity: 0.3;
-
-    @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-      font-size: 0;
-    }
-    a, a:visited, a:hover, a:active, a:focus {
-      @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-        font-size: ${(props) => props.theme.fonts.sizes.xSmall};
-      }
-      color: inherit;
-      text-decoration: none;
-    }
-  }
-  
   img {
     height: 9rem;
     margin-bottom: 1rem;
@@ -156,6 +143,23 @@ const FooterOTLogo = styled.div`
   //}
 `
 
+const PowerdBy = styled.div`
+margin: 6rem 0 0;
+
+span {
+  opacity: 0.3;
+  font-size: ${(props) => props.theme.fonts.sizes.xSmall};
+
+  a, a:visited, a:hover, a:active, a:focus {
+    @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+      font-size: ${(props) => props.theme.fonts.sizes.xSmall};
+    }
+    color: inherit;
+    text-decoration: none;
+  }
+}
+`
+
 const Footer = ({ hasRouter = true }) => {
   const { logoLight, url, has_gift_cards, has_donations } =
     useSelector(selectBrand)
@@ -166,7 +170,7 @@ const Footer = ({ hasRouter = true }) => {
   return (
     <FooterView role="contentinfo">
       <Container>
-        <FooterContainer>
+        <FooterContainer tall={isMobile}>
           <FooterContent>
             <FooterNav>
               {logoLight && (
@@ -208,43 +212,28 @@ const Footer = ({ hasRouter = true }) => {
             </FooterNav>
             <FooterTerms aria-label="Legal Policies Navigation">
               <ul>
-                <li>
-                  <a
-                    href="https://www.opentender.io/terms"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Terms of Use
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.opentender.io/privacy"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Privacy
-                  </a>
-                </li>
                 {hasRouter && (
                   <>
                     <li>
-                      <Link to="/accessibility">Accessibility</Link>
+                      <Link to="/terms">Terms & Conditions</Link>
                     </li>
                     <li>
-                      <Link to="/refunds">Refunds</Link>
+                      <Link to="/privacy">Privacy</Link>
+                    </li>
+                    <li>
+                      <Link to="/pricing">Pricing Policy</Link>
                     </li>
                   </>
                 )}
               </ul>
             </FooterTerms>
-          </FooterContent>
-          <FooterOTLogo>
-            <a href='https://www.bcorporation.net/' target='_blank'><img src={bcorpLogo} alt={'Bcorp Logo'}/></a>
-            <div>
+            <PowerdBy>
               <span>powered by <a href='https://opentender.io' target='_blank'>OpenTender</a></span>
-            </div>
-          </FooterOTLogo>
+            </PowerdBy>
+          </FooterContent>
+          <CCorpLogo>
+            <a href='https://www.bcorporation.net/' target='_blank'><img src={bcorpLogo} alt={'Bcorp Logo'}/></a>
+          </CCorpLogo>
         </FooterContainer>
       </Container>
     </FooterView>

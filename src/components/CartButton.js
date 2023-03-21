@@ -1,16 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
+import { isMobile } from 'react-device-detect'
 import styled from '@emotion/styled'
 import { contains } from '@open-tender/js'
-import { selectCartQuantity } from '@open-tender/redux'
+import { selectCartQuantity, selectOrder } from '@open-tender/redux'
 import { toggleSidebar } from '../slices'
 import { ShoppingBag } from './icons'
 
 const CartButtonView = styled.div`
   position: fixed;
   z-index: 10;
-  bottom: 2rem;
-  right: ${(props) => props.theme.layout.padding};
+  bottom: ${isMobile ? '80px' : '20px'};
+  right: ${(props) => isMobile ? props.theme.layout.padding : '80px'};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     right: ${(props) => props.theme.layout.paddingMobile};
     // bottom: 6rem;
@@ -22,11 +23,11 @@ const CartButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 8rem;
-  height: 8rem;
+  width: ${isMobile ? '48px' : '8rem'};
+  height:${isMobile ? '48px' : '8rem'};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    width: 7rem;
-    height: 7rem;
+    width: ${isMobile ? '48px' : '7rem'};
+    height: ${isMobile ? '48px' : '7rem'};
   }
 `
 
@@ -118,8 +119,11 @@ const CartButton = () => {
   const dispatch = useDispatch()
   const { pathname } = useLocation()
   const cartQuantity = useSelector(selectCartQuantity)
+  const { revenueCenter, serviceType, cart } = useSelector(selectOrder)
+  const isCurrentOrder = revenueCenter && serviceType && cart.length > 0
   const isItem = pathname.includes('/item/')
-  const showCart = contains(pathname, ['menu']) && !isItem
+  const notOrdering = pathname === '/menu' && !isCurrentOrder
+  const showCart = contains(pathname, ['menu']) && !isItem && !notOrdering
 
   const toggle = (evt) => {
     evt.preventDefault()

@@ -1,9 +1,11 @@
+import React, { useEffect } from 'react'
 import propTypes from 'prop-types'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import { setAddress, selectOrder } from '@open-tender/redux'
 import { GoogleMapsAutocomplete } from '@open-tender/components'
 import { Navigation } from './icons'
+import { selectGeoLatLng, selectSettings } from '../slices'
 
 const MapsAutocompleteView = styled('div')`
   position: fixed;
@@ -26,7 +28,59 @@ const MapsAutocompleteView = styled('div')`
   }
 `
 
+export const LocalizedGoogleMapsAutocomplete = ({
+  maps,
+  map,
+  sessionToken,
+  autocomplete,
+  address,
+  setAddress,
+  formattedAddress,
+  center,
+  setCenter,
+  icon,
+  placeholder,
+}) => {
+  const { googleMaps } = useSelector(selectSettings)
+  const { defaultCenter } = googleMaps
+  const geoLatLng = useSelector(selectGeoLatLng)
+  const initialCenter = address
+    ? { lat: address.lat, lng: address.lng }
+    : geoLatLng || defaultCenter
+  const safeCenter = center ? center : initialCenter
+
+  useEffect(() => {
+    if (!autocomplete) return
+    if (!Object.hasOwn(autocomplete, 'baseGetPlacePredictions')) {
+      autocomplete.baseGetPlacePredictions = autocomplete.getPlacePredictions
+    }
+
+    autocomplete.getPlacePredictions = (...args) => {
+      const request = args[0]
+      request.location = new maps.LatLng(safeCenter.lat, safeCenter.lng)
+      request.radius = 10000 // TODO: config
+      request.region = 'ca'
+      return autocomplete.baseGetPlacePredictions(...args)
+    }
+  }, [autocomplete, safeCenter, maps])
+
+  const safeSetCenter = setCenter ? setCenter : (c) => {}
+
+  return <GoogleMapsAutocomplete
+    maps={maps}
+    map={map}
+    sessionToken={sessionToken}
+    autocomplete={autocomplete}
+    formattedAddress={formattedAddress}
+    setAddress={setAddress}
+    setCenter={safeSetCenter}
+    icon={icon}
+    placeholder={placeholder}
+  />
+}
+
 const MapsAutocomplete = ({
+  center,
   setCenter,
   maps,
   map,
@@ -43,13 +97,15 @@ const MapsAutocomplete = ({
 
   return (
     <MapsAutocompleteView>
-      <GoogleMapsAutocomplete
+      <LocalizedGoogleMapsAutocomplete
         maps={maps}
         map={map}
         sessionToken={sessionToken}
         autocomplete={autocomplete}
         formattedAddress={formattedAddress}
+        address={address}
         setAddress={(address) => dispatch(setAddress(address))}
+        center={center}
         setCenter={setCenter}
         icon={<Navigation strokeWidth={2} />}
         placeholder={placeholder}
@@ -67,4 +123,5 @@ MapsAutocomplete.propTypes = {
   sessionToken: propTypes.object,
   autocomplete: propTypes.object,
 }
+
 export default MapsAutocomplete

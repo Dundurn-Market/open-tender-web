@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import propTypes from 'prop-types'
 import { Body, Heading } from '@open-tender/components'
+import { slugify } from '@open-tender/js'
 
 const MenuCategoryHeaderView = styled.div`
   margin: 0 0 3rem;
@@ -31,7 +32,7 @@ const MenuCategoryHeaderSubtitle = styled(Body)`
 const MenuCategoryHeader = ({ title, subtitle, isChild }) => {
   return (
     <MenuCategoryHeaderView>
-      <MenuCategoryHeaderTitle as="p" isChild={isChild}>
+      <MenuCategoryHeaderTitle id={slugify(title)} as="p" isChild={isChild}>
         {title}
       </MenuCategoryHeaderTitle>
       {subtitle && (

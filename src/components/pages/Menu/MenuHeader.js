@@ -75,17 +75,17 @@ const SearchButton = styled.button`
   border-radius: 2rem;
   border:2px solid black;  /* ${(props) => props.theme.border.color}; */
   padding: .5rem 2rem;
-  
+
   background-color: ${(props) => props.isSearchPage? props.theme.colors.success : 'transparent' };
   color: ${(props) => props.isSearchPage? 'white':'black' };
   display: flex;
   align-items: center;
-  
+
   svg {
     vertical-align: bottom;
   }
-  
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     background-color: transparent;
     color: black;
     border: none;
@@ -100,13 +100,10 @@ const Categories = styled.button`
   font-size:2rem;
   font-family: "Full Mrkt Font";
 
-  //margin-left: 1rem;
-  //padding: 0 1rem;
   height: inherit;
   align-items: center;
-  
 
-    transition: background-color, color .2s ease;
+  transition: background-color, color .2s ease;
   background-color: ${(props) => props.showCategories ? props.theme.bgColors.primary : 'transparent'};
   padding-bottom: ${(props) => props.showCategories ? '1px': 'none'};
   margin-bottom: ${(props) => props.showCategories ? '-1px': 'none'};
@@ -114,14 +111,13 @@ const Categories = styled.button`
   border-left: ${(props) => props.showCategories ? '1px solid '+props.theme.border.color: 'none'};
   border-right: ${(props) => props.showCategories ? '1px solid '+props.theme.border.color: 'none'};
   padding: ${(props) => props.showCategories ? '0 .9rem': '0 1rem'};
-  
+
   :hover {
     background-color: ${(props) => props.theme.bgColors.toast};
     color: white;
   }
 
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    //margin: 0;
+  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     font-size: 0;
     margin-left: 0;
   }
@@ -180,9 +176,11 @@ MenuHeaderTitle.propTypes = {
 const MenuHeader = ({ backPath = '/locations', backClick }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const { colors, border } = useTheme()
   const [showMenu, setShowMenu] = useState(false)
-  const [showCategories, setShowCategories] = useState(false)
+  const inCategory = pathname.includes('/category/')
+  const [showCategories, setShowCategories] = useState(inCategory)
   const { allergens: displayAllergens } = useSelector(selectDisplaySettings)
   const order = useSelector(selectOrder)
   const { revenueCenter } = order
@@ -192,9 +190,10 @@ const MenuHeader = ({ backPath = '/locations', backClick }) => {
   const showAllergens = displayAllergens && !isMobile ? true : false
   const allowLeave = cartGuest && backPath === '/locations'
   const menuSlug = useSelector(selectMenuSlug)
-  const path = useLocation().pathname
-  const isSearchPage = path.endsWith('/search')
-  const { categories } = useContext(MenuContext)
+  const isSearchPage = pathname.endsWith('/search')
+  const menuContext = useContext(MenuContext)
+
+  const categoriesAvailable = !!menuContext
 
   const leave = () => {
     dispatch(openModal({ type: 'groupOrderLeave' }))
@@ -239,9 +238,12 @@ const MenuHeader = ({ backPath = '/locations', backClick }) => {
         left={
         <>
           { onClick ? <Back onClick={onClick} /> : <Back path={backPath} /> }
-          <Categories onClick={toggleShowCategories(!showCategories)} showCategories={showCategories}>
-            <Grid size={24} />&nbsp;SHOP
-          </Categories>
+          { categoriesAvailable &&
+            <Categories onClick={toggleShowCategories(!showCategories)} showCategories={showCategories}>
+              <Grid size={24} />
+              <span>&nbsp;SHOP</span>
+            </Categories>
+          }
         </>
         }
         right={
@@ -268,11 +270,13 @@ const MenuHeader = ({ backPath = '/locations', backClick }) => {
         showMenu={showMenu}
         setShowMenu={setShowMenu}
       />
-      <MenuCategoriesDropdown
-        showCategories={showCategories}
-        setShowCategories={setShowCategories}
-        categories={categories}
-      />
+      { categoriesAvailable &&
+        <MenuCategoriesDropdown
+          showCategories={showCategories}
+          setShowCategories={setShowCategories}
+          categories={menuContext.categories}
+        />
+      }
     </>
   )
 }

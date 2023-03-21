@@ -1,19 +1,27 @@
-import { ModalContent, ModalView } from '../Modal'
-import { ButtonStyled } from '@open-tender/components'
-import { closeModal } from '../../slices'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
 import {
-  addMessage,
   deleteCustomerOrder,
   selectTimezone
 } from '@open-tender/redux'
+import { ButtonStyled } from '@open-tender/components'
 import { capitalize, isoToDateStr } from '@open-tender/js'
+
+import { closeModal } from '../../slices'
+import { ModalContent, ModalView } from '../Modal'
 
 const CancelOrder = ({ order }) => {
   const tz = useSelector(selectTimezone)
-  const readableDate = isoToDateStr(order.requested_at, tz, 'EEEE, MMMM dd')
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!order) dispatch(closeModal())
+  }, [order])
+
+  if (!order) return null
+
+  const readableDate = isoToDateStr(order.requested_at, tz, 'EEEE, MMMM dd')
 
   const cancelOrder = async () => {
     await dispatch(deleteCustomerOrder(order.order_id))
@@ -27,8 +35,9 @@ const CancelOrder = ({ order }) => {
         subtitle={
           <>
             <p>
-              The {capitalize(order.service_type)} order scheduled for {readableDate} will be cancelled.
-              However any subscriptions related to that order will not be removed.
+              The {capitalize(order.service_type)} order scheduled for
+              {readableDate} will be cancelled. However any subscriptions
+              related to that order will not be removed.
             </p>
           </>
         }
@@ -38,7 +47,10 @@ const CancelOrder = ({ order }) => {
             <ButtonStyled onClick={cancelOrder}>
               Yes, Cancel Order
             </ButtonStyled>
-            <ButtonStyled onClick={() => dispatch(closeModal())} color='secondary'>
+            <ButtonStyled
+              onClick={() => dispatch(closeModal())}
+              color='secondary'
+            >
               Nevermind
             </ButtonStyled>
           </div>

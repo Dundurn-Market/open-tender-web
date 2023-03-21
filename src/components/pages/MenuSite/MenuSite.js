@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { isBrowser, isMobile } from 'react-device-detect'
 import { scroller, Element } from 'react-scroll'
@@ -10,9 +11,12 @@ import {
   fetchAnnouncementPage, fetchLocations,
   fetchMenu,
   selectAnnouncementsPage,
-  selectMenu, selectRevenueCenters, selectTimezone
+  selectMenu,
+  selectOrder,
+  selectRevenueCenters,
+  selectTimezone,
 } from '@open-tender/redux'
-import { ButtonStyled } from '@open-tender/components'
+import { ButtonLink, ButtonStyled } from '@open-tender/components'
 import { selectBrand, selectContentSection } from '../../../slices'
 import {
   BackgroundContent,
@@ -45,13 +49,25 @@ export const MenuSiteCategories = styled.div`
   }
 `
 
+const BrowseCategoryFootnote = styled.div`
+  margin: 2rem 0 0;
+  font-size: 1.5rem;
+  color: white;
+`
+
 const MenuSite = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { colors } = useTheme()
   const { olo_id, title: siteTitle } = useSelector(selectBrand)
   const { revenueCenters } = useSelector(selectRevenueCenters)
   const tz = useSelector(selectTimezone)
   const [revenueCenterId] = useState(olo_id)
+  const {
+    revenueCenter: orderRevenueCenter,
+    serviceType: orderServiceType,
+    cart: orderCart,
+  } = useSelector(selectOrder)
   const { background, mobile, title, subtitle, content } = useSelector(
     selectContentSection('menuSite')
   )
@@ -73,7 +89,11 @@ const MenuSite = () => {
   const { categories } = useSelector(selectMenu)
   const announcements = useSelector(selectAnnouncementsPage('MENU'))
 
-  const [category, setCategory] = useState(categories[0])
+  const [category, setCategory] = useState(null)
+
+  const isCurrentOrder = orderRevenueCenter &&
+    orderServiceType &&
+    orderCart.length > 0
 
   const scrollToMenu = () => {
     scroller.scrollTo('menuSite', {
@@ -124,15 +144,33 @@ const MenuSite = () => {
               vertical="BOTTOM"
               horizontal="LEFT"
             >
-              <ButtonStyled onClick={scrollToMenu} size="big" color="light">
-                Browse The Menu
-              </ButtonStyled>
+              <div>
+                <ButtonStyled onClick={scrollToMenu} size="big" color="light">
+                  Browse Products
+                </ButtonStyled>
+              </div>
+              <BrowseCategoryFootnote>
+                <p>
+                  <span>
+                    { isCurrentOrder
+                      ? 'Want to add to your cart? '
+                      : 'Ready to add to your cart? '
+                    }
+                  </span>
+                  <ButtonLink
+                    onClick={() => navigate('/order-type')}
+                    color='light'
+                  >
+                    { isCurrentOrder ? 'Continue ordering.' : 'Order now!' }
+                  </ButtonLink>
+                </p>
+              </BrowseCategoryFootnote>
             </BackgroundContent>
           </PageHero>
           <MenuSiteView>
             <Element name="menuSite">
               <MenuSiteCategoryHeader>
-                <h2>Browse Menu By Category</h2>
+                <h2>Browse Products By Category</h2>
               </MenuSiteCategoryHeader>
               <MenuSiteCategories>
                 {categories.map((category, index) => (

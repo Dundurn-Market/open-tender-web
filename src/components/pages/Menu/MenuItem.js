@@ -17,7 +17,7 @@ import {
 } from '@open-tender/redux'
 import { makeOrderItem, rehydrateOrderItem, slugify } from '@open-tender/js'
 import { useOrderItem } from '@open-tender/hooks'
-import { Body, ButtonStyled, CardMenuItem, SelectOnly } from '@open-tender/components'
+import { Body, ButtonStyled, CardMenuItem } from '@open-tender/components'
 import {
   selectDisplaySettings,
   openModal,
@@ -27,6 +27,9 @@ import {
 import { MenuItemButton, MenuItemOverlay, MenuItemTagAlert } from '../..'
 import MenuItemCount from './MenuItemCount'
 import { subscriptionFreqOptions } from '../../../utils/recurringFrequencyUtils'
+import { imageTagnames } from '../../MenuItemTagImages'
+import OrderFrequency from '../../buttons/OrderFrequency'
+
 const MenuItemView = styled(CardMenuItem)`
   position: relative;
   flex: 1;
@@ -54,7 +57,7 @@ const MenuItemButtonsContainer = styled.div`
 `
 
 const MenuItemSubscriptionDropdown = styled.div`
-  width: 8.2rem;
+  width: 7.5rem;
   select {
     padding-left: 5px;
     padding-right: 0;
@@ -107,13 +110,6 @@ const MenuItemButtonsCustomize = styled.div`
     color: ${(props) => props.theme.links.primary.color};
   }
 `
-
-export const imageTagnames = [
-  'Gluten-free',
-  'Organic',
-  'Plant Based',
-  'Local'
-]
 
 const MenuItem = ({
   item,
@@ -184,16 +180,8 @@ const MenuItem = ({
   const addDisabled = isIncomplete || isSoldOut
   const customizeIsPrimary = addDisabled && !isSoldOut
 
-  let textTags = []
-  let imageTags = []
-  for (let tag of displayTags) {
-    if (imageTagnames.includes(tag)) {
-      imageTags.push(tag) // push the image url
-    } else {
-      textTags.push(tag)
-    }
-  }
-  imageTags = imageTags.sort()
+  let textTags = displayTags.filter(t => !imageTagnames.includes(t))
+  let imageTags = displayTags.filter(t => imageTagnames.includes(t))
 
   const view = () => {
     if (!isSoldOut) {
@@ -274,12 +262,10 @@ const MenuItem = ({
             </MenuItemButtonsAdd>
             {isRecurringAllowed && (
               <MenuItemSubscriptionDropdown>
-                <SelectOnly
-                  label='Subscribe'
-                  name='subscription-freq'
-                  value={orderFreq}
-                  onChange={setSubscription}
-                  options={subscriptionFreqOptions}
+                <OrderFrequency
+                  orderFrequency={orderFreq}
+                  setOrderFrequency={setSubscription}
+                  shortOptions={true}
                 />
               </MenuItemSubscriptionDropdown>
             )}

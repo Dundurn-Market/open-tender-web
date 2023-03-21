@@ -100,6 +100,7 @@ import Quantity from './Quantity'
 import RevenueCenter, { RevenueCenterChild } from './RevenueCenter'
 import Reward from './Reward'
 import Rewards from './Rewards'
+import CompactRow from './CompactRow'
 import Row from './Row'
 import ScreenreaderTitle from './ScreenreaderTitle'
 import ScrollableSection from './ScrollableSection'
@@ -224,6 +225,7 @@ export {
   RevenueCenterChild,
   Reward,
   Rewards,
+  CompactRow,
   Row,
   ScreenreaderTitle,
   ScrollableSection,

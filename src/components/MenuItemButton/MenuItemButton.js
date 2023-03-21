@@ -13,7 +13,6 @@ const MenuItemButtonView = styled.button`
   width: 100%;
   margin: 0 0 1.3rem;
   cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
-  padding-top: 2rem;
 
   .compact & {
     @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {

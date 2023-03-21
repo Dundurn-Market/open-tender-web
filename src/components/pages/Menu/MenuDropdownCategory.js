@@ -11,7 +11,7 @@ import {
 import { BgImage, Heading } from '@open-tender/components'
 
 const MenuBrowseCategoryView = styled.div`
-  width: 12.5%;
+  width: 20%;
   padding: 0 2rem 2rem 0;
   @media (max-width: ${(props) => props.theme.breakpoints.narrow}) {
     width: 33.3%;
@@ -41,11 +41,11 @@ const MenuBrowseCategoryButton = styled.button`
     border-bottom: .1rem solid ${(props) => props.theme.border.color};
     background-color: transparent;
   }
-  
+
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     //padding: 1rem 0;
   }
-  
+
   :hover {
     transform: scale(1.10);
   }
@@ -86,7 +86,7 @@ const MenuBrowseCategoryTitle = styled(Heading)`
   font-size: ${(props) => props.theme.fonts.sizes.small};
   font-family: 'Full Mrkt Font';
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    
+
   }
 `
 

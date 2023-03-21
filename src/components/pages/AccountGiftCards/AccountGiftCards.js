@@ -70,6 +70,8 @@ const AccountGiftCards = () => {
                   Add Gift Card To Account
                 </ButtonStyled>
               </PageTitleButtons>
+              <p>Please note, gift cards purchased here are currently only
+                applicable online.</p>
             </PageTitle>
             {entities.length ? (
               <GiftCardsList giftCards={entities} isLoading={isLoading} />

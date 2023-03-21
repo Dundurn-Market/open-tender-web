@@ -66,7 +66,7 @@ const MenuNew = () => {
             ) : (
               <>
                 <MenuTop />
-                {!isScrollable && (
+                {(!isScrollable && !isMobile) && (
                   <MenuBrowse
                     isRcs={isRcs}
                     categories={revenueCenters || categories}

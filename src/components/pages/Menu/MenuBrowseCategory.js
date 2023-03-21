@@ -11,33 +11,29 @@ import {
 import { BgImage, Heading } from '@open-tender/components'
 
 const MenuBrowseCategoryView = styled.div`
-  width: 20% ;
+  width: 25% ;
   padding: 0 2rem 2rem 0;
   @media (max-width: ${(props) => props.theme.breakpoints.narrow}) {
     width: 50%;
   }
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     width: 100%;
-    padding: 0;
+    padding: 0 1rem 1rem 0;
   }
 `
 
 const MenuBrowseCategoryButton = styled.button`
   width: 100%;
   display: flex;
+  gap: 2rem;
+  overflow: hidden;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
   background-color: ${(props) => props.theme.bgColors.tertiary};
   border-radius: 6px;
   border: .1rem solid ${(props) => props.theme.border.color};
-  // border-style: solid;
-  // border-color: ${(props) => props.theme.border.color};
-  // border-bottom-width: ${(props) => props.theme.border.width};
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    padding: 1rem 0;
-  }
-  
+
   :hover {
     transform: scale(1.05);
   }
@@ -65,51 +61,27 @@ const MenuBrowseCategoryText = styled.span`
   flex-grow: 1;
   line-height: ${(props) => props.theme.fonts.body.lineHeight};
   text-align: left;
-  display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0 2.5rem;
   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     padding: 0 2rem;
   }
 `
 
-const MenuBrowseCategoryTitle = styled(Heading)`
-  display: block;
-  margin: 0 0 0 -0.1rem;
-  transition: ${(props) => props.theme.links.transition};
-  font-family: 'Full Mrkt Font';
-  font-size: ${(props) => props.theme.fonts.sizes.big};
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    font-size: ${(props) => props.theme.fonts.sizes.big};
-  }
-`
-
-const MenuBrowseCategoryArrow = styled.span`
-  position: relative;
-  width: 2.2rem;
-  height: 2.2rem;
-  line-height: 0;
-  flex-shrink: 0;
-  color: ${(props) => props.theme.fonts.headings.color};
-  transition: ${(props) => props.theme.links.transition};
-  transform: translateX(0);
-
-  // button:hover & {
-  //   transform: translateX(1rem);
-  //
-  //   @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-  //     transform: translateX(0);
-  //   }
-  // }
-`
-
-const MenuBrowseCategory = ({ category, isLast = false, onClickCallback }) => {
+const MenuBrowseCategory = ({
+  category,
+  name,
+  image,
+  isLast = false,
+  buttonRef,
+  onClickCallback,
+  preventDefault = false,
+}) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const menuSlug = useSelector(selectMenuSlug)
   const {
-    name,
+    name : categoryName,
     small_image_url,
     large_image_url,
     app_image_url,
@@ -120,25 +92,29 @@ const MenuBrowseCategory = ({ category, isLast = false, onClickCallback }) => {
 
   const view = (evt) => {
     evt.preventDefault()
-    if (revenue_center_id) {
-      dispatch(setCurrentVendor(category))
-      navigate(`${menuSlug}/vendor/${slugify(category.name)}`)
-    } else {
-      dispatch(setCurrentCategory(category))
-      navigate(`${menuSlug}/category/${slugify(category.name)}`)
+
+    if (!preventDefault) {
+      if (revenue_center_id) {
+        dispatch(setCurrentVendor(category))
+        navigate(`${menuSlug}/vendor/${slugify(category.name)}`)
+      } else {
+        dispatch(setCurrentCategory(category))
+        navigate(`${menuSlug}/category/${slugify(category.name)}`)
+      }
     }
 
     if (onClickCallback)
       onClickCallback()
   }
 
+  const displayName = name ? name : categoryName
+
   return (
     <MenuBrowseCategoryView>
-      <MenuBrowseCategoryButton onClick={view} isLast={isLast}>
-        <MenuBrowseCategoryImage style={bgStyle} />
+      <MenuBrowseCategoryButton key={name} ref={buttonRef} onClick={view} isLast={isLast}>
+        {!!image ? image : <MenuBrowseCategoryImage style={bgStyle}/>}
         <MenuBrowseCategoryText>
-          <MenuBrowseCategoryTitle>{name}</MenuBrowseCategoryTitle>
-          {/* <MenuBrowseCategorySubtitle>{description}</MenuBrowseCategorySubtitle> */}
+          {displayName}
         </MenuBrowseCategoryText>
       </MenuBrowseCategoryButton>
     </MenuBrowseCategoryView>

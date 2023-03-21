@@ -21,14 +21,14 @@ const CheckoutSubmitMessage = styled.div`
   }
 `
 
-const CheckoutSubmit = () => {
+const CheckoutSubmit = ({ disabled = false }) => {
   const dispatch = useDispatch()
   const { check, form, submitting, loading } = useSelector(selectCheckout)
   const updating = submitting ? false : loading === 'pending'
   const { total } = check.totals
   const amountRemaining = checkAmountRemaining(total, form.tenders)
   const isPaid = Math.abs(amountRemaining).toFixed(2) === '0.00'
-  const submitDisabled = submitting || !isPaid || updating
+  const submitDisabled = disabled || submitting || !isPaid || updating
   const hasTotal = total && parseFloat(total) >= 0 ? true : false
   const totalAmount = hasTotal ? ` ${formatDollars(total)}` : ''
 

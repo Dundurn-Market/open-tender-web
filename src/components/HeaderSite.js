@@ -44,7 +44,7 @@ const HeaderSiteLogo = styled.div`
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
     max-width: 13rem;
   }
-  
+
   a {
     display: inline-block;
   }
@@ -84,7 +84,7 @@ const HeaderSiteLinks = styled.ul`
   }
 `
 
-const HeaderSiteNavUser = styled.button`
+const HeaderSiteNavUser = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -115,10 +115,9 @@ const HeaderSiteNavButton = styled.div`
 `
 
 const links = [
-  { path: '/menu', title: 'Menu' },
+  { path: '/menu', title: 'Catalogue' },
   { path: '/restaurants', title: 'Locations' },
-  { path: '/catering', title: 'Catering' },
-  { path: '/about', title: 'About' },
+  { path: '/catering-address', title: 'Catering' },
 ]
 
 const HeaderSite = ({ useLight = true, style = null }) => {
@@ -129,6 +128,7 @@ const HeaderSite = ({ useLight = true, style = null }) => {
   const logoUrl = useLight || stuck ? logoLight : logo
   const theme = useTheme()
   const { auth } = useSelector(selectCustomer)
+  // TODO: packing current order check for reuse
   const { revenueCenter, serviceType, cart } = useSelector(selectOrder)
   const isCurrentOrder = revenueCenter && serviceType && cart.length > 0
 
@@ -163,8 +163,8 @@ const HeaderSite = ({ useLight = true, style = null }) => {
               {isMobile ? (
                 <>
                   {auth ? (
-                    <HeaderSiteNavUser onClick={() => navigate('/account')}>
-                      <User />
+                    <HeaderSiteNavUser>
+                      <User onClick={() => navigate('/account')} />
                     </HeaderSiteNavUser>
                   ) : (
                     <HeaderSiteNavButton>
@@ -189,8 +189,8 @@ const HeaderSite = ({ useLight = true, style = null }) => {
                     ))}
                   </HeaderSiteLinks>
                   {auth && (
-                    <HeaderSiteNavUser onClick={() => navigate('/account')} style={{marginRight:'2rem'}}>
-                      <User />
+                    <HeaderSiteNavUser style={{marginRight:'2rem'}}>
+                      <User onClick={() => navigate('/account')} />
                     </HeaderSiteNavUser>
                   )}
                   <HeaderSiteNavButton>

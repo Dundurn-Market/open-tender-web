@@ -172,13 +172,13 @@ const ErrorFatalPage = ({ error, loading }) => {
             </p>
             <p>
               If you've updated your browser and the issue persists, please
-              contact Open Tender support at{' '}
+              contact MRKTBOX support at{' '}
               <a
-                href="mailto:help@opentender.io"
+                href="mailto:hello@mrktbox.com"
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                help@opentender.io
+                hello@mrktbox.com
               </a>{' '}
               and provide the details of the error message below.
             </p>

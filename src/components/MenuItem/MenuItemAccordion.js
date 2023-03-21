@@ -8,7 +8,8 @@ import {
   ButtonStyled,
   Checkmark,
   Heading,
-  Input, SelectOnly, Textarea
+  Input,
+  Textarea,
 } from '@open-tender/components'
 import { ChevronDown, ChevronUp } from '../icons'
 import { MenuItemIngredients, MenuItemNutrition, MenuItemPriceCals } from '..'
@@ -16,6 +17,7 @@ import MenuItemQuantity from './MenuItemQuantity'
 import { subscriptionFreqOptions } from '../../utils/recurringFrequencyUtils'
 import { useSelector } from 'react-redux'
 import { selectOrder, selectOrderType, selectRevenueCenter, selectToken } from '@open-tender/redux'
+import OrderFrequency from '../buttons/OrderFrequency'
 
 const MenuItemAccordionView = styled.div`
   padding: ${(props) => props.theme.item.desktop.padding};
@@ -111,7 +113,8 @@ const MenuItemAccordionQuantity = styled.div`
 
 const MenuItemAccordionFrequency = styled.div`
   margin-right: 0.5rem;
-  width: 8rem;
+  width: 12rem;
+
   select, select:focus {
     border-bottom: none;
     outline: none;
@@ -423,12 +426,9 @@ const MenuItemAccordion = ({
           <MenuItemAccordionRow>
             <MenuItemAccordionLabel>Frequency</MenuItemAccordionLabel>
             <MenuItemAccordionFrequency>
-              <SelectOnly
-                label='Subscribe'
-                name='subscription-freq'
+              <OrderFrequency
                 value={orderFreq}
                 onChange={setOrderFrequency}
-                options={subscriptionFreqOptions}
               />
             </MenuItemAccordionFrequency>
           </MenuItemAccordionRow>

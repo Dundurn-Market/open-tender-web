@@ -1,8 +1,6 @@
-import { useContext, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { Helmet } from 'react-helmet'
-import { isMobile } from 'react-device-detect'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from '@emotion/styled'
 import {
   addItemToCart,
@@ -11,69 +9,58 @@ import {
   selectCustomerPointsProgram,
   selectGroupOrder,
   selectOrder,
-  setCurrentItem,
+  selectSelectedAllergenNames,
+  selectSoldOut,
   selectMenuSlug,
-  showNotification, selectOrderFrequency
+  showNotification,
+  selectOrderFrequency
 } from '@open-tender/redux'
 import { useBuilder } from '@open-tender/hooks'
-import { selectContentSection, selectMenuPath } from '../../slices'
-import { Back, NavMenu } from '../buttons'
+import { selectContentSection, selectDisplaySettings, selectMenuPath } from '../../slices'
 import { Star } from '../icons'
-import {
-  BackgroundImage,
-  Content,
-  Header,
-  Main, MenuItemTagImages,
-  ScreenreaderTitle
-} from '..'
-import MenuItemHeader from './MenuItemHeader'
+import { Back, NavMenu } from '../buttons'
 import MenuItemAccordion from './MenuItemAccordion'
+import MenuItemClose from './MenuItemClose'
 import MenuItemFooter from './MenuItemFooter'
 import MenuItemGroups from './MenuItemGroups'
+import MenuItemHeader from './MenuItemHeader'
+import MenuItemImage from './MenuItemImage'
+import MenuItemTagImages from '../MenuItemTagImages'
 import MenuItemUpsell from './MenuItemUpsell'
-import { imageTagnames } from '../pages/Menu/MenuItem'
-import { MenuContext } from '../pages/Menu/Menu'
-import { MenuHeader } from '../pages/Menu'
+import { imageTagnames } from '../MenuItemTagImages'
 
 const MenuItemView = styled.div`
+  label: MenuItemView;
   position: relative;
-  z-index: 2;
+  // z-index: 2;
+  height: 100%;
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  overflow: hidden;
 `
 
-const MenuItemImage = styled.div`
-  position: fixed;
-  display: flex;
-  z-index: 1;
-  top: ${(props) => props.theme.layout.navHeight};
-  bottom: 0;
-  left: 0;
-  right: 64rem;
-  background-color: ${(props) => props.theme.bgColors.tertiary};
-  @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
+const MenuItemContent = styled.div`
+  label: MenuItemContent;
+  flex: 1 1 auto;
+  background-color: lightblue;
+  overflow-y: scroll;
+  background-color: ${(props) => props.theme.bgColors.primary};
+
+  &::-webkit-scrollbar {
     display: none;
   }
 `
 
-const MenuItemContent = styled.div`
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: flex-start;
-  // align-items: flex-stretch;
-  width: 64rem;
-  margin-bottom: ${(props) => props.footerHeight || '10rem'};
-  background-color: ${(props) => props.theme.bgColors.primary};
-  // background-color: yellow;
+const MenuItemBack = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 ${(props) => props.theme.item.desktop.padding};
   @media (max-width: ${(props) => props.theme.breakpoints.tablet}) {
-    width: 100%;
-    margin-bottom: ${(props) => props.footerHeight || '10rem'};
+    padding: 0 ${(props) => props.theme.item.mobile.padding};
   }
-`
-
-const ImageContainer = styled.div`
-  position: relative;
-  width: 100%;
 `
 
 const TagImageContainer = styled.div`
@@ -83,17 +70,21 @@ const TagImageContainer = styled.div`
   right: 5rem;
 `
 
-const MenuItem = () => {
+const MenuItem = ({
+  cancel,
+  showBack = false,
+  showClose = true,
+  showImage = true,
+}) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [scrollContainer, setScrollContainer] = useState(null)
+  const [topOffset, setTopOffset] = useState(null)
   const [showUpsell, setShowUpsell] = useState(false)
   const [isCustomize, setIsCustomize] = useState(false)
-  const [footerHeight, setFooterHeight] = useState(null)
-  const footerHeightRem = footerHeight
-    ? `${(footerHeight / 10).toFixed(1)}rem`
-    : null
-  const { soldOut, siteTitle, displaySettings, allergenAlerts } =
-    useContext(MenuContext)
+  const soldOut = useSelector(selectSoldOut)
+  const allergenAlerts = useSelector(selectSelectedAllergenNames)
+  const displaySettings = useSelector(selectDisplaySettings)
   const menuPath = useSelector(selectMenuPath)
   const menuSlug = useSelector(selectMenuSlug)
   const item = useSelector(selectCurrentItem)
@@ -103,8 +94,8 @@ const MenuItem = () => {
   const upsellItemIds =
     upsellItems && upsells?.item?.show
       ? upsellItems.filter(
-        (id) => !cartIds.includes(id) && !soldOut.includes(id)
-      )
+          (id) => !cartIds.includes(id) && !soldOut.includes(id)
+        )
       : []
   const hasUpsell = upsellItemIds.length > 0
   const { cartId } = useSelector(selectGroupOrder)
@@ -124,19 +115,12 @@ const MenuItem = () => {
     decrementOption,
     setOptionQuantity,
   } = useBuilder(item || {})
+  const { builderImages, hasCustomize } = displaySettings
+  const displayImage = showImage && !isCustomize && builderImages ? true : false
+  const hasGroups = builtItem.groups.filter((g) => !g.isSize).length > 0
+  const showGroups = hasGroups && (!hasCustomize || isCustomize)
 
-
-  let textTags = []
-  let imageTags = []
-  for (let tag of builtItem.tags) {
-    if (imageTagnames.includes(tag)) {
-      imageTags.push(tag) // push the image url
-    } else {
-      textTags.push(tag)
-    }
-  }
-  imageTags = imageTags.sort()
-  const builtItemNoImageTags = {...builtItem, tags: textTags}
+  const imageTags = builtItem.tags.filter(t => imageTagnames.includes(t))
 
   const [searchParams] = useSearchParams()
   const orderFrequencyFromUrl = searchParams.get("freq")
@@ -144,16 +128,9 @@ const MenuItem = () => {
   const orderFrequency = useSelector(selectOrderFrequency)
 
   const [orderFreq, setOrderFreq] = useState(orderFrequencyFromUrl? orderFrequencyFromUrl : orderFrequency)
-  // useEffect(() => {
-  //   setOrderFreq(orderFrequency)
-  // }, [orderFrequency])
 
   const setOrderFrequency = (event) => {
     setOrderFreq(event.target.value)
-  }
-
-  const cancel = () => {
-    dispatch(setCurrentItem(null))
   }
 
   const addItem = () => {
@@ -161,14 +138,20 @@ const MenuItem = () => {
     if (cartItem.index === -1) delete cartItem.index
     dispatch(addItemToCart(cartItem))
     dispatch(showNotification(`${cartItem.name} added to cart`))
-    if (hasUpsell) {
-      setShowUpsell(true)
-    } else {
-      dispatch(setCurrentItem(null))
-    }
+    hasUpsell ? setShowUpsell(true) : cancel()
   }
 
-  const backClick = isCustomize ? () => setIsCustomize(false) : cancel
+  const onViewRef = useCallback((node) => {
+    if (node !== null) {
+      setTopOffset(node.getBoundingClientRect().top)
+    }
+  }, [])
+
+  const onScrollRef = useCallback((node) => {
+    if (node !== null) {
+      setScrollContainer(node)
+    }
+  }, [])
 
   useEffect(() => {
     if (!item) navigate(menuPath || menuSlug)
@@ -178,91 +161,90 @@ const MenuItem = () => {
 
   return (
     <>
-      <Helmet>
-        <title>
-          Menu - {item.name} | {siteTitle}
-        </title>
-      </Helmet>
-      <Content hasFooter={false}>
-        {isMobile ? (
-          <Header
-            style={{ boxShadow: 'none' }}
-            left={<Back onClick={backClick} />}
-            right={<NavMenu />}
-          />
-        ) : (
-          <MenuHeader backClick={backClick} />
-        )}
-        {hasUpsell && (
-          <MenuItemUpsell
-            showUpsell={showUpsell}
-            setShowUpsell={setShowUpsell}
-            upsellItemIds={upsellItemIds}
-          />
-        )}
-        <Main>
-          <ScreenreaderTitle>{item.name}</ScreenreaderTitle>
-          <MenuItemView>
-            <MenuItemImage>
-              <BackgroundImage imageUrl={builtItem.imageUrl}
-                               children={imageTags.length !== 0 ? (
-                                 <TagImageContainer>
-                                   <MenuItemTagImages tags={imageTags} imageSize={'7rem'}/>
-                                 </TagImageContainer>
-                               ): null}
-              />
+      <MenuItemView ref={onViewRef}>
+        {showClose && <MenuItemClose onClick={cancel} />}
+        <MenuItemContent id="menu-item-content" ref={onScrollRef}>
+          {showBack && (
+            <MenuItemBack>
+              <Back onClick={cancel} />
+              <NavMenu />
+            </MenuItemBack>
+          )}
+          {displayImage && <>
+            <MenuItemImage imageUrl={builtItem.imageUrl} hasBack={showBack}>
+              { !!imageTags.length && <>
+                <TagImageContainer>
+                  <MenuItemTagImages tags={imageTags} imageSize={'7rem'}/>
+                </TagImageContainer>
+              </> }
             </MenuItemImage>
-            <MenuItemContent footerHeight={footerHeightRem}>
-              <MenuItemHeader
-                builtItem={builtItemNoImageTags}
-                decrementOption={decrementOption}
-                displaySettings={displaySettings}
-                pointsIcon={pointsIcon}
-                isCustomize={isCustomize}
-                setIsCustomize={setIsCustomize}
-              />
-              {isCustomize ? (
-                <MenuItemGroups
-                  builtItem={builtItem}
-                  allergenAlerts={allergenAlerts}
-                  displaySettings={displaySettings}
-                  toggleOption={toggleOption}
-                  incrementOption={incrementOption}
-                  decrementOption={decrementOption}
-                  setOptionQuantity={setOptionQuantity}
-                />
-              ) : (
-                <MenuItemAccordion
-                  builtItem={builtItem}
-                  setQuantity={setQuantity}
-                  increment={increment}
-                  decrement={decrement}
-                  toggleOption={toggleOption}
-                  setMadeFor={setMadeFor}
-                  setNotes={setNotes}
-                  setOrderFrequency={setOrderFrequency}
-                  orderFreq={orderFreq}
-                  displaySettings={displaySettings}
-                  cartId={cartId}
-                />
-              )}
-              <MenuItemFooter
-                builtItem={builtItem}
-                addItem={addItem}
-                cancel={cancel}
-                isCustomize={isCustomize}
-                setIsCustomize={setIsCustomize}
-                setFooterHeight={setFooterHeight}
-                increment={increment}
-                decrement={decrement}
-              />
-            </MenuItemContent>
-          </MenuItemView>
-        </Main>
-      </Content>
+          </> }
+          <MenuItemHeader
+            cancel={cancel}
+            builtItem={builtItem}
+            decrementOption={decrementOption}
+            displaySettings={displaySettings}
+            pointsIcon={pointsIcon}
+            hasCustomize={hasCustomize}
+            isCustomize={isCustomize}
+            setIsCustomize={setIsCustomize}
+            topOffset={topOffset}
+            scrollContainer={scrollContainer}
+          />
+          {!hasCustomize || !isCustomize ? (
+            <MenuItemAccordion
+              hasCustomize={hasCustomize}
+              builtItem={builtItem}
+              setQuantity={setQuantity}
+              increment={increment}
+              decrement={decrement}
+              toggleOption={toggleOption}
+              setMadeFor={setMadeFor}
+              setNotes={setNotes}
+              setOrderFrequency={setOrderFrequency}
+              orderFreq={orderFreq}
+              displaySettings={displaySettings}
+              cartId={cartId}
+            />
+          ) : null}
+          {showGroups ? (
+            <MenuItemGroups
+              builtItem={builtItem}
+              allergenAlerts={allergenAlerts}
+              displaySettings={displaySettings}
+              toggleOption={toggleOption}
+              incrementOption={incrementOption}
+              decrementOption={decrementOption}
+              setOptionQuantity={setOptionQuantity}
+              scrollContainer={scrollContainer}
+              topOffset={topOffset}
+              headerHeight={45}
+            />
+          ) : null}
+        </MenuItemContent>
+        <MenuItemFooter
+          builtItem={builtItem}
+          increment={increment}
+          decrement={decrement}
+          addItem={addItem}
+          cancel={cancel}
+          hasCustomize={hasCustomize}
+          isCustomize={isCustomize}
+          setIsCustomize={setIsCustomize}
+        />
+      </MenuItemView>
+      {hasUpsell && (
+        <MenuItemUpsell
+          showUpsell={showUpsell}
+          setShowUpsell={setShowUpsell}
+          upsellItemIds={upsellItemIds}
+          cancel={cancel}
+        />
+      )}
     </>
   )
 }
 
 MenuItem.displayName = 'MenuItem'
+
 export default MenuItem

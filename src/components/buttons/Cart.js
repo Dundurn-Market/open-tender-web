@@ -20,10 +20,7 @@ const CartIcon = styled.div`
   }
 
   button {
-    color: ${(props) =>
-      props.isFilled
-        ? props.theme.buttons.colors.cart.color
-        : props.theme.buttons.colors.header.color};
+    color: ${(props) => props.theme.buttons.colors.header.color};
 
     svg {
       transition: ${(props) => props.theme.links.transition};
@@ -36,10 +33,7 @@ const CartIcon = styled.div`
     &:hover,
     &:active,
     &:focus {
-      color: ${(props) =>
-        props.isFilled
-          ? props.theme.buttons.colors.cartHover.color
-          : props.theme.buttons.colors.headerHover.color};
+      color: ${(props) => props.theme.buttons.colors.headerHover.color};
 
       svg {
         // transform: scale(1.15);
