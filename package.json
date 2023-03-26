@@ -1,6 +1,6 @@
 {
   "name": "mrktbox-web",
-  "version": "0.1.1-dev.6",
+  "version": "0.1.2",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.6.0",
@@ -9,7 +9,7 @@
     "@open-tender/components": "^5.1.2",
     "@open-tender/hooks": "^1.0.1",
     "@open-tender/js": "^2.2.4",
-    "@open-tender/redux": "3.0.16-mrktbox.1",
+    "@open-tender/redux": "3.0.16-mrktbox.2",
     "@reduxjs/toolkit": "^1.6.2",
     "@sentry/react": "^7.11.1",
     "@types/react": "^18.0.9",
