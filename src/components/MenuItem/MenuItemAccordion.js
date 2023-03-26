@@ -427,8 +427,8 @@ const MenuItemAccordion = ({
             <MenuItemAccordionLabel>Frequency</MenuItemAccordionLabel>
             <MenuItemAccordionFrequency>
               <OrderFrequency
-                value={orderFreq}
-                onChange={setOrderFrequency}
+                orderFrequency={orderFreq}
+                setOrderFrequency={setOrderFrequency}
               />
             </MenuItemAccordionFrequency>
           </MenuItemAccordionRow>
