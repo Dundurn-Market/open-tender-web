@@ -1,6 +1,11 @@
 import styled from '@emotion/styled'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectCheckout, setSubmitting, submitOrder } from '@open-tender/redux'
+import {
+  selectCheckout,
+  setSubmitting,
+  selectOrder,
+  submitOrder,
+} from '@open-tender/redux'
 import { checkAmountRemaining, formatDollars } from '@open-tender/js'
 import { ButtonStyled, Message } from '@open-tender/components'
 import CheckoutSection from './CheckoutSection'
@@ -23,6 +28,7 @@ const CheckoutSubmitMessage = styled.div`
 
 const CheckoutSubmit = ({ disabled = false }) => {
   const dispatch = useDispatch()
+  const { orderId } = useSelector(selectOrder)
   const { check, form, submitting, loading } = useSelector(selectCheckout)
   const updating = submitting ? false : loading === 'pending'
   const { total } = check.totals
@@ -31,6 +37,8 @@ const CheckoutSubmit = ({ disabled = false }) => {
   const submitDisabled = disabled || submitting || !isPaid || updating
   const hasTotal = total && parseFloat(total) >= 0 ? true : false
   const totalAmount = hasTotal ? ` ${formatDollars(total)}` : ''
+
+  const submitText = orderId ? 'Update Order' : 'Submit Order'
 
   const submitPayment = () => {
     dispatch(setSubmitting(true))
@@ -59,7 +67,7 @@ const CheckoutSubmit = ({ disabled = false }) => {
           size="big"
           color="primary"
         >
-          {updating ? 'Updating...' : `Submit Order${totalAmount}`}
+          {updating ? 'Updating...' : `${submitText}${totalAmount}`}
         </ButtonStyled>
       </CheckoutSubmitButton>
     </CheckoutSection>
