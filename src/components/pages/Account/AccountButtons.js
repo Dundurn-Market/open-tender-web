@@ -1,10 +1,15 @@
 import styled from '@emotion/styled'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { resetOrder, selectOrder } from '@open-tender/redux'
+import {
+  fetchCustomerOrders,
+  resetOrder,
+  selectOrder,
+  selectCustomerOrders,
+} from '@open-tender/redux'
 import { ButtonLarge } from '../..'
 import { ArrowRight } from '../../icons'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 export const AccountButtonsView = styled.div`
   display: flex;
@@ -45,8 +50,17 @@ const AccountButtons = React.forwardRef((props, ref) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const currentOrder = useSelector(selectOrder)
+  const { entities : orders } = useSelector(selectCustomerOrders)
+
+  useEffect(() => {
+    dispatch(fetchCustomerOrders(10))
+  }, [dispatch])
+
   const { revenueCenter, serviceType, cart } = currentOrder
   const isCurrentOrder = revenueCenter && serviceType && cart.length > 0
+
+  const editableOrders = orders.filter(i => i.is_editable)
+  const existingOrders = !!editableOrders.length
 
   const continueCurrent = () => {
     navigate(revenueCenter ? `/menu/${revenueCenter.slug}` : '/order-type')
@@ -57,15 +71,30 @@ const AccountButtons = React.forwardRef((props, ref) => {
     navigate(`/order-type`)
   }
 
+  const editOrders = () => {
+    navigate(`/orders`)
+  }
+
   return (
     <AccountButtonsView ref={ref}>
-      <ButtonLarge
-        onClick={isCurrentOrder ? continueCurrent : startNewOrder}
-        text={isCurrentOrder ? 'Continue Order' : 'Order Now'}
-        color="primary"
-      >
-        <ArrowRight size={22} strokeWidth={2} />
-      </ButtonLarge>
+      <>
+        { existingOrders &&
+          <ButtonLarge
+            onClick={editOrders}
+            text={'Edit an Order'}
+            color="secondary"
+          >
+            <ArrowRight size={22} strokeWidth={2} />
+          </ButtonLarge>
+        }
+        <ButtonLarge
+          onClick={isCurrentOrder ? continueCurrent : startNewOrder}
+          text={isCurrentOrder ? 'Continue Order' : 'New Order'}
+          color="primary"
+        >
+          <ArrowRight size={22} strokeWidth={2} />
+        </ButtonLarge>
+      </>
     </AccountButtonsView>
   )
 })
