@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import {
+  fetchCustomerOrders,
+  fetchLocations,
   selectCustomer,
   selectCustomerOrders,
-  fetchCustomerOrders,
 } from '@open-tender/redux'
 import { ButtonStyled } from '@open-tender/components'
 
@@ -42,6 +43,7 @@ const Orders = () => {
 
   useEffect(() => {
     dispatch(fetchCustomerOrders(limit + 1))
+    dispatch(fetchLocations({type: 'OLO'}))
   }, [dispatch])
 
   useEffect(() => {

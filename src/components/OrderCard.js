@@ -1,11 +1,12 @@
 import propTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   setOrderServiceType,
   setAddress,
+  selectRevenueCenters,
   reorderPastOrder,
-  editOrder, deleteCustomerOrder
+  editOrder,
 } from '@open-tender/redux'
 import {
   timezoneMap,
@@ -18,10 +19,12 @@ import { ButtonStyled, DeliveryLink } from '@open-tender/components'
 import { Card, OrderImages, OrderTag } from '.'
 import { ExternalLink } from './icons'
 import { openModal } from '../slices'
+import { isValidTime } from '../utils/revenueCenters'
 
 const OrderCard = ({ order, isLast }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const { revenueCenters } = useSelector(selectRevenueCenters)
   const {
     order_id,
     status,
@@ -35,6 +38,9 @@ const OrderCard = ({ order, isLast }) => {
     totals,
     delivery,
   } = order
+  const revenueCenter = revenueCenters.find(
+    r => r.revenue_center_id === revenue_center.revenue_center_id,
+  )
   const isOpen = status === 'OPEN'
   const isMerch = order_type === 'MERCH'
   const orderTypeName = makeOrderTypeName(order_type, service_type)
@@ -64,6 +70,10 @@ const OrderCard = ({ order, isLast }) => {
     dispatch(openModal({ type: 'cancelOrder', args: { order } }))
   }
 
+  const shouldEdit = (revenueCenter && requested_at && service_type)
+    ? isValidTime(revenueCenter, requested_at, service_type)
+    : false
+
   return (
     <Card
       tag={<OrderTag isUpcoming={isUpcoming} status={status} />}
@@ -91,7 +101,7 @@ const OrderCard = ({ order, isLast }) => {
       }
       footer={
         <>
-          {order.is_editable && (
+          {order.is_editable && shouldEdit && (
             <ButtonStyled
               onClick={() => dispatch(editOrder(order))}
               size="small"

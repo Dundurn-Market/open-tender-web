@@ -8,6 +8,7 @@ import {
 } from '@open-tender/redux'
 
 import { parseDate } from '../utils/date'
+import { isValidTime } from '../utils/revenueCenters'
 
 const isOrderRecurrence = (recurrence, order) => {
   if (recurrence.next_order_id === order.order_id) return true
