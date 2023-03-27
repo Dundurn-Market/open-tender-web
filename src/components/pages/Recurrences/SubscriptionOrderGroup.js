@@ -24,6 +24,7 @@ import Tag from '../../Tag'
 
 import { openModal } from '../../../slices'
 import { getLongName } from '../../../utils'
+import { isScheduled, isValidTime } from '../../../utils/revenueCenters'
 
 import { parseDate } from '../../../utils/date'
 
@@ -240,7 +241,10 @@ const SubscriptionOrderGroup = ({ subscriptionGroup }) => {
     rc => rc.revenue_center_id === subscriptionGroup.revenue_center_id,
   )
 
-  if (revenueCenter == null) {
+  if (
+    revenueCenter == null ||
+    !isScheduled(revenueCenter)
+  ) {
     return null;
   }
 
@@ -266,6 +270,15 @@ const SubscriptionOrderGroup = ({ subscriptionGroup }) => {
 
   const isEditable = (!orderByDate || orderByDate > Date.now()) &&
     (!subscriptionGroup.order || subscriptionGroup.order.is_editable)
+  const shouldEdit = (
+      revenueCenter &&
+      subscriptionGroup.requested_at &&
+      subscriptionGroup.service_type
+    ) ? isValidTime(
+      revenueCenter,
+      subscriptionGroup.requested_at,
+      subscriptionGroup.service_type,
+    ) : false
 
   const orderByText = orderByDate
     ? orderByDate.toLocaleDateString(
@@ -278,9 +291,11 @@ const SubscriptionOrderGroup = ({ subscriptionGroup }) => {
     : null
   const tagText = !subscriptionGroup.order
     ? 'Skipped'
-    : (orderByText
-        ?  `Edit By ${orderByText}`
-        : 'No Longer Editable')
+    : (!isEditable || !orderByText
+      ? 'No Longer Editable'
+      : (shouldEdit
+          ?  `Edit By ${orderByText}`
+          : 'Too Early To Edit'))
 
   const locationText = isDelivery
     ? `${subscriptionGroup.address.street}, ${subscriptionGroup.address.city}`
@@ -334,10 +349,11 @@ const SubscriptionOrderGroup = ({ subscriptionGroup }) => {
         { !!tagText && (
           <Tag
             text={tagText}
-            bgColor={isEditable && !!subscriptionGroup.order
+            bgColor={isEditable && shouldEdit && !!subscriptionGroup.order
               ? 'success'
               : 'tertiary'
             }
+            useBgColors={false}
           />
         )}
       </OrderGroupTag>
@@ -354,7 +370,7 @@ const SubscriptionOrderGroup = ({ subscriptionGroup }) => {
         { !!subscriptionGroup.order &&
           <div style={{ flexShrink : 0 }}>
             <ButtonStyled
-              disabled={!isEditable}
+              disabled={!isEditable || !shouldEdit}
               onClick={editNextOrder}
               size='small'
             >

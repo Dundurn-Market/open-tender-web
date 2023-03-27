@@ -31,7 +31,12 @@ const OrderTag = ({ isUpcoming, status }) => {
 
   return (
     <OrderTagView>
-      <Tag text={tag.text} icon={tag.icon} color={tag.color} />
+      <Tag
+        text={tag.text}
+        icon={tag.icon}
+        color={tag.color}
+        bgColor={tag.color}
+      />
     </OrderTagView>
   )
 }

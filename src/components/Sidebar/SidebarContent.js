@@ -304,7 +304,7 @@ const Sidebar = React.forwardRef((props, ref) => {
                   color="primary"
                   disabled={!canCheckout}
                 >
-                  {isCheckout ? 'Close' : 'Checkout'}
+                  { isCheckout ? 'Close' : (orderId ? 'Confirm' : 'Checkout') }
                 </ButtonStyled>
               )}
             </SidebarCheckout>
