@@ -24,7 +24,7 @@ import Tag from '../../Tag'
 
 import { openModal } from '../../../slices'
 import { getLongName } from '../../../utils'
-import { isValidTime } from '../../../utils/revenueCenters'
+import { isScheduled, isValidTime } from '../../../utils/revenueCenters'
 
 import { parseDate } from '../../../utils/date'
 
@@ -241,7 +241,10 @@ const SubscriptionOrderGroup = ({ subscriptionGroup }) => {
     rc => rc.revenue_center_id === subscriptionGroup.revenue_center_id,
   )
 
-  if (revenueCenter == null) {
+  if (
+    revenueCenter == null ||
+    !isScheduled(revenueCenter)
+  ) {
     return null;
   }
 
