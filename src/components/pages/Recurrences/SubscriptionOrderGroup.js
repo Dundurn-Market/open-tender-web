@@ -291,9 +291,11 @@ const SubscriptionOrderGroup = ({ subscriptionGroup }) => {
     : null
   const tagText = !subscriptionGroup.order
     ? 'Skipped'
-    : (orderByText
-        ?  `Edit By ${orderByText}`
-        : 'No Longer Editable')
+    : (!isEditable || !orderByText
+      ? 'No Longer Editable'
+      : (shouldEdit
+          ?  `Edit By ${orderByText}`
+          : 'Too Early To Edit'))
 
   const locationText = isDelivery
     ? `${subscriptionGroup.address.street}, ${subscriptionGroup.address.city}`
@@ -347,10 +349,11 @@ const SubscriptionOrderGroup = ({ subscriptionGroup }) => {
         { !!tagText && (
           <Tag
             text={tagText}
-            bgColor={isEditable && !!subscriptionGroup.order
+            bgColor={isEditable && shouldEdit && !!subscriptionGroup.order
               ? 'success'
               : 'tertiary'
             }
+            useBgColors={false}
           />
         )}
       </OrderGroupTag>

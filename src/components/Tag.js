@@ -9,7 +9,10 @@ const TagView = styled('span')`
   border-radius: 1.5rem;
   line-height: 0;
   color: ${(props) => props.theme.colors.light};
-  background-color: ${(props) => props.theme.colors[props.bgColor]};
+  background-color: ${(props) => props.useBgColors
+    ? props.theme.bgColors[props.bgColor]
+    : props.theme.colors[props.bgColor]
+  };
   // color: ${(props) => props.color ? props.theme[props.color].color : props.theme.colors.light};
   // background-color: ${(props) => props.color ? props.theme[props.color].bgColor : props.theme.bgColors.dark};
 `
@@ -42,12 +45,12 @@ const TagText = styled(Preface)`
   line-height: 1.2;
 `
 
-const Tag = ({ text, icon, bgColor }) => {
+const Tag = ({ text, icon, color, bgColor, useBgColors = true }) => {
   return (
-    <TagView bgColor={bgColor}>
+    <TagView bgColor={bgColor} useBgColors={useBgColors}>
       <TagContainer>
-        {icon && <TagIcon>{icon}</TagIcon>}
-        <TagText>{text}</TagText>
+        {icon && <TagIcon color={color}>{icon}</TagIcon>}
+        <TagText color={color}>{text}</TagText>
       </TagContainer>
     </TagView>
   )

@@ -8,7 +8,8 @@ import {
   selectCustomer,
   selectCustomerOrders,
 } from '@open-tender/redux'
-import { ButtonStyled } from '@open-tender/components'
+import { ButtonLink, ButtonStyled } from '@open-tender/components'
+import { isoToDate } from '@open-tender/js'
 
 import { selectBrand, selectConfig } from '../../../slices'
 import {
@@ -54,7 +55,17 @@ const Orders = () => {
     setCount(Math.min(count + increment, limit))
   }
 
+  const goToSubscriptions = () => {
+    navigate(`/subscriptions`)
+  }
+
   if (!auth) return null
+
+  const now = new Date()
+  const upcoming = recentOrders.filter(i => isoToDate(i.requested_at) >= now)
+  const past = recentOrders.filter(i => isoToDate(i.requested_at) < now)
+
+  upcoming.sort((a, b) => a.requested_at > b.requested_at ? 1 : -1)
 
   return (
     <>
@@ -67,26 +78,60 @@ const Orders = () => {
         <HeaderDefault />
         <Main>
           <PageContainer style={{ maxWidth: '114rem' }}>
-            <PageTitle {...config} />
+            <PageTitle
+              {...config}
+              subtitle={
+                <>
+                  <p>{ config.subtitle }</p>
+                  <p style={{ marginTop : '1rem' }}>
+                    <span>Looking for your subscription items? </span>
+                    <ButtonLink onClick={goToSubscriptions}>
+                      Click here to see your subscriptions.
+                    </ButtonLink>
+                  </p>
+                </>
+              }
+            />
             <PageError error={error} />
-            {recentOrders.length ? (
-              <>
-                <OrdersList orders={recentOrders} delay={0} />
-                {entities.length - 1 > count && (
-                  <ButtonStyled onClick={loadMore}>
-                    Load more recent orders
-                  </ButtonStyled>
-                )}
+            { !isLoading
+              ? <>
+                { upcoming.length
+                  ? <>
+                    <OrdersList orders={upcoming} delay={0} />
+                    {!past.length && (entities.length - 1 > count) &&
+                      <ButtonStyled onClick={loadMore}>
+                        Load more orders
+                      </ButtonStyled>
+                    }
+                  </>
+                  : <PageContent>
+                    <p>Looks like you don't have any upcoming orders.</p>
+                  </PageContent>
+                }
+                <PageTitle
+                  title='Order History'
+                  subtitle={'Reorder past orders, ' +
+                    'or add order ratings & comments.'}
+                  style={{ marginTop : '8rem' }}
+                />
+                { past.length
+                  ? <>
+                    <OrdersList orders={past} delay={0} />
+                    {entities.length - 1 > count &&
+                      <ButtonStyled onClick={loadMore}>
+                        Load more recent orders
+                      </ButtonStyled>
+                    }
+                  </>
+                  : <PageContent>
+                    <p>Looks like you don't have any past orders.</p>
+                  </PageContent>
+                }
               </>
-            ) : (
-              <PageContent>
-                {isLoading ? (
-                  <Loading text="Retrieving your order history. Please sit tight." />
-                ) : (
-                  <p>Looks like you don't have any orders yet.</p>
-                )}
+              : <PageContent>
+                <Loading text="Retrieving your orders. Please sit tight." />
               </PageContent>
-            )}
+            }
           </PageContainer>
         </Main>
       </Content>
